@@ -12,11 +12,7 @@ window.onload = function () {
   }
 };
 
-
-
-
-
-
+// ---script para salvar a ns no localstorage e recarregar a pagina
 function salvarOpcao() {
   const numeronsInput = document.getElementById('numerons');
   if (numeronsInput) {
@@ -30,7 +26,6 @@ function salvarOpcao() {
 
 }
     
-  
 // Event listener para capturar Enter em qualquer lugar da página
 document.addEventListener('keydown', function (event) {
     // Verificar se a tecla pressionada é Enter (código 13 ou 'Enter')
