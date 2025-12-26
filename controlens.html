@@ -283,7 +283,7 @@
 
     <script>
         // 🔑 Substitua com suas credenciais reais do Supabase
-        const supabase = window.supabase.createClient(
+        const supa = window.supabase.createClient(
             'https://nelzhukmxrgdoarsxcek.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
         );
@@ -301,7 +301,7 @@
         }
 
         async function carregarAnalises(nsFiltro = '', statusFiltro = '', dataInicio = '', dataFim = '') {
-            let query = supabase
+            let query = supa
                 .from('controle_analise')
                 .select('*')
                 .order('id', { ascending: false });
@@ -382,7 +382,7 @@
                 registro.prazo = prazoInput;
             }
 
-            const { error } = await supabase
+            const { error } = await supa
                 .from('controle_analise')
                 .insert([registro]);
 

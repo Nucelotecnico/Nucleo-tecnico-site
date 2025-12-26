@@ -260,9 +260,8 @@
         </div>
     </div>
     <script>
-        const supabase = window.supabase.createClient(
-            'https://nelzhukmxrgdoarsxcek.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
+        const supa = window.supabase.createClient(
+            'https://nelzhukmxrgdoarsxcek.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
         );
 
         let imagensBlob = [];
@@ -304,7 +303,7 @@
                 const blob = imagensBlob[i];
                 const nomeArquivo = `${Date.now()}_${i}.png`;
 
-                const { data, error: uploadError } = await supabase.storage
+                const { data, error: uploadError } = await supa.storage
                     .from('registros')
                     .upload(nomeArquivo, blob);
 
@@ -320,7 +319,7 @@
             const todasImagens = [...imagensExistentes, ...novasUrls];
 
             if (registroEditandoId) {
-                const { error } = await supabase
+                const { error } = await supa
                     .from('notas')
                     .update({ assunto, descricao, status, cor_fundo: corFundo, imagens: todasImagens })
                     .eq('id', registroEditandoId);
@@ -335,7 +334,7 @@
                 imagensExistentes = [];
                 document.querySelector('button[onclick="salvarRegistro()"]').textContent = 'Salvar Registro';
             } else {
-                const { error: insertError } = await supabase
+                const { error: insertError } = await supa
                     .from('notas')
                     .insert([{ assunto, descricao, status, cor_fundo: corFundo, imagens: todasImagens }]);
 
@@ -361,7 +360,7 @@
             if (!confirm('Tem certeza que deseja excluir este registro?')) return;
 
             // Remove do banco de dados
-            const { error } = await supabase
+            const { error } = await supa
                 .from('notas')
                 .delete()
                 .eq('id', id);
@@ -381,7 +380,7 @@
 
 
         async function carregarRegistros() {
-            const { data, error } = await supabase
+            const { data, error } = await supa
                 .from('notas')
                 .select('*')
                 .order('created_at', { ascending: false });
@@ -467,7 +466,7 @@
                 return;
             }
 
-            const { data, error } = await supabase.from('notas').select('*');
+            const { data, error } = await supa.from('notas').select('*');
             const container = document.getElementById('registros');
             container.innerHTML = '';
 
@@ -522,7 +521,7 @@ filtrados.forEach(registro => {
         }
 
         async function carregarAssuntos() {
-            const { data, error } = await supabase
+            const { data, error } = await supa
                 .from('notas')
                 .select('id, assunto, status')
                 .order('created_at', { ascending: false });
