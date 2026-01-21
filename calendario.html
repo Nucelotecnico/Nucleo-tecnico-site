@@ -52,61 +52,72 @@
 
     <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CALENDÁRIO</h1>
 
-
     <div id="containergeral">
-
-
-        <div id="user-container" style="flex: 0 0 320px; max-width:100px;">
-            <button id="toggle-users-btn">Gerenciar Usuários</button>
+        <!-- Painel Esquerdo: Gerenciar Usuários -->
+        <aside id="user-container">
+            <button id="toggle-users-btn" class="panel-toggle-btn">👥 Gerenciar Usuários</button>
             <div id="user-manager" style="display:none;">
-                <!-- Seu formulário e lista de usuários aqui -->
-
-                <h3>Gerenciar Usuários</h3>
+                <h3>👥 Gerenciar Usuários</h3>
                 <form id="user-form">
-                    <label for="user-name">Nome:</label>
-                    <input type="text" id="user-name" required>
+                    <div class="form-group">
+                        <label for="user-name">📝 Nome:</label>
+                        <input type="text" id="user-name" required placeholder="Nome do usuário">
+                    </div>
 
-                    <label for="user-color">Cor:</label>
-                    <input type="color" id="user-color" value="#ff0000" required>
+                    <div class="form-group">
+                        <label for="user-color">🎨 Cor:</label>
+                        <input type="color" id="user-color" value="#ff0000" required>
+                    </div>
 
-                    <button type="submit" id="btn-cadastrar-usuario">Cadastrar Usuário</button>
+                    <button type="submit" id="btn-cadastrar-usuario" class="btn-primary">✓ Cadastrar Usuário</button>
                 </form>
 
                 <ul id="user-list"></ul>
-
             </div>
-        </div>
+        </aside>
 
-        <div id="form-container" style="flex: 0 0 320px; max-width:150px;">
-            <h3>Adicionar Evento</h3>
+        <!-- Calendário Central -->
+        <main id="calendar"></main>
+
+        <!-- Painel Direito: Adicionar Evento -->
+        <aside id="form-container">
+            <h3>📅 Adicionar Evento</h3>
             <form id="event-form">
-                <label for="title">Título:</label>
-                <input type="text" id="title" required>
+                <div class="form-group">
+                    <label for="title">📝 Título:</label>
+                    <input type="text" id="title" required placeholder="Título do evento">
+                </div>
 
-                <label for="type">Tipo:</label>
-                <select id="type" required>
-                    <option value="Compensação">Compensação</option>
-                    <option value="Férias">Férias</option>
-                    <option value="Serviço Externo">Serviço Externo</option>
-                    <option value="Feriado">Feriado</option>
-                    <option value="Licença Médica">Licença Médica</option>
-                    <option value="Aniversário">Aniversário</option>
-                </select>
+                <div class="form-group">
+                    <label for="type">🏷️ Tipo:</label>
+                    <select id="type" required>
+                        <option value="Compensação">Compensação</option>
+                        <option value="Férias">Férias</option>
+                        <option value="Serviço Externo">Serviço Externo</option>
+                        <option value="Feriado">Feriado</option>
+                        <option value="Licença Médica">Licença Médica</option>
+                        <option value="Aniversário">Aniversário</option>
+                    </select>
+                </div>
 
-                <label for="user">Usuário:</label>
-                <select id="user" required></select>
+                <div class="form-group">
+                    <label for="user">👤 Usuário:</label>
+                    <select id="user" required></select>
+                </div>
 
-                <label for="start">Data de Início:</label>
-                <input type="date" id="start" required>
+                <div class="form-group">
+                    <label for="start">📅 Data de Início:</label>
+                    <input type="date" id="start" required>
+                </div>
 
-                <label for="end">Data de Fim:</label>
-                <input type="date" id="end" required>
+                <div class="form-group">
+                    <label for="end">📅 Data de Fim:</label>
+                    <input type="date" id="end" required>
+                </div>
 
-                <button type="submit" id="btn-adicionar-evento">Adicionar Evento</button>
+                <button type="submit" id="btn-adicionar-evento" class="btn-primary">✓ Adicionar Evento</button>
             </form>
-        </div>
-
-        <div id="calendar"></div>
+        </aside>
     </div>
 
     <div id="future-events-report">

@@ -116,15 +116,15 @@ button {
     width: 95%;
     max-width: 1400px;
     margin: 30px auto;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(102, 187, 106, 0.2);
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 20px;
     animation: slideUp 0.6s ease-out;
 }
@@ -141,39 +141,52 @@ button {
 }
 
 #calendar {
-    background: #fff;
+    background: #ffffff;
     max-width: 700px;
     min-height: 350px;
     max-height: 600px;
     margin: 0;
-    padding: 20px;
+    padding: 22px;
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     flex: 1;
-    transition: transform 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(102, 187, 106, 0.15);
 }
 
 #calendar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(102, 187, 106, 0.2);
+    border-color: rgba(102, 187, 106, 0.3);
 }
 
 #form-container,
 #user-container {
-    max-width: 320px;
+    flex: 0 0 280px;
     margin: 0;
-    padding: 24px;
-    border: none;
-    background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    padding: 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(102, 187, 106, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 #form-container:hover,
 #user-container:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 24px rgba(102, 187, 106, 0.15);
+    border-color: rgba(102, 187, 106, 0.25);
     transform: translateY(-2px);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.panel-toggle-btn {
+    width: 100%;
+    margin-bottom: 0;
 }
 
 label {
@@ -197,6 +210,12 @@ input[type="color"] {
     font-size: 1em;
     transition: all 0.3s ease;
     background: #fff;
+    box-sizing: border-box;
+}
+
+#user-name {
+    width: 100%;
+    min-width: 240px;
 }
 
 select:focus,
@@ -217,6 +236,52 @@ ul {
 
 li {
     margin-bottom: 12px;
+}
+
+#user-list {
+    margin-top: 20px;
+}
+
+#user-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+#user-list li:hover {
+    background: #e8f5e9;
+    transform: translateX(3px);
+}
+
+#user-list button,
+.btn-delete-user {
+    background: linear-gradient(145deg, #d32f2f, #f44336);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+}
+
+#user-list button:hover,
+.btn-delete-user:hover {
+    background: linear-gradient(145deg, #b71c1c, #d32f2f);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+}
+
+#user-list button:active,
+.btn-delete-user:active {
+    transform: translateY(0);
 }
 
 /* Estilos para botões de formulário */

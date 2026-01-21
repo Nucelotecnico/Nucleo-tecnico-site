@@ -28,21 +28,64 @@ async function loadUsersAndRenderList() {
         const li = document.createElement('li');
         li.innerHTML = `
           <span style="color:${user.color}; font-weight:bold;">${user.name}</span>
-          <button data-id="${user.id}">Excluir</button>
+          <button class="btn-delete-user" data-id="${user.id}">Excluir</button>
         `;
         userList.appendChild(li);
     });
-
-    document.querySelectorAll('#user-list button').forEach(button => {
-        button.addEventListener('click', async () => {
-            const userId = button.getAttribute('data-id');
-            if (confirm('Deseja excluir este usuário?')) {
-                await supabaseClient.from('users').delete().eq('id', userId);
-                await loadUsersAndRenderList();
-            }
-        });
-    });
 }
+
+// Delegação de eventos para exclusão de usuários
+document.addEventListener('click', async function(e) {
+    if (e.target && e.target.classList.contains('btn-delete-user')) {
+        const userId = e.target.getAttribute('data-id');
+        
+        // Verificar se usuário tem eventos associados
+        const { data: userEvents, error: checkError } = await supabaseClient
+            .from('events')
+            .select('id')
+            .eq('user_id', userId);
+        
+        if (checkError) {
+            console.error('Erro ao verificar eventos:', checkError);
+            alert('Erro ao verificar eventos do usuário.');
+            return;
+        }
+        
+        let confirmMessage = 'Deseja excluir este usuário?';
+        if (userEvents && userEvents.length > 0) {
+            confirmMessage = `Este usuário possui ${userEvents.length} evento(s) cadastrado(s).\nAo excluir o usuário, todos os seus eventos serão excluídos também.\n\nDeseja continuar?`;
+        }
+        
+        if (confirm(confirmMessage)) {
+            // Primeiro excluir os eventos do usuário
+            if (userEvents && userEvents.length > 0) {
+                const { error: deleteEventsError } = await supabaseClient
+                    .from('events')
+                    .delete()
+                    .eq('user_id', userId);
+                
+                if (deleteEventsError) {
+                    console.error('Erro ao excluir eventos do usuário:', deleteEventsError);
+                    alert('Erro ao excluir eventos do usuário: ' + deleteEventsError.message);
+                    return;
+                }
+            }
+            
+            // Depois excluir o usuário
+            const { error } = await supabaseClient.from('users').delete().eq('id', userId);
+            if (error) {
+                console.error('Erro ao excluir usuário:', error);
+                alert('Erro ao excluir usuário: ' + error.message);
+            } else {
+                await loadUsersAndRenderList();
+                // Atualizar calendário após exclusão
+                if (typeof calendar !== 'undefined') {
+                    calendar.refetchEvents();
+                }
+            }
+        }
+    }
+});
 
 document.getElementById('user-form').addEventListener('submit', async function (e) {
     e.preventDefault();
