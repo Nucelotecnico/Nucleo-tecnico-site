@@ -5,7 +5,7 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 // 🔄 Carrega os links da tabela
 async function loadLinks() {
-    const { data, error } = await supabaseClient.from('links').select('*');
+    const { data, error } = await supabaseClient.from('links').select('*').order('title', { ascending: true });
     const table = document.getElementById('linkTable');
     table.innerHTML = '';
 
@@ -14,13 +14,29 @@ async function loadLinks() {
         return;
     }
 
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    const isUsuario = userCategoria === 'usuario';
+
+    // Ocultar cabeçalho da coluna Ações para usuario
+    const thAcoes = document.getElementById('th-acoes');
+    if (thAcoes) {
+        thAcoes.style.display = isUsuario ? 'none' : '';
+    }
+
     data.forEach(link => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-        <td>${link.title}</td>
-        <td><a href="${link.url}" target="_blank">${link.url}</a></td>
-        <td><button class="excluir" onclick="deleteLink('${link.id}')">Excluir</button></td>
-        `;
+        if (isUsuario) {
+            row.innerHTML = `
+            <td>${link.title}</td>
+            <td><a href="${link.url}" target="_blank">${link.url}</a></td>
+            `;
+        } else {
+            row.innerHTML = `
+            <td>${link.title}</td>
+            <td><a href="${link.url}" target="_blank">${link.url}</a></td>
+            <td><button class="excluir" onclick="deleteLink('${link.id}')">Excluir</button></td>
+            `;
+        }
         table.appendChild(row);
     });
 }
@@ -61,3 +77,14 @@ async function deleteLink(id) {
 
 // 🚀 Inicializa a tabela ao carregar a página
 loadLinks();
+
+// Ocultar formulário de adicionar links para usuario
+document.addEventListener('DOMContentLoaded', () => {
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    if (userCategoria === 'usuario') {
+        const formAdicionar = document.getElementById('form-adicionar-link');
+        if (formAdicionar) {
+            formAdicionar.style.display = 'none';
+        }
+    }
+});

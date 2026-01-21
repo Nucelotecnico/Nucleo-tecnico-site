@@ -19,6 +19,9 @@ async function listarProjetos(filtro = '*') {
         return;
     }
 
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    const isUsuario = userCategoria === 'usuario';
+
     //const projetos = filtro === '*' ? data : data.filter(item => item.name.includes(filtro));
 
 
@@ -54,13 +57,17 @@ async function listarProjetos(filtro = '*') {
             <tr>
               <th>Nome do Projeto</th>
               <th>Link para PDF</th>
-              <th>Ações</th>
+              <th id="th-acoes-modulos">Ações</th>
             </tr>
           </thead>
           <tbody id="tabelaProjetos"></tbody>
         </table>
       `;
-
+    // Ocultar cabeçalho da coluna Ações para usuario
+    const thAcoes = document.getElementById('th-acoes-modulos');
+    if (thAcoes) {
+        thAcoes.style.display = isUsuario ? 'none' : '';
+    }
     const corpoTabela = document.getElementById('tabelaProjetos');
 
 for (const item of projetos) {
@@ -77,11 +84,18 @@ for (const item of projetos) {
       .trim();
 
     const linha = document.createElement('tr');
-    linha.innerHTML = `
-      <td>${displayName}</td>
-      <td><a href="${urlData.publicUrl}" target="_blank">Visualizar PDF</a></td>
-      <td><button class="excluir" onclick="excluirProjeto('${caminho}')">Excluir</button></td>
-    `;
+    if (isUsuario) {
+        linha.innerHTML = `
+          <td>${displayName}</td>
+          <td><a href="${urlData.publicUrl}" target="_blank">Visualizar PDF</a></td>
+        `;
+    } else {
+        linha.innerHTML = `
+          <td>${displayName}</td>
+          <td><a href="${urlData.publicUrl}" target="_blank">Visualizar PDF</a></td>
+          <td><button class="excluir" onclick="excluirProjeto('${caminho}')">Excluir</button></td>
+        `;
+    }
     corpoTabela.appendChild(linha);
 }
 
@@ -160,4 +174,26 @@ const nomeSanitizado = nomeRaw
 document.getElementById('btnBuscar').addEventListener('click', () => {
     const nomeBusca = document.getElementById('buscaProjeto').value.trim().replace(/\s+/g, '_');
     listarProjetos(nomeBusca || '*');
+});
+
+// Ocultar formulário de cadastro para usuario
+document.addEventListener('DOMContentLoaded', () => {
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    if (userCategoria === 'usuario') {
+        const formCadastro = document.getElementById('formularioCadastro');
+        if (formCadastro) {
+            formCadastro.style.display = 'none';
+        }
+    }
+});
+
+// Ocultar formulário de cadastro para usuario
+document.addEventListener('DOMContentLoaded', () => {
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    if (userCategoria === 'usuario') {
+        const formCadastro = document.getElementById('formularioCadastro');
+        if (formCadastro) {
+            formCadastro.style.display = 'none';
+        }
+    }
 });

@@ -66,6 +66,76 @@ document.addEventListener('DOMContentLoaded', async function () {
         editable: true,
         selectable: true,
 
+        eventDidMount: function(info) {
+            // Criar tooltip com informações do evento
+            const tooltip = document.createElement('div');
+            tooltip.className = 'event-tooltip';
+            tooltip.style.cssText = `
+                position: absolute;
+                background: white;
+                border: 2px solid ${info.event.backgroundColor};
+                border-radius: 8px;
+                padding: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: none;
+                min-width: 200px;
+                font-size: 14px;
+            `;
+
+            // Obter dados do evento original
+            const eventData = info.event.extendedProps;
+            const startDate = new Date(info.event.start).toLocaleDateString('pt-BR');
+            
+            // Subtrair 1 dia apenas da data fim
+            let endDate = startDate;
+            if (info.event.end) {
+                const adjustedEnd = new Date(info.event.end);
+                adjustedEnd.setDate(adjustedEnd.getDate() - 1);
+                endDate = adjustedEnd.toLocaleDateString('pt-BR');
+            }
+
+            tooltip.innerHTML = `
+                <div style="border-bottom: 2px solid ${info.event.backgroundColor}; padding-bottom: 8px; margin-bottom: 8px;">
+                    <strong style="color: ${info.event.backgroundColor}; font-size: 16px;">${eventData.eventTitle || info.event.title}</strong>
+                </div>
+                <div style="margin-bottom: 6px;">
+                    <strong>Tipo:</strong> ${eventData.eventType || 'Não especificado'}
+                </div>
+                <div style="margin-bottom: 6px;">
+                    <strong>Usuário:</strong> <span style="color: ${info.event.backgroundColor};">${eventData.userName || 'Não especificado'}</span>
+                </div>
+                <div style="margin-bottom: 6px;">
+                    <strong>Início:</strong> ${startDate}
+                </div>
+                <div>
+                    <strong>Fim:</strong> ${endDate}
+                </div>
+            `;
+
+            document.body.appendChild(tooltip);
+
+            // Mostrar tooltip ao passar o mouse
+            info.el.addEventListener('mouseenter', function(e) {
+                const rect = e.target.getBoundingClientRect();
+                tooltip.style.display = 'block';
+                tooltip.style.left = (rect.left + window.scrollX) + 'px';
+                tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+            });
+
+            // Esconder tooltip ao sair
+            info.el.addEventListener('mouseleave', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Remover tooltip ao destruir evento
+            info.el.addEventListener('DOMNodeRemoved', function() {
+                if (tooltip.parentNode) {
+                    tooltip.parentNode.removeChild(tooltip);
+                }
+            });
+        },
+
         eventClick: async function (info) {
             if (confirm('Deseja excluir este evento?')) {
                 await supabaseClient.from('events').delete().eq('id', info.event.id);
@@ -76,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         events: async function (fetchInfo, successCallback, failureCallback) {
             const { data, error } = await supabaseClient
                 .from('events')
-                .select('id,title,start_date,end_date,users(name,color)');
+                .select('id,title,type,start_date,end_date,users(name,color)');
 
             if (error) {
                 console.error('Erro ao buscar eventos:', error);
@@ -88,7 +158,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 title: `${ev.title} - ${ev.users?.name || 'Usuário'}`,
                 start: ev.start_date,
                 end: ev.end_date,
-                backgroundColor: ev.users?.color || '#999'
+                backgroundColor: ev.users?.color || '#999',
+                extendedProps: {
+                    eventTitle: ev.title,
+                    eventType: ev.type,
+                    userName: ev.users?.name || 'Usuário'
+                }
             }));
 
             successCallback(events);

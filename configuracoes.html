@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configurações - Cadastro de Usuários</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="configuracoes.css">
+</head>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+        <h1 id="titulo"
+            style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+            PORTAL NÚCLEO TÉCNICO
+        </h1>
+    </div>
+    <br>
+
+    <div class="menu-container">
+        <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+        <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+        <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+        <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+        <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+        <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos<br>Homologados</button>
+        <button id="btn-conversor" class="menu-btn" onclick="location.href='conversor.html'">Ferramentas</button>
+        <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+        <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+        <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+        <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+    </div>
+
+    <script src="auth.js"></script>
+
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CADASTRO DE USUÁRIOS</h1>
+
+    <div id="container" style="display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 30px;">
+        <div style="max-width: 400px; width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
+            <h2 style="text-align: center;">Novo Usuário</h2>
+            <form id="form" style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center;">
+                    <label for="email" style="width: 120px; text-align: left;">Email</label>
+                    <input type="email" id="email" placeholder="email@exemplo.com" required style="flex: 1;">
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label for="senha" style="width: 120px; text-align: left;">Senha</label>
+                    <input type="password" id="senha" placeholder="Mínimo 6 caracteres" minlength="6" required style="flex: 1;">
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <label for="categoria" style="width: 120px; text-align: left;">Categoria</label>
+                    <select id="categoria" style="flex: 1; padding: 8px;">
+                        <option value="usuario">Usuário</option>
+                        <option value="tecnico">Técnico</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button type="submit" style="background: linear-gradient(145deg, #2e7d32, #43a047); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    Cadastrar
+                </button>
+            </form>
+        </div>
+
+        <div style="max-width: 800px; width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
+            <h2 style="text-align: center;">Usuários Cadastrados</h2>
+            <div id="usuarios-lista" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd;">ID</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd;">Email</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd;">Categoria</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd;">Data Criação</th>
+                            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usuarios-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px;">Carregando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://nelzhukmxrgdoarsxcek.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Função para carregar usuários
+        async function carregarUsuarios() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_login_nt')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const tbody = document.getElementById('usuarios-tbody');
+                tbody.innerHTML = '';
+
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Nenhum usuário cadastrado</td></tr>';
+                    return;
+                }
+
+                data.forEach(usuario => {
+                    const tr = document.createElement('tr');
+                    tr.style.borderBottom = '1px solid #eee';
+                    tr.innerHTML = `
+                        <td style="padding: 12px;">${usuario.id}</td>
+                        <td style="padding: 12px;">${usuario.email}</td>
+                        <td style="padding: 12px;">
+                            <span style="background-color: ${usuario.categoria === 'admin' ? '#ff9800' : usuario.categoria === 'tecnico' ? '#2196F3' : '#4CAF50'}; 
+                                         color: white; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: bold;">
+                                ${usuario.categoria.toUpperCase()}
+                            </span>
+                        </td>
+                        <td style="padding: 12px;">${new Date(usuario.created_at).toLocaleString('pt-BR')}</td>
+                        <td style="padding: 12px; text-align: center;">
+                            <button onclick="excluirUsuario(${usuario.id})" style="background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
+                                Excluir
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                document.getElementById('usuarios-tbody').innerHTML = `
+                    <tr><td colspan="5" style="text-align: center; padding: 20px; color: red;">
+                        Erro ao carregar usuários: ${error.message}
+                    </td></tr>
+                `;
+            }
+        }
+
+        // Função para excluir usuário
+        async function excluirUsuario(id) {
+            if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('user_login_nt')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Usuário excluído com sucesso!');
+                carregarUsuarios();
+
+            } catch (error) {
+                console.error('Erro ao excluir usuário:', error);
+                alert('Erro ao excluir usuário: ' + error.message);
+            }
+        }
+
+        // Função para cadastrar usuário
+        document.getElementById('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const senha = document.getElementById('senha').value;
+            const categoria = document.getElementById('categoria').value;
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('user_login_nt')
+                    .insert([
+                        {
+                            email: email,
+                            senha: senha,
+                            categoria: categoria
+                        }
+                    ])
+                    .select();
+
+                if (error) throw error;
+
+                alert('Usuário cadastrado com sucesso!');
+                document.getElementById('form').reset();
+                carregarUsuarios();
+
+            } catch (error) {
+                console.error('Erro ao cadastrar usuário:', error);
+                alert('Erro ao cadastrar usuário: ' + error.message);
+            }
+        });
+
+        // Carregar usuários ao carregar a página
+        window.addEventListener('load', carregarUsuarios);
+    </script>
+</body>
+
+</html>
