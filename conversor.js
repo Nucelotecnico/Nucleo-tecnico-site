@@ -1814,10 +1814,24 @@ async function reprovadorPesquisar() {
     }
 
     if (data.length > 0) {
+        // Verificar categoria do usuário
+        const userCategoria = sessionStorage.getItem('userCategoria');
+        const isUsuario = userCategoria === 'usuario';
+        
         data.forEach(item => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'reprovador-item';
-            itemDiv.innerHTML = `
+            
+            // Criar HTML com ou sem botões dependendo da categoria
+            if (isUsuario) {
+                itemDiv.innerHTML = `
+        <div class="reprovador-item-texto">
+          <div class="reprovador-item-topico">${item.topico}</div>
+          <div>${item.descricao}</div>
+        </div>
+      `;
+            } else {
+                itemDiv.innerHTML = `
         <div class="reprovador-item-texto">
           <div class="reprovador-item-topico">${item.topico}</div>
           <div>${item.descricao}</div>
@@ -1827,6 +1841,7 @@ async function reprovadorPesquisar() {
           <button class="reprovador-btn reprovador-btn-excluir" onclick="reprovadorExcluir('${item.id}')">Excluir</button>
         </div>
       `;
+            }
             resultados.appendChild(itemDiv);
         });
     } else {

@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Núcleo-Técnico - Índices</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="indices.css">
+
+</head>
+
+<body>
+
+  <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+    <h1 id="titulo"
+      style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+      PORTAL NÚCLEO TÉCNICO
+    </h1>
+  </div>
+  <br>
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn"
+      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+
+  <h1 style="text-align: center; color: #184d27; margin: 20px 0;">GERENCIADOR DE ÍNDICES</h1>
+
+  <div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
+    
+    <!-- Seção de Upload -->
+    <div id="secaoUpload" style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📤 Upload de Arquivo Excel</h2>
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <input type="file" id="fileInput" accept=".xlsx, .xls" 
+          style="padding: 10px; border: 2px solid #e8f5e9; border-radius: 8px; flex: 1;">
+        <button onclick="processarExcel()" 
+          style="background: linear-gradient(145deg, #2e7d32, #43a047); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+          Importar Dados
+        </button>
+        <button onclick="limparTabela()" 
+          style="background: linear-gradient(145deg, #d32f2f, #f44336); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+          Limpar Tabela
+        </button>
+      </div>
+      <p style="color: #666; font-size: 0.9em; margin-top: 8px;">
+        ℹ️ O arquivo Excel deve conter as colunas: Nota, Área operacional, Cidade, Código medidas, Descrição, Texto medidas, Status usuário, Início planejado, Fim planejado, Concluído por, Concluída em, Modificado por
+      </p>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">🔍 Filtros</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+        <input type="text" id="filtroNota" placeholder="Filtrar por Nota" 
+          style="padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        <input type="text" id="filtroCidade" placeholder="Filtrar por Cidade" 
+          style="padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        <input type="text" id="filtroStatus" placeholder="Filtrar por Status" 
+          style="padding: 8px; border: 1px solid #ddd; border-radius: 6px;">
+        <button onclick="aplicarFiltros()" 
+          style="background: #66bb6a; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+          Aplicar Filtros
+        </button>
+        <button onclick="limparFiltros()" 
+          style="background: #9e9e9e; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+
+    <!-- Gráfico de Análise Geral -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Quantidade de Notas por Fim Planejado</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartFimPlanejado"></canvas>
+      </div>
+      <div id="infoGeralNotas" style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> | 
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> | 
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
+      </div>
+    </div>
+
+    <!-- Gráfico de Notas Concluídas (CONC CTEC e CONC RTEC) -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">✅ Notas Concluídas por Data de Conclusão</h2>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
+          <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()" 
+                  style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartConcluidas"></canvas>
+      </div>
+      <div id="infoConcluidas" style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas concluídas:</strong> <span id="totalConcluidas">0</span> | 
+        <strong style="color: #388e3c;">CONC CTEC:</strong> <span id="totalCONC_CTEC" style="color: #388e3c;">0</span> | 
+        <strong style="color: #81c784;">CONC RTEC:</strong> <span id="totalCONC_RTEC" style="color: #81c784;">0</span> | 
+        <strong style="color: #388e3c;">% Aprovação CONC CTEC:</strong> <span id="percentualAprovacao" style="color: #388e3c; font-weight: bold;">0%</span>
+      </div>
+    </div>
+
+    <!-- Gráfico de Prazo Médio Mensal -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📅 Prazo Médio Mensal (CONC) - Diferença entre Fim Planejado e Data de Conclusão</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartPrazoMedio"></canvas>
+      </div>
+      <div id="infoPrazoMedio" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas">0</span> | 
+        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral">0</span> dias
+      </div>
+    </div>
+
+    <!-- Gráfico Filtrado - Mini Geração -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">⚡ Análise: Analisar Carga Acessante Mini Geração</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartMiniGeracao"></canvas>
+      </div>
+      <div id="infoMiniGeracao" style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
+      </div>
+    </div>
+
+    <!-- Gráfico de Todos os Tipos de Descrição -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Análise: Todos os Tipos de Descrição</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartOutrosTipos"></canvas>
+      </div>
+      <div id="infoOutrosTipos" style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
+        <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> | 
+        <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
+      </div>
+    </div>
+
+    <!-- Gráfico Sem Mini e Micro Geração - Por Fim Planejado -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">🔍 Análise: Sem Mini e Micro Geração (Por Fim Planejado)</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartSemGeracoes"></canvas>
+      </div>
+      <div id="infoSemGeracoes" style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
+        <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
+      </div>
+    </div>
+
+    <!-- Tabela de Dados -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Dados Cadastrados</h2>
+      <div id="tabelaContainer" style="overflow-x: auto;">
+        <table id="tabelaIndices" style="width: 100%; border-collapse: collapse; min-width: 1200px;">
+          <thead>
+            <tr style="background: #f5f5f5;">
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Nota</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Área Operacional</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Cidade</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Código Medidas</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Descrição</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Texto Medidas</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Status Usuário</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Início Planejado</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Fim Planejado</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluído Por</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluída Em</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Modificado Por</th>
+              <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd; white-space: nowrap;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody">
+            <tr>
+              <td colspan="13" style="text-align: center; padding: 20px; color: #999;">
+                Nenhum dado cadastrado. Faça upload de um arquivo Excel para começar.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    // Configuração do Supabase
+    const SUPABASE_URL = 'https://nelzhukmxrgdoarsxcek.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Controlar acesso à seção de upload para usuário comum
+    document.addEventListener('DOMContentLoaded', function() {
+      const categoria = sessionStorage.getItem('userCategoria');
+      const secaoUpload = document.getElementById('secaoUpload');
+      
+      if (categoria === 'usuario' && secaoUpload) {
+        secaoUpload.style.display = 'none';
+      }
+    });
+
+    window.processarExcel = async function() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      
+      if (!file) {
+        alert('Por favor, selecione um arquivo Excel.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          
+          // Ler como array de arrays (ignora cabeçalhos problemáticos)
+          const arrayData = XLSX.utils.sheet_to_json(firstSheet, { 
+            header: 1, // Retorna array de arrays
+            defval: '' // Define valor padrão para células vazias
+          });
+
+          console.log('Total de linhas no Excel:', arrayData.length);
+          console.log('Primeira linha (cabeçalho):', arrayData[0]);
+          console.log('Segunda linha (dados):', arrayData[1]);
+          console.log('Terceira linha (dados):', arrayData[2]);
+
+          // Remover linha de cabeçalho
+          const dadosLinhas = arrayData.slice(1).filter(row => 
+            row && row.length > 0 && row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+          );
+
+          console.log('Total de linhas com dados:', dadosLinhas.length);
+
+          if (dadosLinhas.length === 0) {
+            alert('O arquivo Excel está vazio ou não possui dados válidos.');
+            return;
+          }
+
+          // Mapear os dados usando índices de array
+          const dadosFormatados = dadosLinhas.map((row, index) => {
+            console.log(`Linha ${index + 1}:`, row);
+            return {
+              nota: String(row[0] || ''),
+              area_operacional: String(row[1] || ''),
+              cidade: String(row[2] || ''),
+              codigo_medidas: String(row[3] || ''),
+              descricao: String(row[4] || ''),
+              texto_medidas: String(row[5] || ''),
+              status_usuario: String(row[6] || ''),
+              inicio_planejado: String(row[7] || ''),
+              fim_planejado: String(row[8] || ''),
+              concluido_por: String(row[9] || ''),
+              concluida_em: String(row[10] || ''),
+              modificado_por: String(row[11] || '')
+            };
+          });
+
+          console.log('Dados formatados:', dadosFormatados);
+          console.log('Total de registros formatados:', dadosFormatados.length);
+
+          // Inserir no banco de dados
+          const { data: insertData, error } = await supabaseClient
+            .from('indices')
+            .insert(dadosFormatados);
+
+          if (error) {
+            console.error('Erro ao inserir dados:', error);
+            alert('Erro ao importar dados: ' + error.message);
+          } else {
+            alert(`${dadosFormatados.length} registros importados com sucesso!`);
+            fileInput.value = '';
+            carregarDados();
+          }
+        } catch (error) {
+          console.error('Erro ao processar arquivo:', error);
+          alert('Erro ao processar arquivo: ' + error.message);
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    };
+
+    window.carregarDados = async function() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('indices')
+          .select('*')
+          .order('fim_planejado', { ascending: true });
+
+        if (error) {
+          console.error('Erro ao carregar dados:', error);
+          return;
+        }
+
+        // Armazenar dados globalmente
+        dadosGlobais = data;
+
+        exibirDados(data);
+        gerarGrafico(data);
+        
+        // Popular filtro de meses (irá gerar o gráfico de concluídas com mês atual se disponível)
+        popularFiltroMeses(data);
+        
+        gerarGraficoPrazoMedio(data);
+        gerarGraficoMiniGeracao(data);
+        gerarGraficoOutrosTipos(data);
+        gerarGraficoSemGeracoes(data);
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      }
+    };
+
+    window.exibirDados = function(dados) {
+      const tbody = document.getElementById('tabelaBody');
+      
+      if (!dados || dados.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="13" style="text-align: center; padding: 20px; color: #999;">
+              Nenhum dado cadastrado. Faça upload de um arquivo Excel para começar.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = dados.map(item => `
+        <tr style="border-bottom: 1px solid #eee;">
+          <td style="padding: 12px;">${item.nota || ''}</td>
+          <td style="padding: 12px;">${item.area_operacional || ''}</td>
+          <td style="padding: 12px;">${item.cidade || ''}</td>
+          <td style="padding: 12px;">${item.codigo_medidas || ''}</td>
+          <td style="padding: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${item.descricao || ''}">${item.descricao || ''}</td>
+          <td style="padding: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${item.texto_medidas || ''}">${item.texto_medidas || ''}</td>
+          <td style="padding: 12px;">${item.status_usuario || ''}</td>
+          <td style="padding: 12px;">${item.inicio_planejado || ''}</td>
+          <td style="padding: 12px;">${item.fim_planejado || ''}</td>
+          <td style="padding: 12px;">${item.concluido_por || ''}</td>
+          <td style="padding: 12px;">${item.concluida_em || ''}</td>
+          <td style="padding: 12px;">${item.modificado_por || ''}</td>
+          <td style="padding: 12px; text-align: center;">
+            <button onclick="excluirRegistro(${item.id})" 
+              style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+              🗑️ Excluir
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    };
+
+    window.excluirRegistro = async function(id) {
+      if (!confirm('Tem certeza que deseja excluir este registro?')) return;
+
+      const { error } = await supabaseClient
+        .from('indices')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        alert('Erro ao excluir: ' + error.message);
+      } else {
+        alert('Registro excluído com sucesso!');
+        carregarDados();
+      }
+    };
+
+    window.limparTabela = async function() {
+      if (!confirm('⚠️ ATENÇÃO: Isso irá excluir TODOS os dados da tabela. Deseja continuar?')) return;
+      
+      if (!confirm('Tem certeza ABSOLUTA? Esta ação não pode ser desfeita!')) return;
+
+      const { error } = await supabaseClient
+        .from('indices')
+        .delete()
+        .neq('id', 0);
+
+      if (error) {
+        alert('Erro ao limpar tabela: ' + error.message);
+      } else {
+        alert('Tabela limpa com sucesso!');
+        carregarDados();
+      }
+    };
+
+    window.aplicarFiltros = async function() {
+      const filtroNota = document.getElementById('filtroNota').value.toLowerCase();
+      const filtroCidade = document.getElementById('filtroCidade').value.toLowerCase();
+      const filtroStatus = document.getElementById('filtroStatus').value.toLowerCase();
+
+      let query = supabaseClient.from('indices').select('*');
+
+      if (filtroNota) {
+        query = query.ilike('nota', `%${filtroNota}%`);
+      }
+      if (filtroCidade) {
+        query = query.ilike('cidade', `%${filtroCidade}%`);
+      }
+      if (filtroStatus) {
+        query = query.ilike('status_usuario', `%${filtroStatus}%`);
+      }
+
+      const { data, error } = await query.order('fim_planejado', { ascending: true });
+
+      if (error) {
+        alert('Erro ao aplicar filtros: ' + error.message);
+      } else {
+        // Armazenar dados globalmente
+        dadosGlobais = data;
+        
+        exibirDados(data);
+        gerarGrafico(data);
+        
+        // Popular filtro de meses (irá gerar o gráfico de concluídas com mês atual se disponível)
+        popularFiltroMeses(data);
+        
+        gerarGraficoPrazoMedio(data);
+        gerarGraficoMiniGeracao(data);
+        gerarGraficoOutrosTipos(data);
+        gerarGraficoSemGeracoes(data);
+      }
+    };
+
+    window.limparFiltros = function() {
+      document.getElementById('filtroNota').value = '';
+      document.getElementById('filtroCidade').value = '';
+      document.getElementById('filtroStatus').value = '';
+      carregarDados();
+    };
+
+    // Variável global para armazenar dados
+    let dadosGlobais = [];
+
+    // Função para popular o filtro de meses
+    window.popularFiltroMeses = function(dados) {
+      const mesesSet = new Set();
+      
+      dados.forEach(item => {
+        const concluidaEm = item.concluida_em || '';
+        const status = item.status_usuario || '';
+        
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2]; // MM.YYYY
+            mesesSet.add(mesAno);
+          }
+        }
+      });
+      
+      const mesesArray = Array.from(mesesSet).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dataA = new Date(parseInt(anoA), parseInt(mesA) - 1);
+        const dataB = new Date(parseInt(anoB), parseInt(mesB) - 1);
+        return dataA - dataB;
+      });
+      
+      const selectMes = document.getElementById('filtroMesConcluidas');
+      // Manter a opção "Todos os meses"
+      selectMes.innerHTML = '<option value="todos">Todos os meses</option>';
+      
+      // Adicionar opções de meses
+      mesesArray.forEach(mesAno => {
+        const [mes, ano] = mesAno.split('.');
+        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
+        const option = document.createElement('option');
+        option.value = mesAno;
+        option.textContent = `${nomeMes}/${ano}`;
+        selectMes.appendChild(option);
+      });
+      
+      // Selecionar mês atual por padrão
+      const dataAtual = new Date();
+      const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+      const anoAtual = dataAtual.getFullYear();
+      const mesAnoAtual = `${mesAtual}.${anoAtual}`;
+      
+      // Verificar se o mês atual existe nos dados
+      if (mesesArray.includes(mesAnoAtual)) {
+        selectMes.value = mesAnoAtual;
+        // Aplicar filtro do mês atual
+        gerarGraficoConcluidas(dados, mesAnoAtual);
+      }
+    };
+
+    // Função para filtrar gráfico de concluídas por mês
+    window.filtrarGraficoConcluidasPorMes = function() {
+      const mesSelecionado = document.getElementById('filtroMesConcluidas').value;
+      gerarGraficoConcluidas(dadosGlobais, mesSelecionado);
+    };
+
+    // Variável global para os gráficos
+    let chartInstance = null;
+    let chartConcluidasInstance = null;
+    let chartPrazoMedioInstance = null;
+    let chartMiniGeracaoInstance = null;
+    let chartOutrosTiposInstance = null;
+    let chartSemGeracoesInstance = null;
+
+    // Função para gerar gráfico de barras
+    window.gerarGrafico = function(dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Filtrar apenas status ANDM e ABER
+      const dadosFiltrados = dados.filter(item => {
+        const status = item.status_usuario || '';
+        return status === 'ANDM' || status === 'ABER';
+      });
+
+      // Agrupar dados por fim_planejado e status_usuario
+      const agrupamentoPorData = {};
+      let totalANDM = 0;
+      let totalABER = 0;
+      
+      dadosFiltrados.forEach(item => {
+        const fimPlanejado = item.fim_planejado || 'Sem data';
+        const status = item.status_usuario || '';
+        
+        if (!agrupamentoPorData[fimPlanejado]) {
+          agrupamentoPorData[fimPlanejado] = { ANDM: 0, ABER: 0 };
+        }
+        
+        if (status === 'ANDM') {
+          agrupamentoPorData[fimPlanejado].ANDM++;
+          totalANDM++;
+        } else if (status === 'ABER') {
+          agrupamentoPorData[fimPlanejado].ABER++;
+          totalABER++;
+        }
+      });
+
+      // Atualizar contadores na interface (apenas ANDM e ABER)
+      document.getElementById('totalGeralNotas').textContent = dadosFiltrados.length;
+      document.getElementById('totalANDM').textContent = totalANDM;
+      document.getElementById('totalABER').textContent = totalABER;
+
+      // Converter para arrays e ordenar por data
+      const labels = Object.keys(agrupamentoPorData).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+      });
+
+      // Preparar dados para cada status
+      const valoresANDM = labels.map(label => agrupamentoPorData[label].ANDM);
+      const valoresABER = labels.map(label => agrupamentoPorData[label].ABER);
+
+      // Destruir gráfico anterior se existir
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      // Criar novo gráfico com múltiplos datasets
+      const ctx = document.getElementById('chartFimPlanejado').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'ANDM',
+              data: valoresANDM,
+              backgroundColor: 'rgba(46, 125, 50, 0.7)',
+              borderColor: 'rgba(46, 125, 50, 1)',
+              borderWidth: 2,
+              borderRadius: 8,
+              hoverBackgroundColor: 'rgba(56, 142, 60, 0.8)',
+              hoverBorderColor: 'rgba(56, 142, 60, 1)',
+              datalabels: {
+                color: '#fff',
+                font: {
+                  weight: 'bold',
+                  size: 12
+                },
+                formatter: function(value) {
+                  return value > 0 ? value : '';
+                }
+              }
+            },
+            {
+              label: 'ABER',
+              data: valoresABER,
+              backgroundColor: 'rgba(102, 187, 106, 0.7)',
+              borderColor: 'rgba(102, 187, 106, 1)',
+              borderWidth: 2,
+              borderRadius: 8,
+              hoverBackgroundColor: 'rgba(129, 199, 132, 0.8)',
+              hoverBorderColor: 'rgba(129, 199, 132, 1)',
+              datalabels: {
+                color: '#fff',
+                font: {
+                  weight: 'bold',
+                  size: 12
+                },
+                formatter: function(value) {
+                  return value > 0 ? value : '';
+                }
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            datalabels: {
+              display: true,
+              align: 'center',
+              anchor: 'center'
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Fim Planejado',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Função para gerar gráfico de Notas Concluídas (CONC CTEC e CONC RTEC)
+    window.gerarGraficoConcluidas = function(dados, mesFiltro = null) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Filtrar dados por mês se especificado
+      let dadosFiltrados = dados;
+      if (mesFiltro && mesFiltro !== 'todos') {
+        dadosFiltrados = dados.filter(item => {
+          const concluidaEm = item.concluida_em || '';
+          if (!concluidaEm) return false;
+          // Extrair mês/ano no formato MM.YYYY
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 2) {
+            const mesAno = partes[1] + '.' + partes[2]; // MM.YYYY
+            return mesAno === mesFiltro;
+          }
+          return false;
+        });
+      }
+
+      // Agrupar dados por concluida_em e status_usuario
+      const agrupamentoPorData = {};
+      let totalCONC_CTEC = 0;
+      let totalCONC_RTEC = 0;
+      
+      dadosFiltrados.forEach(item => {
+        const concluidaEm = item.concluida_em || 'Sem data';
+        const status = item.status_usuario || '';
+        
+        if (status === 'CONC CTEC' || status === 'CONC RTEC') {
+          if (!agrupamentoPorData[concluidaEm]) {
+            agrupamentoPorData[concluidaEm] = { CONC_CTEC: 0, CONC_RTEC: 0 };
+          }
+          
+          if (status === 'CONC CTEC') {
+            agrupamentoPorData[concluidaEm].CONC_CTEC++;
+            totalCONC_CTEC++;
+          } else if (status === 'CONC RTEC') {
+            agrupamentoPorData[concluidaEm].CONC_RTEC++;
+            totalCONC_RTEC++;
+          }
+        }
+      });
+
+      // Atualizar contadores na interface
+      const totalConcluidas = totalCONC_CTEC + totalCONC_RTEC;
+      const percentualAprovacao = totalConcluidas > 0 ? ((totalCONC_CTEC / totalConcluidas) * 100).toFixed(1) : 0;
+      
+      document.getElementById('totalConcluidas').textContent = totalConcluidas;
+      document.getElementById('totalCONC_CTEC').textContent = totalCONC_CTEC;
+      document.getElementById('totalCONC_RTEC').textContent = totalCONC_RTEC;
+      document.getElementById('percentualAprovacao').textContent = percentualAprovacao + '%';
+
+      if (totalConcluidas === 0) {
+        // Limpar gráfico se não houver dados
+        if (chartConcluidasInstance) {
+          chartConcluidasInstance.destroy();
+          chartConcluidasInstance = null;
+        }
+        return;
+      }
+
+      // Converter para arrays e ordenar por data
+      const labels = Object.keys(agrupamentoPorData).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+      });
+
+      // Preparar dados para cada status
+      const valoresCONC_CTEC = labels.map(label => agrupamentoPorData[label].CONC_CTEC);
+      const valoresCONC_RTEC = labels.map(label => agrupamentoPorData[label].CONC_RTEC);
+
+      // Destruir gráfico anterior se existir
+      if (chartConcluidasInstance) {
+        chartConcluidasInstance.destroy();
+      }
+
+      // Criar novo gráfico com múltiplos datasets
+      const ctx = document.getElementById('chartConcluidas').getContext('2d');
+      chartConcluidasInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'CONC CTEC',
+              data: valoresCONC_CTEC,
+              backgroundColor: 'rgba(56, 142, 60, 0.7)',
+              borderColor: 'rgba(56, 142, 60, 1)',
+              borderWidth: 2,
+              borderRadius: 8,
+              hoverBackgroundColor: 'rgba(67, 160, 71, 0.8)',
+              hoverBorderColor: 'rgba(67, 160, 71, 1)',
+              datalabels: {
+                color: '#fff',
+                font: {
+                  weight: 'bold',
+                  size: 12
+                },
+                formatter: function(value) {
+                  return value > 0 ? value : '';
+                }
+              }
+            },
+            {
+              label: 'CONC RTEC',
+              data: valoresCONC_RTEC,
+              backgroundColor: 'rgba(129, 199, 132, 0.7)',
+              borderColor: 'rgba(129, 199, 132, 1)',
+              borderWidth: 2,
+              borderRadius: 8,
+              hoverBackgroundColor: 'rgba(165, 214, 167, 0.8)',
+              hoverBorderColor: 'rgba(165, 214, 167, 1)',
+              datalabels: {
+                color: '#fff',
+                font: {
+                  weight: 'bold',
+                  size: 12
+                },
+                formatter: function(value) {
+                  return value > 0 ? value : '';
+                }
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            datalabels: {
+              display: true,
+              align: 'center',
+              anchor: 'center'
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Data de Conclusão',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Função para gerar gráfico de Prazo Médio Mensal
+    window.gerarGraficoPrazoMedio = function(dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) com datas válidas
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && 
+               item.fim_planejado && 
+               item.concluida_em;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasAnalisadas').textContent = '0';
+        document.getElementById('prazoMedioGeral').textContent = '0';
+        if (chartPrazoMedioInstance) {
+          chartPrazoMedioInstance.destroy();
+          chartPrazoMedioInstance = null;
+        }
+        return;
+      }
+
+      // Função para converter data DD.MM.YYYY para objeto Date
+      function parseData(dataStr) {
+        if (!dataStr) return null;
+        const partes = dataStr.split('.');
+        if (partes.length !== 3) return null;
+        // Date(ano, mês-1, dia)
+        return new Date(partes[2], partes[1] - 1, partes[0]);
+      }
+
+      // Calcular diferenças e agrupar por mês/ano
+      const prazosPorMes = {};
+      let somaTotalDias = 0;
+      let totalNotasValidas = 0;
+
+      notasConcluidas.forEach(item => {
+        const fimPlanejado = parseData(item.fim_planejado);
+        const concluida = parseData(item.concluida_em);
+        
+        if (fimPlanejado && concluida) {
+          // Calcular diferença em dias (fim planejado - data de conclusão)
+          const diferencaDias = Math.round((fimPlanejado - concluida) / (1000 * 60 * 60 * 24));
+          
+          // Agrupar por mês/ano (baseado na data de conclusão)
+          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
+          
+          if (!prazosPorMes[mesAno]) {
+            prazosPorMes[mesAno] = { soma: 0, count: 0 };
+          }
+          
+          prazosPorMes[mesAno].soma += diferencaDias;
+          prazosPorMes[mesAno].count++;
+          
+          somaTotalDias += diferencaDias;
+          totalNotasValidas++;
+        }
+      });
+
+      // Calcular médias mensais
+      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
+        const [mesA, anoA] = a.split('.').map(Number);
+        const [mesB, anoB] = b.split('.').map(Number);
+        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
+      });
+
+      const labels = mesesOrdenados;
+      const medias = mesesOrdenados.map(mes => {
+        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
+        return Math.round(media * 10) / 10; // Arredondar para 1 casa decimal
+      });
+
+      // Atualizar contadores
+      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
+      document.getElementById('totalNotasAnalisadas').textContent = totalNotasValidas;
+      document.getElementById('prazoMedioGeral').textContent = prazoMedioGeral;
+
+      // Destruir gráfico anterior se existir
+      if (chartPrazoMedioInstance) {
+        chartPrazoMedioInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartPrazoMedio').getContext('2d');
+      chartPrazoMedioInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Prazo Médio (dias)',
+            data: medias,
+            backgroundColor: 'rgba(255, 152, 0, 0.2)',
+            borderColor: 'rgba(255, 152, 0, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(255, 152, 0, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            datalabels: {
+              display: false
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 152, 0, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Prazo médio: ' + context.parsed.y + ' dias';
+                },
+                afterLabel: function(context) {
+                  const mes = labels[context.dataIndex];
+                  const info = prazosPorMes[mes];
+                  return 'Notas: ' + info.count;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Mês/Ano',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function(value) {
+                  return value + ' dias';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Prazo Médio (dias)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Função para gerar gráfico filtrado de Mini Geração
+    window.gerarGraficoMiniGeracao = function(dados) {
+      if (!dados || dados.length === 0) {
+        document.getElementById('totalMiniGeracao').textContent = '0';
+        return;
+      }
+
+      // Filtrar apenas registros com "Analisar Carga Acessante Mini Geração" na descrição
+      const dadosFiltrados = dados.filter(item => 
+        item.descricao && item.descricao.toLowerCase().includes('analisar carga acessante mini geração')
+      );
+
+      console.log('Total de registros Mini Geração:', dadosFiltrados.length);
+      document.getElementById('totalMiniGeracao').textContent = dadosFiltrados.length;
+
+      if (dadosFiltrados.length === 0) {
+        // Limpar gráfico se não houver dados
+        if (chartMiniGeracaoInstance) {
+          chartMiniGeracaoInstance.destroy();
+          chartMiniGeracaoInstance = null;
+        }
+        return;
+      }
+
+      // Agrupar dados por fim_planejado e contar
+      const agrupamento = {};
+      dadosFiltrados.forEach(item => {
+        const fimPlanejado = item.fim_planejado || 'Sem data';
+        if (agrupamento[fimPlanejado]) {
+          agrupamento[fimPlanejado]++;
+        } else {
+          agrupamento[fimPlanejado] = 1;
+        }
+      });
+
+      // Converter para arrays e ordenar por data
+      const labels = Object.keys(agrupamento).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+      });
+      const valores = labels.map(label => agrupamento[label]);
+
+      // Destruir gráfico anterior se existir
+      if (chartMiniGeracaoInstance) {
+        chartMiniGeracaoInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartMiniGeracao').getContext('2d');
+      chartMiniGeracaoInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas - Mini Geração',
+            data: valores,
+            backgroundColor: 'rgba(255, 152, 0, 0.7)',
+            borderColor: 'rgba(255, 152, 0, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(255, 167, 38, 0.8)',
+            hoverBorderColor: 'rgba(255, 167, 38, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 152, 0, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Notas: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Fim Planejado',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Função para gerar gráfico com todos os tipos de descrição (incluindo Mini Geração)
+    window.gerarGraficoOutrosTipos = function(dados) {
+      // Filtrar apenas status ANDM e ABER
+      const dadosFiltrados = dados.filter(item => {
+        const status = item.status_usuario || '';
+        return status === 'ANDM' || status === 'ABER';
+      });
+
+      // Atualizar contador total
+      document.getElementById('totalOutrosTipos').textContent = dadosFiltrados.length;
+
+      if (dadosFiltrados.length === 0) {
+        // Limpar gráfico se não houver dados
+        if (chartOutrosTiposInstance) {
+          chartOutrosTiposInstance.destroy();
+          chartOutrosTiposInstance = null;
+        }
+        document.getElementById('tiposUnicos').textContent = '0';
+        return;
+      }
+
+      // Agrupar dados por descrição e contar
+      const agrupamento = {};
+      dadosFiltrados.forEach(item => {
+        const descricao = item.descricao || 'Sem descrição';
+        if (agrupamento[descricao]) {
+          agrupamento[descricao]++;
+        } else {
+          agrupamento[descricao] = 1;
+        }
+      });
+
+      // Atualizar contador de tipos únicos
+      document.getElementById('tiposUnicos').textContent = Object.keys(agrupamento).length;
+
+      // Converter para arrays e ordenar por quantidade (decrescente)
+      const ordenado = Object.entries(agrupamento).sort((a, b) => b[1] - a[1]);
+      const labels = ordenado.map(item => item[0]);
+      const valores = ordenado.map(item => item[1]);
+
+      // Destruir gráfico anterior se existir
+      if (chartOutrosTiposInstance) {
+        chartOutrosTiposInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartOutrosTipos').getContext('2d');
+      chartOutrosTiposInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas - Todos os Tipos',
+            data: valores,
+            backgroundColor: 'rgba(25, 118, 210, 0.7)',
+            borderColor: 'rgba(25, 118, 210, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(66, 165, 245, 0.8)',
+            hoverBorderColor: 'rgba(66, 165, 245, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(25, 118, 210, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Notas: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Tipo de Descrição',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Função para gerar gráfico sem Mini e Micro Geração - Por Fim Planejado
+    window.gerarGraficoSemGeracoes = function(dados) {
+      // Filtrar dados excluindo mini e micro geração E considerando apenas ANDM e ABER
+      const dadosFiltrados = dados.filter(item => {
+        const descricao = (item.descricao || '').toLowerCase();
+        const status = item.status_usuario || '';
+        return !descricao.includes('mini geração') && 
+               !descricao.includes('micro geração') &&
+               (status === 'ANDM' || status === 'ABER');
+      });
+
+      // Atualizar contador total
+      document.getElementById('totalSemGeracoes').textContent = dadosFiltrados.length;
+
+      if (dadosFiltrados.length === 0) {
+        // Limpar gráfico se não houver dados
+        if (chartSemGeracoesInstance) {
+          chartSemGeracoesInstance.destroy();
+          chartSemGeracoesInstance = null;
+        }
+        return;
+      }
+
+      // Agrupar dados por fim_planejado e contar
+      const agrupamento = {};
+      dadosFiltrados.forEach(item => {
+        const fimPlanejado = item.fim_planejado || 'Sem data';
+        if (agrupamento[fimPlanejado]) {
+          agrupamento[fimPlanejado]++;
+        } else {
+          agrupamento[fimPlanejado] = 1;
+        }
+      });
+
+      // Converter para arrays e ordenar por data
+      const labels = Object.keys(agrupamento).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+      });
+      const valores = labels.map(label => agrupamento[label]);
+
+      // Destruir gráfico anterior se existir
+      if (chartSemGeracoesInstance) {
+        chartSemGeracoesInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartSemGeracoes').getContext('2d');
+      chartSemGeracoesInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas - Sem Mini/Micro Geração',
+            data: valores,
+            backgroundColor: 'rgba(123, 31, 162, 0.7)',
+            borderColor: 'rgba(123, 31, 162, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(156, 39, 176, 0.8)',
+            hoverBorderColor: 'rgba(156, 39, 176, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(123, 31, 162, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Notas: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Fim Planejado',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Carregar dados ao iniciar a página
+    window.addEventListener('DOMContentLoaded', carregarDados);
+  </script>
+
+  
+
+</body>
+
+</html>
