@@ -89,7 +89,31 @@
 
     <!-- Gráfico de Análise Geral -->
     <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Quantidade de Notas por Fim Planejado</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas por Fim Planejado</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoes" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidas" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartFimPlanejado"></canvas>
       </div>
@@ -102,14 +126,26 @@
 
     <!-- Gráfico de Notas Concluídas (CONC CTEC e CONC RTEC) -->
     <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">✅ Notas Concluídas por Data de Conclusão</h2>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
-          <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()" 
-                  style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
-            <option value="todos">Todos os meses</option>
-          </select>
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
+            <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()" 
+                    style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasConcluidas" onclick="toggleDropdownCodigoMedidasConcluidas()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasConcluidas" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
         </div>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
@@ -125,7 +161,31 @@
 
     <!-- Gráfico de Prazo Médio Mensal -->
     <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📅 Prazo Médio Mensal (CONC) - Diferença entre Fim Planejado e Data de Conclusão</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal (CONC) - Diferença entre Fim Planejado e Data de Conclusão</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesPrazo" onclick="toggleDropdownDescricoesPrazo()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesPrazo" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasPrazo" onclick="toggleDropdownCodigoMedidasPrazo()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasPrazo" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoMedio"></canvas>
       </div>
@@ -135,9 +195,93 @@
       </div>
     </div>
 
+    <!-- Gráfico de Prazo Médio Mensal - Todos exceto Mini/Micro Geração -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Todos os tipos (Exceto Mini/Micro Geração)</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesPrazoExceto" onclick="toggleDropdownDescricoesPrazoExceto()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesPrazoExceto" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasPrazoExceto" onclick="toggleDropdownCodigoMedidasPrazoExceto()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasPrazoExceto" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartPrazoMedioExceto"></canvas>
+      </div>
+      <div id="infoPrazoMedioExceto" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasExceto">0</span> | 
+        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralExceto">0</span> dias
+      </div>
+    </div>
+
+    <!-- Gráfico de Prazo Médio Mensal - Somente Mini/Micro Geração -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Mini/Micro Geração</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesPrazoMiniMicro" onclick="toggleDropdownDescricoesPrazoMiniMicro()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesPrazoMiniMicro" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasPrazoMiniMicro" onclick="toggleDropdownCodigoMedidasPrazoMiniMicro()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasPrazoMiniMicro" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartPrazoMedioMiniMicro"></canvas>
+      </div>
+      <div id="infoPrazoMedioMiniMicro" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasMiniMicro">0</span> | 
+        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralMiniMicro">0</span> dias
+      </div>
+    </div>
+
     <!-- Gráfico Filtrado - Mini Geração -->
     <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">⚡ Análise: Analisar Carga Acessante Mini Geração</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">⚡ Análise: Analisar Carga Acessante Mini Geração</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasMiniGeracao" onclick="toggleDropdownCodigoMedidasMiniGeracao()" 
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasMiniGeracao" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartMiniGeracao"></canvas>
       </div>
@@ -160,12 +304,66 @@
 
     <!-- Gráfico Sem Mini e Micro Geração - Por Fim Planejado -->
     <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">🔍 Análise: Sem Mini e Micro Geração (Por Fim Planejado)</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">🔍 Análise: Sem Mini e Micro Geração (Por Fim Planejado)</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasSemGeracoes" onclick="toggleDropdownCodigoMedidasSemGeracoes()" 
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasSemGeracoes" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartSemGeracoes"></canvas>
       </div>
       <div id="infoSemGeracoes" style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
         <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
+      </div>
+    </div>
+
+    <!-- Gráfico: Notas Concluídas por Usuário -->
+    <div style="background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #d32f2f; margin: 0;">👥 Notas Concluídas por Usuário</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="filtroMesNotasPorUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês (Concluída em):</label>
+            <select id="filtroMesNotasPorUsuario" onchange="aplicarFiltroMesNotasPorUsuario()" 
+              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesNotasPorUsuario" onclick="toggleDropdownDescricoesNotasPorUsuario()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesNotasPorUsuario" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasNotasPorUsuario" onclick="toggleDropdownCodigoMedidasNotasPorUsuario()" 
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasNotasPorUsuario" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartNotasPorUsuario"></canvas>
+      </div>
+      <div id="infoNotasPorUsuario" style="margin-top: 16px; padding: 12px; background: #ffebee; border-radius: 8px; color: #c62828;">
+        <strong>Total de notas concluídas:</strong> <span id="totalNotasPorUsuario">0</span>
       </div>
     </div>
 
@@ -326,13 +524,35 @@
         exibirDados(data);
         gerarGrafico(data);
         
-        // Popular filtro de meses (irá gerar o gráfico de concluídas com mês atual se disponível)
+        // Popular filtro de descrições e de meses
+        popularFiltroDescricoes(data);
         popularFiltroMeses(data);
+        popularFiltroCodigoMedidas(data);
         
         gerarGraficoPrazoMedio(data);
+        popularFiltroDescricoesPrazo(data);
+        popularFiltroCodigoMedidasPrazo(data);
+
+        gerarGraficoPrazoMedioExceto(data);
+        popularFiltroDescricoesPrazoExceto(data);
+        popularFiltroCodigoMedidasPrazoExceto(data);
+
+        gerarGraficoPrazoMedioMiniMicro(data);
+        popularFiltroDescricoesPrazoMiniMicro(data);
+        popularFiltroCodigoMedidasPrazoMiniMicro(data);
+
         gerarGraficoMiniGeracao(data);
+        popularFiltroCodigoMedidasMiniGeracao(data);
+
         gerarGraficoOutrosTipos(data);
+        popularFiltroCodigoMedidasSemGeracoes(data);
+
         gerarGraficoSemGeracoes(data);
+        
+        gerarGraficoNotasPorUsuario(data);
+        popularFiltroDescricoesNotasPorUsuario(data);
+        popularFiltroMesesNotasPorUsuario(data);
+        popularFiltroCodigoMedidasNotasPorUsuario(data);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       }
@@ -435,16 +655,43 @@
         // Armazenar dados globalmente
         dadosGlobais = data;
         
+        console.log('Dados carregados, total:', data.length);
+        console.log('Primeira descrição:', data[0]?.descricao);
+        
         exibirDados(data);
         gerarGrafico(data);
         
-        // Popular filtro de meses (irá gerar o gráfico de concluídas com mês atual se disponível)
+        // Popular filtro de descrições e de meses
+        console.log('Chamando popularFiltroDescricoes...');
+        popularFiltroDescricoes(data);
+        console.log('Chamando popularFiltroMeses...');
         popularFiltroMeses(data);
+        popularFiltroCodigoMedidas(data);
         
         gerarGraficoPrazoMedio(data);
+        popularFiltroDescricoesPrazo(data);
+        popularFiltroCodigoMedidasPrazo(data);
+
+        gerarGraficoPrazoMedioExceto(data);
+        popularFiltroDescricoesPrazoExceto(data);
+        popularFiltroCodigoMedidasPrazoExceto(data);
+
+        gerarGraficoPrazoMedioMiniMicro(data);
+        popularFiltroDescricoesPrazoMiniMicro(data);
+        popularFiltroCodigoMedidasPrazoMiniMicro(data);
+
         gerarGraficoMiniGeracao(data);
+        popularFiltroCodigoMedidasMiniGeracao(data);
+
         gerarGraficoOutrosTipos(data);
+        popularFiltroCodigoMedidasSemGeracoes(data);
+
         gerarGraficoSemGeracoes(data);
+
+        gerarGraficoNotasPorUsuario(data);
+        popularFiltroDescricoesNotasPorUsuario(data);
+        popularFiltroMesesNotasPorUsuario(data);
+        popularFiltroCodigoMedidasNotasPorUsuario(data);
       }
     };
 
@@ -453,6 +700,1030 @@
       document.getElementById('filtroCidade').value = '';
       document.getElementById('filtroStatus').value = '';
       carregarDados();
+    };
+
+    // Função para toggle dropdown de descrições
+    window.toggleDropdownDescricoes = function() {
+      const container = document.getElementById('containerCheckboxesDescricoes');
+      const botao = document.getElementById('botaoToggleDescricoes');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições do Prazo Médio
+    window.toggleDropdownDescricoesPrazo = function() {
+      const container = document.getElementById('containerCheckboxesDescricoesPrazo');
+      const botao = document.getElementById('botaoToggleDescricoesPrazo');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições do Prazo Médio - Exceto Mini/Micro
+    window.toggleDropdownDescricoesPrazoExceto = function() {
+      const container = document.getElementById('containerCheckboxesDescricoesPrazoExceto');
+      const botao = document.getElementById('botaoToggleDescricoesPrazoExceto');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições do Prazo Médio - Mini/Micro
+    window.toggleDropdownDescricoesPrazoMiniMicro = function() {
+      const container = document.getElementById('containerCheckboxesDescricoesPrazoMiniMicro');
+      const botao = document.getElementById('botaoToggleDescricoesPrazoMiniMicro');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições do gráfico de Notas por Usuário
+    window.toggleDropdownDescricoesNotasPorUsuario = function() {
+      const container = document.getElementById('containerCheckboxesDescricoesNotasPorUsuario');
+      const botao = document.getElementById('botaoToggleDescricoesNotasPorUsuario');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do gráfico de Notas por Usuário
+    window.toggleDropdownCodigoMedidasNotasPorUsuario = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasNotasPorUsuario');
+      const botao = document.getElementById('botaoToggleCodigoMedidasNotasPorUsuario');
+      
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do gráfico de Fim Planejado
+    window.toggleDropdownCodigoMedidas = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidas');
+      const botao = document.getElementById('botaoToggleCodigoMedidas');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do gráfico de Concluídas
+    window.toggleDropdownCodigoMedidasConcluidas = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasConcluidas');
+      const botao = document.getElementById('botaoToggleCodigoMedidasConcluidas');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do Prazo Médio (CONC)
+    window.toggleDropdownCodigoMedidasPrazo = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazo');
+      const botao = document.getElementById('botaoToggleCodigoMedidasPrazo');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do Prazo Médio - Exceto Mini/Micro
+    window.toggleDropdownCodigoMedidasPrazoExceto = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoExceto');
+      const botao = document.getElementById('botaoToggleCodigoMedidasPrazoExceto');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do Prazo Médio - Mini/Micro
+    window.toggleDropdownCodigoMedidasPrazoMiniMicro = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoMiniMicro');
+      const botao = document.getElementById('botaoToggleCodigoMedidasPrazoMiniMicro');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do gráfico Mini Geração
+    window.toggleDropdownCodigoMedidasMiniGeracao = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasMiniGeracao');
+      const botao = document.getElementById('botaoToggleCodigoMedidasMiniGeracao');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Código Medidas do gráfico Sem Mini/Micro Geração
+    window.toggleDropdownCodigoMedidasSemGeracoes = function() {
+      const container = document.getElementById('containerCheckboxesCodigoMedidasSemGeracoes');
+      const botao = document.getElementById('botaoToggleCodigoMedidasSemGeracoes');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para popular o filtro de descrições do gráfico de Fim Planejado com checkboxes
+    window.popularFiltroDescricoes = function(dados) {
+      console.log('=== INICIANDO popularFiltroDescricoes ===');
+      console.log('Total de dados recebidos:', dados?.length || 0);
+      
+      if (!dados || dados.length === 0) {
+        console.warn('Sem dados para popular filtro de descrições');
+        return;
+      }
+
+      const descricoes = new Set();
+      
+      dados.forEach((item, idx) => {
+        const descricao = item.descricao || item.Descrição || '';
+        if (descricao) {
+          descricoes.add(descricao);
+        }
+      });
+      
+      console.log('Descrições encontradas:', Array.from(descricoes));
+      console.log('Total de descrições únicas:', descricoes.size);
+      
+      const container = document.getElementById('containerCheckboxesDescricoes');
+      console.log('Container encontrado?', !!container);
+      
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesDescricoes" não encontrado!');
+        return;
+      }
+      
+      container.innerHTML = ''; // Limpar conteúdo anterior
+      
+      // Adicionar checkboxes para cada descrição
+      const descricoesArray = Array.from(descricoes).sort();
+      
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_desc_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = true; // Começar marcado por padrão
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          console.log('Checkbox alterado:', desc, 'Marcado:', this.checked);
+          aplicarFiltroDescricaoFimPlanejado();
+        };
+        
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+        
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+      
+      console.log('✅ Checkboxes criados com sucesso! Total:', descricoesArray.length);
+    };
+
+    // Função para aplicar filtro de descrição com checkboxes
+    window.aplicarFiltroDescricaoFimPlanejado = function() {
+      gerarGrafico(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Fim Planejado
+    window.popularFiltroCodigoMedidas = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigo = item.codigo_medidas || '';
+        if ((status === 'ANDM' || status === 'ABER') && codigo) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidas');
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesCodigoMedidas" não encontrado!');
+        return;
+      }
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasFimPlanejado();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasFimPlanejado = function() {
+      gerarGrafico(dadosGlobais);
+    };
+
+    // Função para popular o filtro de descrições do Prazo Médio com checkboxes
+    window.popularFiltroDescricoesPrazo = function(dados) {
+      console.log('=== INICIANDO popularFiltroDescricoesPrazo ===');
+      
+      const descricoes = new Set();
+      
+      dados.forEach(item => {
+        const descricao = item.descricao || '';
+        if (descricao) {
+          descricoes.add(descricao);
+        }
+      });
+      
+      const container = document.getElementById('containerCheckboxesDescricoesPrazo');
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesDescricoesPrazo" não encontrado!');
+        return;
+      }
+      
+      container.innerHTML = ''; // Limpar conteúdo anterior
+      
+      const descricoesArray = Array.from(descricoes).sort();
+      
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_prazo_desc_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroDescricaoPrazo();
+        };
+        
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+        
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+      
+      console.log('✅ Checkboxes do Prazo Médio criados com sucesso!');
+    };
+
+    // Função para aplicar filtro de descrição ao Prazo Médio
+    window.aplicarFiltroDescricaoPrazo = function() {
+      gerarGraficoPrazoMedio(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Prazo Médio (CONC)
+    window.popularFiltroCodigoMedidasPrazo = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigo = item.codigo_medidas || '';
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo && item.inicio_planejado && item.concluida_em) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazo');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_prazo_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasPrazo();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasPrazo = function() {
+      gerarGraficoPrazoMedio(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Concluídas
+    window.popularFiltroCodigoMedidasConcluidas = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigo = item.codigo_medidas || '';
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasConcluidas');
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesCodigoMedidasConcluidas" não encontrado!');
+        return;
+      }
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_concluidas_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasConcluidas();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasConcluidas = function() {
+      const mesSelecionado = document.getElementById('filtroMesConcluidas')?.value || 'todos';
+      gerarGraficoConcluidas(dadosGlobais, mesSelecionado);
+    };
+
+    // Função para popular filtro de descrições - Prazo Médio Exceto Mini/Micro
+    window.popularFiltroDescricoesPrazoExceto = function(dados) {
+      const descricoes = new Set();
+      dados.forEach(item => {
+        const descricao = item.descricao || '';
+        if (descricao && !descricao.toLowerCase().includes('mini geração') && !descricao.toLowerCase().includes('micro geração')) {
+          descricoes.add(descricao);
+        }
+      });
+      
+      const container = document.getElementById('containerCheckboxesDescricoesPrazoExceto');
+      container.innerHTML = '';
+      const descricoesArray = Array.from(descricoes).sort();
+      
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_prazo_exceto_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = aplicarFiltroDescricaoPrazoExceto;
+        
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+        
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroDescricaoPrazoExceto = function() {
+      gerarGraficoPrazoMedioExceto(dadosGlobais);
+    };
+
+    // Função para popular filtro de descrições - Prazo Médio Mini/Micro Geração
+    window.popularFiltroDescricoesPrazoMiniMicro = function(dados) {
+      const descricoes = new Set();
+      dados.forEach(item => {
+        const descricao = item.descricao || '';
+        if (descricao && (descricao.toLowerCase().includes('mini geração') || descricao.toLowerCase().includes('micro geração'))) {
+          descricoes.add(descricao);
+        }
+      });
+      
+      const container = document.getElementById('containerCheckboxesDescricoesPrazoMiniMicro');
+      container.innerHTML = '';
+      const descricoesArray = Array.from(descricoes).sort();
+      
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_prazo_minimicro_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = aplicarFiltroDescricaoPrazoMiniMicro;
+        
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+        
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroDescricaoPrazoMiniMicro = function() {
+      gerarGraficoPrazoMedioMiniMicro(dadosGlobais);
+    };
+
+    // Função para popular o filtro de descrições do gráfico de Notas por Usuário
+    window.popularFiltroDescricoesNotasPorUsuario = function(dados) {
+      const descricoes = new Set();
+      dados.forEach(item => {
+        const descricao = item.descricao || '';
+        if (descricao) {
+          descricoes.add(descricao);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesDescricoesNotasPorUsuario');
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesDescricoesNotasPorUsuario" não encontrado!');
+        return;
+      }
+
+      container.innerHTML = '';
+      const descricoesArray = Array.from(descricoes).sort();
+
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_notas_usuario_desc_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroDescricaoNotasPorUsuario();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroDescricaoNotasPorUsuario = function() {
+      gerarGraficoNotasPorUsuario(dadosGlobais);
+    };
+
+    // Função para popular o filtro de meses do gráfico de Notas por Usuário (Concluída em)
+    window.popularFiltroMesesNotasPorUsuario = function(dados) {
+      const mesesSet = new Set();
+
+      dados.forEach(item => {
+        const concluidaEm = item.concluida_em || '';
+        const status = item.status_usuario || '';
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            mesesSet.add(mesAno);
+          }
+        }
+      });
+
+      const mesesArray = Array.from(mesesSet).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dataA = new Date(parseInt(anoA), parseInt(mesA) - 1);
+        const dataB = new Date(parseInt(anoB), parseInt(mesB) - 1);
+        return dataA - dataB;
+      });
+
+      const selectMes = document.getElementById('filtroMesNotasPorUsuario');
+      if (!selectMes) return;
+      selectMes.innerHTML = '<option value="todos">Todos os meses</option>';
+
+      mesesArray.forEach(mesAno => {
+        const [mes, ano] = mesAno.split('.');
+        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
+        const option = document.createElement('option');
+        option.value = mesAno;
+        option.textContent = `${nomeMes}/${ano}`;
+        selectMes.appendChild(option);
+      });
+
+      const dataAtual = new Date();
+      const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+      const anoAtual = dataAtual.getFullYear();
+      const mesAnoAtual = `${mesAtual}.${anoAtual}`;
+
+      if (mesesArray.includes(mesAnoAtual)) {
+        selectMes.value = mesAnoAtual;
+      }
+    };
+
+    window.aplicarFiltroMesNotasPorUsuario = function() {
+      gerarGraficoNotasPorUsuario(dadosGlobais);
+    };
+
+    // Função para popular o filtro de Código Medidas do gráfico de Notas por Usuário
+    window.popularFiltroCodigoMedidasNotasPorUsuario = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const codigo = item.codigo_medidas || '';
+        if (codigo) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasNotasPorUsuario');
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesCodigoMedidasNotasPorUsuario" não encontrado!');
+        return;
+      }
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_notas_usuario_codigo_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasNotasPorUsuario();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasNotasPorUsuario = function() {
+      gerarGraficoNotasPorUsuario(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Prazo Médio Exceto Mini/Micro
+    window.popularFiltroCodigoMedidasPrazoExceto = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigo = item.codigo_medidas || '';
+        const descricao = (item.descricao || '').toLowerCase();
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo && item.inicio_planejado && item.concluida_em &&
+            !descricao.includes('mini geração') && !descricao.includes('micro geração')) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoExceto');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_prazo_exceto_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasPrazoExceto();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasPrazoExceto = function() {
+      gerarGraficoPrazoMedioExceto(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Prazo Médio Mini/Micro
+    window.popularFiltroCodigoMedidasPrazoMiniMicro = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigo = item.codigo_medidas || '';
+        const descricao = (item.descricao || '').toLowerCase();
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo && item.inicio_planejado && item.concluida_em &&
+            (descricao.includes('mini geração') || descricao.includes('micro geração'))) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoMiniMicro');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_prazo_minimicro_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasPrazoMiniMicro();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasPrazoMiniMicro = function() {
+      gerarGraficoPrazoMedioMiniMicro(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Mini Geração
+    window.popularFiltroCodigoMedidasMiniGeracao = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const codigo = item.codigo_medidas || '';
+        const descricao = (item.descricao || '').toLowerCase();
+        if (codigo && descricao.includes('analisar carga acessante mini geração')) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasMiniGeracao');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_minigeracao_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasMiniGeracao();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasMiniGeracao = function() {
+      gerarGraficoMiniGeracao(dadosGlobais);
+    };
+
+    // Função para popular filtro de Código Medidas - Sem Gerações
+    window.popularFiltroCodigoMedidasSemGeracoes = function(dados) {
+      const codigos = new Set();
+      dados.forEach(item => {
+        const codigo = item.codigo_medidas || '';
+        const descricao = (item.descricao || '').toLowerCase();
+        if (codigo && !descricao.includes('mini geração') && !descricao.includes('micro geração')) {
+          codigos.add(codigo);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesCodigoMedidasSemGeracoes');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const codigosArray = Array.from(codigos).sort();
+
+      codigosArray.forEach((codigo, index) => {
+        const checkboxId = 'checkbox_codigo_semgeracoes_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = codigo;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function() {
+          aplicarFiltroCodigoMedidasSemGeracoes();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = codigo;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroCodigoMedidasSemGeracoes = function() {
+      gerarGraficoOutrosTipos(dadosGlobais);
     };
 
     // Variável global para armazenar dados
@@ -522,9 +1793,12 @@
     let chartInstance = null;
     let chartConcluidasInstance = null;
     let chartPrazoMedioInstance = null;
+    let chartPrazoMedioExcetoInstance = null;
+    let chartPrazoMedioMiniMicroInstance = null;
     let chartMiniGeracaoInstance = null;
     let chartOutrosTiposInstance = null;
     let chartSemGeracoesInstance = null;
+    let chartNotasPorUsuarioInstance = null;
 
     // Função para gerar gráfico de barras
     window.gerarGrafico = function(dados) {
@@ -532,10 +1806,33 @@
         return;
       }
 
-      // Filtrar apenas status ANDM e ABER
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoes input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidas input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas status ANDM e ABER e aplicar filtro de descrição
       const dadosFiltrados = dados.filter(item => {
         const status = item.status_usuario || '';
-        return status === 'ANDM' || status === 'ABER';
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const statusOk = status === 'ANDM' || status === 'ABER';
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return statusOk && descricaoOk && codigoOk;
       });
 
       // Agrupar dados por fim_planejado e status_usuario
@@ -732,6 +2029,15 @@
         return;
       }
 
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasConcluidas input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
       // Filtrar dados por mês se especificado
       let dadosFiltrados = dados;
       if (mesFiltro && mesFiltro !== 'todos') {
@@ -756,8 +2062,10 @@
       dadosFiltrados.forEach(item => {
         const concluidaEm = item.concluida_em || 'Sem data';
         const status = item.status_usuario || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         
-        if (status === 'CONC CTEC' || status === 'CONC RTEC') {
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigoOk) {
           if (!agrupamentoPorData[concluidaEm]) {
             agrupamentoPorData[concluidaEm] = { CONC_CTEC: 0, CONC_RTEC: 0 };
           }
@@ -957,12 +2265,35 @@
         return;
       }
 
-      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) com datas válidas
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazo input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazo input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) com datas válidas e descrição selecionada
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
-        return (status === 'CONC CTEC' || status === 'CONC RTEC') && 
-               item.fim_planejado && 
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
+               item.inicio_planejado &&
                item.concluida_em;
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return statusOk && descricaoOk && codigoOk;
       });
 
       if (notasConcluidas.length === 0) {
@@ -990,12 +2321,12 @@
       let totalNotasValidas = 0;
 
       notasConcluidas.forEach(item => {
-        const fimPlanejado = parseData(item.fim_planejado);
+        const inicioPlanejado = parseData(item.inicio_planejado);
         const concluida = parseData(item.concluida_em);
         
-        if (fimPlanejado && concluida) {
-          // Calcular diferença em dias (fim planejado - data de conclusão)
-          const diferencaDias = Math.round((fimPlanejado - concluida) / (1000 * 60 * 60 * 24));
+        if (inicioPlanejado && concluida) {
+          // Calcular diferença em dias (data de conclusão - início planejado)
+          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
           
           // Agrupar por mês/ano (baseado na data de conclusão)
           const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
@@ -1155,6 +2486,450 @@
       });
     };
 
+    // Gráfico Prazo Médio (Exceto Mini/Micro Geração)
+    window.gerarGraficoPrazoMedioExceto = function(dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoExceto input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazoExceto input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) que NÃO sejam mini/micro geração
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
+               item.inicio_planejado &&
+               item.concluida_em;
+        // Excluir mini e micro geração
+        const naoEMiniMicro = !descricao.toLowerCase().includes('mini geração') && 
+                              !descricao.toLowerCase().includes('micro geração');
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return statusOk && naoEMiniMicro && descricaoOk && codigoOk;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasAnalisadasExceto').textContent = '0';
+        document.getElementById('prazoMedioGeralExceto').textContent = '0';
+        if (chartPrazoMedioExcetoInstance) {
+          chartPrazoMedioExcetoInstance.destroy();
+          chartPrazoMedioExcetoInstance = null;
+        }
+        return;
+      }
+
+      // Função para converter data DD.MM.YYYY para objeto Date
+      function parseData(dataStr) {
+        if (!dataStr) return null;
+        const partes = dataStr.split('.');
+        if (partes.length !== 3) return null;
+        return new Date(partes[2], partes[1] - 1, partes[0]);
+      }
+
+      // Calcular diferenças e agrupar por mês/ano
+      const prazosPorMes = {};
+      let somaTotalDias = 0;
+      let totalNotasValidas = 0;
+
+      notasConcluidas.forEach(item => {
+        const inicioPlanejado = parseData(item.inicio_planejado);
+        const concluida = parseData(item.concluida_em);
+        
+        if (inicioPlanejado && concluida) {
+          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
+          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
+          
+          if (!prazosPorMes[mesAno]) {
+            prazosPorMes[mesAno] = { soma: 0, count: 0 };
+          }
+          
+          prazosPorMes[mesAno].soma += diferencaDias;
+          prazosPorMes[mesAno].count++;
+          
+          somaTotalDias += diferencaDias;
+          totalNotasValidas++;
+        }
+      });
+
+      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
+        const [mesA, anoA] = a.split('.').map(Number);
+        const [mesB, anoB] = b.split('.').map(Number);
+        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
+      });
+
+      const labels = mesesOrdenados;
+      const medias = mesesOrdenados.map(mes => {
+        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
+        return Math.round(media * 10) / 10;
+      });
+
+      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
+      document.getElementById('totalNotasAnalisadasExceto').textContent = totalNotasValidas;
+      document.getElementById('prazoMedioGeralExceto').textContent = prazoMedioGeral;
+
+      if (chartPrazoMedioExcetoInstance) {
+        chartPrazoMedioExcetoInstance.destroy();
+      }
+
+      const ctx = document.getElementById('chartPrazoMedioExceto').getContext('2d');
+      chartPrazoMedioExcetoInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Prazo Médio (dias)',
+            data: medias,
+            backgroundColor: 'rgba(76, 175, 80, 0.2)',
+            borderColor: 'rgba(76, 175, 80, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(76, 175, 80, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            datalabels: {
+              display: false
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(76, 175, 80, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Prazo médio: ' + context.parsed.y + ' dias';
+                },
+                afterLabel: function(context) {
+                  const mes = labels[context.dataIndex];
+                  const info = prazosPorMes[mes];
+                  return 'Notas: ' + info.count;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Mês/Ano',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function(value) {
+                  return value + ' dias';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Prazo Médio (dias)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Gráfico Prazo Médio (Somente Mini/Micro Geração)
+    window.gerarGraficoPrazoMedioMiniMicro = function(dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoMiniMicro input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazoMiniMicro input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) que SEJAM mini/micro geração
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
+               item.inicio_planejado &&
+               item.concluida_em;
+        // Incluir apenas mini e micro geração
+        const ehMiniMicro = descricao.toLowerCase().includes('mini geração') || 
+                            descricao.toLowerCase().includes('micro geração');
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return statusOk && ehMiniMicro && descricaoOk && codigoOk;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasAnalisadasMiniMicro').textContent = '0';
+        document.getElementById('prazoMedioGeralMiniMicro').textContent = '0';
+        if (chartPrazoMedioMiniMicroInstance) {
+          chartPrazoMedioMiniMicroInstance.destroy();
+          chartPrazoMedioMiniMicroInstance = null;
+        }
+        return;
+      }
+
+      // Função para converter data DD.MM.YYYY para objeto Date
+      function parseData(dataStr) {
+        if (!dataStr) return null;
+        const partes = dataStr.split('.');
+        if (partes.length !== 3) return null;
+        return new Date(partes[2], partes[1] - 1, partes[0]);
+      }
+
+      // Calcular diferenças e agrupar por mês/ano
+      const prazosPorMes = {};
+      let somaTotalDias = 0;
+      let totalNotasValidas = 0;
+
+      notasConcluidas.forEach(item => {
+        const inicioPlanejado = parseData(item.inicio_planejado);
+        const concluida = parseData(item.concluida_em);
+        
+        if (inicioPlanejado && concluida) {
+          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
+          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
+          
+          if (!prazosPorMes[mesAno]) {
+            prazosPorMes[mesAno] = { soma: 0, count: 0 };
+          }
+          
+          prazosPorMes[mesAno].soma += diferencaDias;
+          prazosPorMes[mesAno].count++;
+          
+          somaTotalDias += diferencaDias;
+          totalNotasValidas++;
+        }
+      });
+
+      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
+        const [mesA, anoA] = a.split('.').map(Number);
+        const [mesB, anoB] = b.split('.').map(Number);
+        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
+      });
+
+      const labels = mesesOrdenados;
+      const medias = mesesOrdenados.map(mes => {
+        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
+        return Math.round(media * 10) / 10;
+      });
+
+      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
+      document.getElementById('totalNotasAnalisadasMiniMicro').textContent = totalNotasValidas;
+      document.getElementById('prazoMedioGeralMiniMicro').textContent = prazoMedioGeral;
+
+      if (chartPrazoMedioMiniMicroInstance) {
+        chartPrazoMedioMiniMicroInstance.destroy();
+      }
+
+      const ctx = document.getElementById('chartPrazoMedioMiniMicro').getContext('2d');
+      chartPrazoMedioMiniMicroInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Prazo Médio (dias)',
+            data: medias,
+            backgroundColor: 'rgba(33, 150, 243, 0.2)',
+            borderColor: 'rgba(33, 150, 243, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(33, 150, 243, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            datalabels: {
+              display: false
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(33, 150, 243, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Prazo médio: ' + context.parsed.y + ' dias';
+                },
+                afterLabel: function(context) {
+                  const mes = labels[context.dataIndex];
+                  const info = prazosPorMes[mes];
+                  return 'Notas: ' + info.count;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Mês/Ano',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function(value) {
+                  return value + ' dias';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Prazo Médio (dias)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
     // Função para gerar gráfico filtrado de Mini Geração
     window.gerarGraficoMiniGeracao = function(dados) {
       if (!dados || dados.length === 0) {
@@ -1162,10 +2937,23 @@
         return;
       }
 
-      // Filtrar apenas registros com "Analisar Carga Acessante Mini Geração" na descrição
-      const dadosFiltrados = dados.filter(item => 
-        item.descricao && item.descricao.toLowerCase().includes('analisar carga acessante mini geração')
-      );
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasMiniGeracao input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas registros com "Analisar Carga Acessante Mini Geração" na descrição e status ABER ou ANDM
+      const dadosFiltrados = dados.filter(item => {
+        const temDescricao = item.descricao && item.descricao.toLowerCase().includes('analisar carga acessante mini geração');
+        const temStatus = item.status_usuario && (item.status_usuario.toUpperCase() === 'ABER' || item.status_usuario.toUpperCase() === 'ANDM');
+        const codigoMedidas = item.codigo_medidas || '';
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return temDescricao && temStatus && codigoOk;
+      });
 
       console.log('Total de registros Mini Geração:', dadosFiltrados.length);
       document.getElementById('totalMiniGeracao').textContent = dadosFiltrados.length;
@@ -1313,10 +3101,21 @@
 
     // Função para gerar gráfico com todos os tipos de descrição (incluindo Mini Geração)
     window.gerarGraficoOutrosTipos = function(dados) {
+      // Obter códigos medidas selecionados nos checkboxes
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasSemGeracoes input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
       // Filtrar apenas status ANDM e ABER
       const dadosFiltrados = dados.filter(item => {
         const status = item.status_usuario || '';
-        return status === 'ANDM' || status === 'ABER';
+        const codigoMedidas = item.codigo_medidas || '';
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return (status === 'ANDM' || status === 'ABER') && codigoOk;
       });
 
       // Atualizar contador total
@@ -1606,6 +3405,221 @@
               title: {
                 display: true,
                 text: 'Fim Planejado',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Gráfico de Notas Concluídas por Usuário
+    window.gerarGraficoNotasPorUsuario = function(dados) {
+      if (!dados || dados.length === 0) {
+        document.getElementById('totalNotasPorUsuario').textContent = '0';
+        if (chartNotasPorUsuarioInstance) {
+          chartNotasPorUsuarioInstance.destroy();
+          chartNotasPorUsuarioInstance = null;
+        }
+        return;
+      }
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesNotasPorUsuario input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Obter mês selecionado (Concluída em)
+      const selectMes = document.getElementById('filtroMesNotasPorUsuario');
+      const mesSelecionado = selectMes ? selectMes.value : 'todos';
+
+      // Obter códigos de medidas selecionados
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasNotasPorUsuario input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas notas concluídas (status CONC CTEC ou CONC RTEC) com usuário preenchido
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const usuario = (item.concluido_por || '').trim();
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const concluidaEm = item.concluida_em || '';
+
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+
+        let mesOk = true;
+        if (mesSelecionado !== 'todos') {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            mesOk = mesAno === mesSelecionado;
+          } else {
+            mesOk = false;
+          }
+        }
+
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && descricaoOk && codigoOk && mesOk;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasPorUsuario').textContent = '0';
+        if (chartNotasPorUsuarioInstance) {
+          chartNotasPorUsuarioInstance.destroy();
+          chartNotasPorUsuarioInstance = null;
+        }
+        return;
+      }
+
+      // Atualizar total
+      document.getElementById('totalNotasPorUsuario').textContent = notasConcluidas.length;
+
+      // Agrupar por usuário (concluido_por)
+      const agrupamentoUsuario = {};
+      notasConcluidas.forEach(item => {
+        const usuario = (item.concluido_por || 'Desconhecido').trim();
+        if (agrupamentoUsuario[usuario]) {
+          agrupamentoUsuario[usuario]++;
+        } else {
+          agrupamentoUsuario[usuario] = 1;
+        }
+      });
+
+      // Converter para arrays e ordenar por quantidade (decrescente)
+      const labels = Object.keys(agrupamentoUsuario).sort((a, b) => {
+        return agrupamentoUsuario[b] - agrupamentoUsuario[a];
+      });
+      const valores = labels.map(label => agrupamentoUsuario[label]);
+
+      // Cores alternadas para melhor visualização
+      const cores = [
+        'rgba(255, 87, 34, 0.7)',   // Deep Orange
+        'rgba(244, 67, 54, 0.7)',   // Red
+        'rgba(233, 30, 99, 0.7)',   // Pink
+        'rgba(156, 39, 176, 0.7)',  // Purple
+        'rgba(103, 58, 183, 0.7)',  // Deep Purple
+        'rgba(63, 81, 181, 0.7)',   // Indigo
+        'rgba(33, 150, 243, 0.7)',  // Blue
+        'rgba(0, 172, 193, 0.7)',   // Cyan
+        'rgba(0, 150, 136, 0.7)',   // Teal
+        'rgba(76, 175, 80, 0.7)'    // Green
+      ];
+
+      const backgroundColors = labels.map((_, index) => cores[index % cores.length]);
+      const borderColors = backgroundColors.map(color => color.replace('0.7', '1'));
+
+      // Destruir gráfico anterior se existir
+      if (chartNotasPorUsuarioInstance) {
+        chartNotasPorUsuarioInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartNotasPorUsuario').getContext('2d');
+      chartNotasPorUsuarioInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas Concluídas',
+            data: valores,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: borderColors
+          }]
+        },
+        options: {
+          indexAxis: 'y', // Gráfico horizontal
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 1.2,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function(context) {
+                  return 'Notas: ' + context.parsed.x;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade de Notas',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Usuário',
                 font: {
                   size: 13,
                   family: 'Roboto',
