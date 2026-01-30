@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Núcleo-Técnico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="calendario.css">
+
+</head>
+
+<body>
+
+
+
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+        <h1 id="titulo"
+            style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+            PORTAL NÚCLEO TÉCNICO
+        </h1>
+    </div>
+    <br>
+
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-conversor" class="menu-btn"
+      onclick="location.href='conversor.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-reserva8" class="menu-btn" onclick="location.href='#contato'">Reserva8</button>
+
+  </div>
+
+
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CALENDÁRIO</h1>
+
+
+    <div id="containergeral">
+
+
+        <div id="user-container" style="flex: 0 0 320px; max-width:100px;">
+            <button id="toggle-users-btn">Gerenciar Usuários</button>
+            <div id="user-manager" style="display:none;">
+                <!-- Seu formulário e lista de usuários aqui -->
+
+                <h3>Gerenciar Usuários</h3>
+                <form id="user-form">
+                    <label for="user-name">Nome:</label>
+                    <input type="text" id="user-name" required>
+
+                    <label for="user-color">Cor:</label>
+                    <input type="color" id="user-color" value="#ff0000" required>
+
+                    <button type="submit">Cadastrar Usuário</button>
+                </form>
+
+                <ul id="user-list"></ul>
+
+            </div>
+        </div>
+
+        <div id="form-container" style="flex: 0 0 320px; max-width:150px;">
+            <h3>Adicionar Evento</h3>
+            <form id="event-form">
+                <label for="title">Título:</label>
+                <input type="text" id="title" required>
+
+                <label for="type">Tipo:</label>
+                <select id="type" required>
+                    <option value="Compensação">Compensação</option>
+                    <option value="Férias">Férias</option>
+                    <option value="Serviço Externo">Serviço Externo</option>
+                    <option value="Feriado">Feriado</option>
+                    <option value="Licença Médica">Licença Médica</option>
+                    <option value="Aniversário">Aniversário</option>
+                </select>
+
+                <label for="user">Usuário:</label>
+                <select id="user" required></select>
+
+                <label for="start">Data de Início:</label>
+                <input type="date" id="start" required>
+
+                <label for="end">Data de Fim:</label>
+                <input type="date" id="end" required>
+
+                <button type="submit">Adicionar Evento</button>
+            </form>
+        </div>
+
+        <div id="calendar"></div>
+    </div>
+
+    <div id="future-events-report">
+        <h3>📅 Eventos Futuros</h3>
+        <ul id="future-events-list"></ul>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="calendario.js"></script>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

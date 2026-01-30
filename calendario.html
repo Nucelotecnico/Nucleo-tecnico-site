@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Núcleo-Técnico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="calendario.css">
+
+</head>
+
+<body>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+        <h1 id="titulo"
+            style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+            PORTAL NÚCLEO TÉCNICO
+        </h1>
+    </div>
+    <br>
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn"
+      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+
+
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CALENDÁRIO</h1>
+
+    <div id="containergeral">
+        <!-- Painel Esquerdo: Gerenciar Usuários -->
+        <aside id="user-container">
+            <button id="toggle-users-btn" class="panel-toggle-btn">👥 Gerenciar Usuários</button>
+            <div id="user-manager" style="display:none;">
+                <h3>👥 Gerenciar Usuários</h3>
+                <form id="user-form">
+                    <div class="form-group">
+                        <label for="user-name">📝 Nome:</label>
+                        <input type="text" id="user-name" required placeholder="Nome do usuário">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-color">🎨 Cor:</label>
+                        <input type="color" id="user-color" value="#ff0000" required>
+                    </div>
+
+                    <button type="submit" id="btn-cadastrar-usuario" class="btn-primary">✓ Cadastrar Usuário</button>
+                </form>
+
+                <ul id="user-list"></ul>
+            </div>
+        </aside>
+
+        <!-- Calendário Central -->
+        <main id="calendar"></main>
+
+        <!-- Painel Direito: Adicionar Evento -->
+        <aside id="form-container">
+            <h3>📅 Adicionar Evento</h3>
+            <form id="event-form">
+                <div class="form-group">
+                    <label for="title">📝 Título:</label>
+                    <input type="text" id="title" required placeholder="Título do evento">
+                </div>
+
+                <div class="form-group">
+                    <label for="type">🏷️ Tipo:</label>
+                    <select id="type" required>
+                        <option value="Compensação">Compensação</option>
+                        <option value="Férias">Férias</option>
+                        <option value="Serviço Externo">Serviço Externo</option>
+                        <option value="Feriado">Feriado</option>
+                        <option value="Licença Médica">Licença Médica</option>
+                        <option value="Aniversário">Aniversário</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="user">👤 Usuário:</label>
+                    <select id="user" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="start">📅 Data de Início:</label>
+                    <input type="date" id="start" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="end">📅 Data de Fim:</label>
+                    <input type="date" id="end" required>
+                </div>
+
+                <button type="submit" id="btn-adicionar-evento" class="btn-primary">✓ Adicionar Evento</button>
+            </form>
+        </aside>
+    </div>
+
+    <div id="future-events-report">
+        <h3>📅 Eventos Futuros</h3>
+        <ul id="future-events-list"></ul>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="calendario.js"></script>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

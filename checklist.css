@@ -1,0 +1,223 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+    background-attachment: fixed;
+    color: #333;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Container dos botões */
+.menu-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0 30px 0;
+    flex-wrap: wrap;
+}
+
+.menu-btn {
+    background: linear-gradient(145deg, #2e7d32, #43a047);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-family: Roboto;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.menu-btn:hover::before {
+    left: 100%;
+}
+
+.menu-btn:hover {
+    background: linear-gradient(145deg, #ff9f68, #ffb088);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 159, 104, 0.4);
+}
+
+.menu-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 159, 104, 0.3);
+}
+
+#titulo {
+    background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
+    animation: titleFadeIn 0.8s ease-out;
+}
+
+@keyframes titleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    text-align: center;
+    color: #66bb6a;
+    font-weight: 800;
+    margin: 30px 0 20px;
+    font-size: 2.2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+button {
+    padding: 10px 20px;
+    margin-top: 8px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/*fim das configurações basicas*/
+
+table {
+  width: 70%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+tr {
+  background-color: #fff;
+}
+
+
+
+
+
+th,
+td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #2c3e50;
+  color: white;
+  text-align: left;
+}
+
+td select,
+td textarea {
+  width: 100%;
+  font-size: 14px;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+tr.finalizado {
+  background-color: #e8f5e9;
+}
+
+tr.analise {
+  background-color: #fffde7;
+}
+
+
+
+
+
+
+.tabela-checklist {
+  width: 100vw;
+  max-width: 100%;
+
+}
+
+.tabela-checklist th:first-child,
+.tabela-checklist td:first-child {
+  width: 50%;
+}
+
+
+
+
+#titulo {
+    margin: 20px 0;
+    padding: 30px 40px;
+    text-align: center;
+    width: 100%;
+    background: transparent;
+    border-radius: 20px;
+    box-shadow: none;
+    backdrop-filter: none;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    animation: titleFadeIn 0.8s ease-out;
+}
+
+/* #titulo {
+  margin-top: 0px;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-self: flex-start;
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+} */
+
+
+
+
+
+
+.aprovado {
+  background-color: #d4edda !important;
+}
+.analise {
+  background-color: #fff3cd !important;
+}
+.vazio {
+  background-color: #f8f9fa !important;
+}
+
+.reprovado {
+  background-color: #f0b6ac !important;
+}
+
+
+
+
+
+
+

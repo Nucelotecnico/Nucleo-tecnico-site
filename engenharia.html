@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro com Imagens</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container dos botões */
+        .menu-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+
+        }
+
+        .menu-btn {
+            background: linear-gradient(145deg, #2e7d32, #43a047);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-family: Roboto;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(145deg, #ff9f68, #ffb088);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 159, 104, 0.4);
+        }
+
+        .menu-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 159, 104, 0.3);
+        }
+
+        #titulo {
+            margin: 20px 0;
+            padding: 30px 40px;
+            text-align: center;
+            width: 100%;
+            background: transparent;
+            border-radius: 20px;
+            box-shadow: none;
+            backdrop-filter: none;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            animation: titleFadeIn 0.8s ease-out;
+        }
+
+        #titulo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
+            animation: titleShine 3s infinite;
+        }
+
+        #titulo {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
+        }
+
+        @keyframes titleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleShine {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #66bb6a;
+            font-weight: 800;
+            margin: 30px 0 20px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /*fim das configurações basicas*/
+
+
+        #sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+            border: 2px solid rgba(102, 187, 106, 0.15);
+            padding: 20px;
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            max-height: calc(100vh - 100px);
+            margin-right: 20px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        #sidebar:hover {
+            box-shadow: 0 6px 24px rgba(102, 187, 106, 0.15);
+            border-color: rgba(102, 187, 106, 0.25);
+        }
+
+        .main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        #sidebar h3 {
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            font-size: 1.1em;
+            text-align: center;
+            color: #2e7d32;
+            font-weight: 700;
+            border-bottom: 2px solid #e8f5e9;
+        }
+
+        #lista-assuntos {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #lista-assuntos li {
+            margin-bottom: 8px;
+        }
+
+        #lista-assuntos a {
+            display: block;
+            text-decoration: none;
+            color: #2e7d32;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: #f5f5f5;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        #lista-assuntos a:hover {
+            background: #e8f5e9;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(102, 187, 106, 0.2);
+        }
+
+        .main {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 32px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            border: 2px solid rgba(102, 187, 106, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h2,
+        h3 {
+            text-align: center;
+            margin: 0 0 24px 0;
+            padding-bottom: 12px;
+            color: #2e7d32;
+            font-weight: 700;
+            border-bottom: 2px solid #e8f5e9;
+        }
+
+        h2 {
+            font-size: 1.6em;
+        }
+
+        h3 {
+            font-size: 1.3em;
+            margin-top: 32px;
+        }
+
+        input,
+        textarea,
+        select {
+            display: block;
+            margin-bottom: 16px;
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1em;
+            border: 2px solid #e8f5e9;
+            border-radius: 10px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #66bb6a;
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.15);
+            background: #fafffe;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 12px 24px;
+            font-size: 1em;
+            background: linear-gradient(145deg, #2e7d32, #43a047);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(145deg, #ff9f68, #ffb088);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 159, 104, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Botão de excluir vermelho */
+        .btn[style*="background-color: rgb(220, 53, 69)"],
+        .btn[style*="backgroundColor"],
+        button[style*="backgroundColor: '#dc3545'"] {
+            background: linear-gradient(145deg, #dc3545, #c82333) !important;
+            border-color: #dc3545 !important;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3) !important;
+        }
+
+        .btn[style*="background-color: rgb(220, 53, 69)"]:hover,
+        .btn[style*="backgroundColor"]:hover,
+        button[style*="backgroundColor: '#dc3545'"]:hover {
+            background: linear-gradient(145deg, #c82333, #bd2130) !important;
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
+        }
+        
+
+        #dropzone {
+            border: 2px dashed #66bb6a;
+            padding: 24px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fdf9 0%, #ffffff 100%);
+            margin-bottom: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        #dropzone:hover {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f8fdf9 100%);
+            border-color: #43a047;
+            box-shadow: 0 4px 12px rgba(102, 187, 106, 0.2);
+        }
+
+        .preview img,
+        .registro img {
+            width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border: 2px solid #e8f5e9;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .preview img:hover,
+        .registro img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 16px rgba(102, 187, 106, 0.2);
+        }
+
+        .registro {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+            border: 2px solid #e8f5e9;
+            margin-bottom: 24px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .registro:hover {
+            box-shadow: 0 6px 20px rgba(102, 187, 106, 0.15);
+            border-color: rgba(102, 187, 106, 0.3);
+            transform: translateY(-2px);
+        }
+
+        #form-cadastro-engenharia {
+            background: linear-gradient(135deg, #f8fdf9 0%, #ffffff 100%);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border: 2px solid #e8f5e9;
+        }
+    </style>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+        <h1 id="titulo"
+            style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+            PORTAL NÚCLEO TÉCNICO
+        </h1>
+    </div>
+    <br>
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn"
+      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">ENGENHARIA</h1>
+
+    <div style="display: flex; width: 95%; max-width: 1600px; margin: 20px auto; gap: 0;">
+        <div id="sidebar">
+            <h3>📁 Assuntos</h3>
+            <ul id="lista-assuntos"></ul>
+        </div>
+
+        <div class="main">
+            <div class="container">
+                <div id="form-cadastro-engenharia">
+                    <h2>📋 Novo Registro</h2>
+                    <input type="text" id="assunto" placeholder="Assunto">
+                    <textarea id="descricao" placeholder="Descrição detalhada..."></textarea>
+                    <select id="status">
+                        <option value="em_analise">Em análise</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                    <div id="dropzone" tabindex="0">Clique aqui e pressione Ctrl+V para colar imagens</div>
+                    <div class="preview" id="preview"></div>
+                    <button class="btn" onclick="salvarRegistro()">Salvar Registro</button>
+                </div>
+
+                <h3>🔎 Buscar Registros</h3>
+                <input type="text" id="busca" placeholder="Digite assunto ou palavras da descrição">
+                <button class="btn" onclick="buscarRegistros()">Buscar</button>
+
+                <h3>🗂️ Registros Salvos</h3>
+                <div id="registros"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const supa = window.supabase.createClient(
+            'https://nelzhukmxrgdoarsxcek.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
+        );
+
+        let imagensBlob = [];
+        let imagensExistentes = [];
+        let registroEditandoId = null;
+
+        const dropzone = document.getElementById('dropzone');
+        const preview = document.getElementById('preview');
+
+        dropzone.addEventListener('click', () => dropzone.focus());
+        dropzone.addEventListener('paste', (event) => {
+            const items = event.clipboardData.items;
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const blob = item.getAsFile();
+                    imagensBlob.push(blob);
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    preview.appendChild(img);
+                }
+            }
+        });
+
+        async function salvarRegistro() {
+            const assunto = document.getElementById('assunto').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const status = document.getElementById('status').value;
+            const corFundo = status === 'concluido' ? '#d4edda' : '#fff3cd';
+
+            if (!assunto || !descricao || (imagensBlob.length === 0 && !registroEditandoId)) {
+                alert('Preencha o assunto, descrição e cole ao menos uma imagem.');
+                return;
+            }
+
+            const novasUrls = [];
+
+            for (let i = 0; i < imagensBlob.length; i++) {
+                const blob = imagensBlob[i];
+                const nomeArquivo = `${Date.now()}_${i}.png`;
+
+                const { data, error: uploadError } = await supa.storage
+                    .from('registros')
+                    .upload(nomeArquivo, blob);
+
+                if (uploadError) {
+                    alert('Erro ao enviar imagem: ' + uploadError.message);
+                    return;
+                }
+
+                const urlImagem = `https://nelzhukmxrgdoarsxcek.supabase.co/storage/v1/object/public/registros/${nomeArquivo}`;
+                novasUrls.push(urlImagem);
+            }
+
+            const todasImagens = [...imagensExistentes, ...novasUrls];
+
+            if (registroEditandoId) {
+                const { error } = await supa
+                    .from('notas')
+                    .update({ assunto, descricao, status, cor_fundo: corFundo, imagens: todasImagens })
+                    .eq('id', registroEditandoId);
+
+                if (error) {
+                    alert('Erro ao atualizar: ' + error.message);
+                } else {
+                    alert('Registro atualizado!');
+                }
+
+                registroEditandoId = null;
+                imagensExistentes = [];
+                document.querySelector('button[onclick="salvarRegistro()"]').textContent = 'Salvar Registro';
+            } else {
+                const { error: insertError } = await supa
+                    .from('notas')
+                    .insert([{ assunto, descricao, status, cor_fundo: corFundo, imagens: todasImagens }]);
+
+                if (insertError) {
+                    alert('Erro ao salvar registro: ' + insertError.message);
+                    return;
+                } else {
+                    alert('Registro salvo com sucesso!');
+                }
+            }
+
+            document.getElementById('assunto').value = '';
+            document.getElementById('descricao').value = '';
+            document.getElementById('status').value = 'em_analise';
+            preview.innerHTML = '';
+            imagensBlob = [];
+            carregarRegistros();
+        }
+
+        //novo codigo a ser inserido 
+
+        async function excluirRegistro(id) {
+            if (!confirm('Tem certeza que deseja excluir este registro?')) return;
+
+            // Remove do banco de dados
+            const { error } = await supa
+                .from('notas')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert('Erro ao excluir registro: ' + error.message);
+            } else {
+                alert('Registro excluído com sucesso!');
+                carregarRegistros();
+                carregarAssuntos();
+            }
+        }
+
+
+
+
+
+
+        async function carregarRegistros() {
+            const { data, error } = await supa
+                .from('notas')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            const container = document.getElementById('registros');
+            const lista = document.getElementById('lista-assuntos');
+            container.innerHTML = '';
+            lista.innerHTML = '';
+
+            if (data) {
+                data.forEach(registro => {
+                    const div = document.createElement('div');
+                    div.className = 'registro';
+                    div.style.backgroundColor = registro.cor_fundo || '#ffffff';
+                    div.innerHTML = `
+                    <h4>${registro.assunto}</h4>
+                    <p>${registro.descricao}</p>
+                    <p><strong>Status:</strong> ${registro.status === 'concluido' ? 'Concluído' : 'Em análise'}</p>
+                `;
+
+                    if (Array.isArray(registro.imagens)) {
+                        registro.imagens.forEach(url => {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            div.appendChild(img);
+                        });
+                    }
+
+                    // Verificar categoria do usuário
+                    const userCategoria = sessionStorage.getItem('userCategoria');
+                    const isUsuario = userCategoria === 'usuario';
+
+                    // Botão de editar (oculto para categoria usuario)
+                    if (!isUsuario) {
+                        const editarBtn = document.createElement('button');
+                        editarBtn.textContent = 'Editar';
+                        editarBtn.className = 'btn';
+                        editarBtn.onclick = () => editarRegistro(registro);
+                        div.appendChild(editarBtn);
+
+                        // Botão de excluir (oculto para categoria usuario)
+                        const excluirBtn = document.createElement('button');
+                        excluirBtn.textContent = 'Excluir';
+                        excluirBtn.className = 'btn';
+                        excluirBtn.style.marginLeft = '0px';
+                        excluirBtn.style.backgroundColor = '#dc3545'; // vermelho
+                        excluirBtn.style.borderColor = '#dc3545';
+                        excluirBtn.onclick = () => excluirRegistro(registro.id);
+                        div.appendChild(excluirBtn);
+                    }
+
+                    container.appendChild(div);
+
+                    // Adiciona o assunto à barra lateral
+                    const item = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.textContent = registro.assunto;
+                    link.href = '#';
+                    link.onclick = () => {
+                        document.getElementById('busca').value = registro.assunto;
+                        buscarRegistros();
+                    };
+                    item.appendChild(link);
+                    lista.appendChild(item);
+                });
+            }
+        }
+
+        function editarRegistro(registro) {
+            document.getElementById('assunto').value = registro.assunto;
+            document.getElementById('descricao').value = registro.descricao;
+            document.getElementById('status').value = registro.status;
+            preview.innerHTML = '';
+            imagensBlob = [];
+            imagensExistentes = registro.imagens || [];
+            registroEditandoId = registro.id;
+            document.querySelector('button[onclick="salvarRegistro()"]').textContent = 'Atualizar Registro';
+
+            imagensExistentes.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                preview.appendChild(img);
+            });
+        }
+
+        async function buscarRegistros() {
+            const termo = document.getElementById('busca').value.trim().toLowerCase();
+            if (!termo) {
+                carregarRegistros();
+                return;
+            }
+
+            const { data, error } = await supa.from('notas').select('*');
+            const container = document.getElementById('registros');
+            container.innerHTML = '';
+
+            if (data) {
+                const filtrados = data.filter(registro =>
+                    registro.assunto.toLowerCase().includes(termo) ||
+                    registro.descricao.toLowerCase().includes(termo)
+                );
+
+                if (filtrados.length === 0) {
+                    container.innerHTML = '<p>Nenhum registro encontrado.</p>';
+                    return;
+                }
+
+filtrados.forEach(registro => {
+    const div = document.createElement('div');
+    div.className = 'registro';
+    div.style.backgroundColor = registro.cor_fundo || '#ffffff';
+    div.innerHTML = `
+        <h4>${registro.assunto}</h4>
+        <p>${registro.descricao}</p>
+        <p><strong>Status:</strong> ${registro.status === 'concluido' ? 'Concluído' : 'Em análise'}</p>
+    `;
+
+    if (Array.isArray(registro.imagens)) {
+        registro.imagens.forEach(url => {
+            const img = document.createElement('img');
+            img.src = url;
+            div.appendChild(img);
+        });
+    }
+
+    // Verificar categoria do usuário
+    const userCategoria = sessionStorage.getItem('userCategoria');
+    const isUsuario = userCategoria === 'usuario';
+
+    // Botão de editar (oculto para categoria usuario)
+    if (!isUsuario) {
+        const editarBtn = document.createElement('button');
+        editarBtn.textContent = 'Editar';
+        editarBtn.className = 'btn';
+        editarBtn.onclick = () => editarRegistro(registro);
+        div.appendChild(editarBtn);
+
+        // Botão de excluir (oculto para categoria usuario)
+        const excluirBtn = document.createElement('button');
+        excluirBtn.textContent = 'Excluir';
+        excluirBtn.className = 'btn';
+        excluirBtn.style.marginLeft = '0px';
+        excluirBtn.style.backgroundColor = '#dc3545'; // vermelho
+        excluirBtn.style.borderColor = '#dc3545';
+        excluirBtn.onclick = () => excluirRegistro(registro.id);
+        div.appendChild(excluirBtn);
+    }
+
+    container.appendChild(div);
+});
+            }
+        }
+
+        async function carregarAssuntos() {
+            const { data, error } = await supa
+                .from('notas')
+                .select('id, assunto, status')
+                .order('created_at', { ascending: false });
+
+            const lista = document.getElementById('lista-assuntos');
+            lista.innerHTML = '';
+
+            if (data) {
+                data.forEach(registro => {
+                    const item = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.textContent = registro.assunto;
+                    link.href = '#';
+
+                    // diminuir tamanho da letra
+                    link.style.fontSize = '12px'; // ajuste para o tamanho desejado (ex.: '12px', '14px')
+                    link.style.lineHeight = '1.2';
+                    link.style.display = 'inline-block';
+
+                    // cor verde para concluído, azul para em análise
+                    link.style.color = registro.status === 'concluido' ? '#28a745' : '#007bff';
+
+                    link.onclick = () => {
+                        document.getElementById('busca').value = registro.assunto;
+                        buscarRegistros();
+                    };
+                    item.appendChild(link);
+                    lista.appendChild(item);
+                });
+            }
+        }
+
+        carregarAssuntos();
+
+        // Adicionar evento Enter no campo de busca
+        document.getElementById('busca').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                buscarRegistros();
+            }
+        });
+
+        // Ocultar formulário de cadastro para usuários categoria "usuario"
+        document.addEventListener('DOMContentLoaded', () => {
+            const userCategoria = sessionStorage.getItem('userCategoria');
+            if (userCategoria === 'usuario') {
+                const formCadastro = document.getElementById('form-cadastro-engenharia');
+                if (formCadastro) {
+                    formCadastro.style.display = 'none';
+                }
+            }
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+    <!-- <script src="engenharia.js"></script> -->
+</body>
+
+</html>

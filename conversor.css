@@ -1,0 +1,532 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+  background-attachment: fixed;
+  color: #333;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Container dos botões */
+.menu-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0 30px 0;
+  flex-wrap: wrap;
+}
+
+.menu-btn {
+  background: linear-gradient(145deg, #2e7d32, #43a047);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-family: Roboto;
+  font-weight: 600;
+  font-size: 0.95em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.menu-btn:hover::before {
+  left: 100%;
+}
+
+.menu-btn:hover {
+  background: linear-gradient(145deg, #ff9f68, #ffb088);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 159, 104, 0.4);
+}
+
+.menu-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 159, 104, 0.3);
+}
+
+#titulo {
+  background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
+  animation: titleFadeIn 0.8s ease-out;
+}
+
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+  text-shadow: none;
+  filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2));
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleShine {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+h1 {
+  text-align: center;
+  color: #66bb6a;
+  font-weight: 800;
+  margin: 30px 0 20px;
+  font-size: 2.2em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 8px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+
+
+
+/* fim dos estilos basicos */
+
+
+
+.result {
+  margin: 28px auto 0 auto;
+  font-weight: bold;
+  white-space: pre-line;
+  background: white;
+  border-radius: 8px;
+  padding: 18px 22px;
+  max-width: 600px;
+  color: #2c3e50;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.07);
+  font-size: 1.05rem;
+  display: none;
+
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+  max-width: 900px;
+  margin: 32px auto 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  /* Adicionado para garantir que o mapa apareça */
+  display: block;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.box {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+  padding: 24px 18px 18px 18px;
+  min-width: 320px;
+  flex: 1;
+  max-width: 400px;
+  transition: box-shadow 0.2s;
+}
+
+.box:hover {
+  box-shadow: 0 4px 16px rgba(44, 62, 80, 0.15);
+}
+
+h3 {
+  margin-top: 0;
+  color: #2980b9;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+input,
+select {
+  padding: 8px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  width: 100%;
+  border: 1px solid #bfc9d1;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f9fafb;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: #2980b9;
+  outline: none;
+  background: #fff;
+}
+
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  #map {
+    max-width: 100%;
+  }
+}
+
+
+/* //estilos para o menu equipamentos de aterramento */
+
+
+    .container2 {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    /* h1 {
+      text-align: center;
+      color: #333;
+    } */
+
+    /* label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    } */
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #botao2 {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #botao2:hover {
+      background: #005fa3;
+    }
+    .result2 {
+      margin-top: 20px;
+      background: #e9f5ff;
+      padding: 15px;
+      border-radius: 6px;
+    } 
+
+
+    /*estilos para o formulario de proteções de geração*/
+
+          /* body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        } */
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        select,
+        input[type="number"] {
+            margin-top: 5px;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #0078D4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005fa3;
+        }
+
+        .resultado {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .circulo {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            background: #0078D4;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .ocultar {
+            display: none;
+        }
+
+        #camposExtras {
+          background: #ffffff;
+          color: #333;
+          padding: 16px;
+          border-radius: 8px;
+          border: 1px solid #e6e9ec;
+          box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+          box-sizing: border-box;
+          width: 100%;
+          margin-top: 16px;
+        }
+
+        .radio-group {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+          background: #ffffff;
+          padding: 10px;
+          border-radius: 6px;
+          border: 1px solid #e6e9ec;
+          box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+
+/*ESTILOS PARA ITENS DE REPROVAÇÃO */
+
+
+        #reprovador-container, #cadastro-panel {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 20px;
+            max-width: 700px;
+            margin: 40px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #reprovador-container, #cadastro-panel h1 {
+            text-align: center;
+            color: #0077cc;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        select,
+        textarea,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .reprovador-btn {
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .reprovador-btn:hover {
+            background-color: #005fa3;
+        }
+
+        .reprovador-btn-excluir {
+            background-color: #cc0000;
+        }
+
+        .reprovador-btn-excluir:hover {
+            background-color: #990000;
+        }
+
+        #reprovador-resultados {
+            margin-top: 20px;
+        }
+
+        .reprovador-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+
+        .reprovador-item-texto {
+            flex: 1;
+            padding-right: 10px;
+
+            text-align: justify;
+
+        }
+
+        .reprovador-item-topico {
+            font-weight: bold;
+            color: #0077cc;
+            margin-bottom: 6px;
+        }
+
+        .reprovador-item-buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            min-width: 100px;
+        }
+
+        #reprovador-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #reprovador-modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        #reprovador-modal-texto {
+            width: 100%;
+            resize: vertical;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        #reprovador-modal-buttons {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        /* Fim dos estilos para itens de reprovação */

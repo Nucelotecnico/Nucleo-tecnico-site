@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Conversor de Coordenadas e Distância</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="conversor.css">
+
+</head>
+
+<body>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+    <h1 id="titulo"
+      style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+      PORTAL NÚCLEO TÉCNICO
+    </h1>
+  </div>
+  <br>
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn" onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+
+  <div style="display: flex; justify-content: center; margin: 24px 0;">
+    <label for="ferramentaSelector" style="font-weight: bold; color: #184d27; font-size: 1.1em; margin-right: 12px;">
+      Selecione a ferramenta:
+    </label>
+    <select id="ferramentaSelector"
+      style="padding: 6px 14px; border-radius: 6px; border: 1px solid #b2bec3; font-size: 1em;">
+      <option value="">-- Escolha uma opção --</option>
+      <option value="conversorCoordenadas">Conversor de Coordenadas</option>
+      <!-- <option value="medidor">Medidor de Distância</option> -->
+      <option value="PesquisarRTs">Pesquisar RTs</option>
+      <!-- Adicione mais opções conforme necessário -->
+      <option value="equipamentosaterramento">Equipamentos de Aterramento</option>
+      <option value="protecoesdegeracao">Proteções de Geração</option>
+      <option value="Gerenciador de Textos de Reprovação">Gerenciador de Textos de Reprovação</option>
+    </select>
+  </div>
+
+
+
+  <div id="conversorCoordenadas" style="display:none;">
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CONVERSÃO DE COORDENADAS E MEDIDOR DE
+      DISTÂNCIA
+    </h1>
+
+    <div class="container">
+      <div class="box">
+        <h3>📍 Coordenada 1</h3>
+        <label>Formato:
+          <select id="formato1" onchange="atualizarCampos(1)">
+            <option value="geo">Geográfica</option>
+            <option value="utm">UTM</option>
+          </select>
+        </label><br>
+        <div id="campos1"></div>
+      </div>
+
+      <div class="box">
+        <h3>📍 Coordenada 2</h3>
+        <label>Formato:
+          <select id="formato2" onchange="atualizarCampos(2)">
+            <option value="geo">Geográfica</option>
+            <option value="utm">UTM</option>
+          </select>
+        </label><br>
+        <div id="campos2"></div>
+      </div>
+    </div>
+    <br>
+    <button onclick="converterEPlotar()"
+      style="padding:8px 16px; margin-top:0px; background:linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%); color:#fff; border:none; border-radius:8px; font-size:1.1rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(44,62,80,0.08); transition:background 0.2s, box-shadow 0.2s;"
+      onmouseover="this.style.background='linear-gradient(90deg,#2471a3 0%,#48c6ef 100%)'; this.style.boxShadow='0 4px 16px rgba(44,62,80,0.15)';"
+      onmouseout="this.style.background='linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%)'; this.style.boxShadow='0 2px 8px rgba(44,62,80,0.08)';">Converter
+      e Medir</button>
+
+
+    <div class="result" id="resultado"></div>
+
+
+    <div id="map"></div>
+    <br><br>
+  </div>
+
+  <div id="PesquisarRTs" style="display:none;">
+    <div class="search-container"
+      style="max-width: 400px; margin: 32px auto 0 auto; padding: 24px 28px; background: #f8fafc; border-radius: 14px; box-shadow: 0 2px 12px rgba(44,62,80,0.09); font-family: 'Roboto', Arial, sans-serif;">
+      <h2 style="margin-top: 0; color: #184d27; font-size: 1.4em; font-weight: 700; letter-spacing: 1px;">Pesquisar RTs
+      </h2>
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <input type="text" id="searchInput" placeholder="Digite o nome..." disabled
+          style="flex: 1; padding: 8px 12px; border: 1px solid #b2bec3; border-radius: 6px; font-size: 1em; background: #e9ecef; color: #888;">
+        <button id="searchBtn" disabled
+          style="padding: 8px 18px; background: linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1em; opacity: 0.7; transition: background 0.2s, box-shadow 0.2s, opacity 0.2s; cursor: not-allowed;"
+          onmouseover="this.style.background='linear-gradient(90deg,#2471a3 0%,#48c6ef 100%)'; this.style.boxShadow='0 4px 16px rgba(44,62,80,0.15)'; this.style.opacity='1';"
+          onmouseout="this.style.background='linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%)'; this.style.boxShadow='none'; this.style.opacity='0.7';">Pesquisar</button>
+      </div>
+      <div class="results" id="results" style="min-height: 32px; color: #555; font-size: 1em;"></div>
+    </div>
+  </div>
+
+  <div id="equipamentosaterramento" style="display:none;">
+    <div class="container2">
+      <h1>Equipamento de Aterramento</h1>
+      <label for="tipo">Tipo de Aterramento:</label>
+      <select id="tipo">
+        <option value="reator">Reator de aterramento</option>
+        <option value="zigzag">Transformador zig-zag</option>
+        <option value="estrela">Transformador estrela-aterrado</option>
+      </select>
+
+      <label for="potencia">Potência de geração (kVA):</label>
+      <select id="potencia">
+        <option value="">-- Selecione (kVA) --</option>
+        <option value="500">até 500 kVA</option>
+        <option value="1000">maior que 500 kVA até 1000 kVA</option>
+        <option value="2000">maior que 1000 kVA até 2000 kVA</option>
+        <option value="3000">maior que 2000 kVA até 3000 kVA</option>
+        <option value="4000">maior que 3000 kVA até 4000 kVA</option>
+        <option value="5000">maior que 4000 kVA até 5000 kVA</option>
+      </select>
+
+      <label for="tensao">Nível de tensão:</label>
+      <select id="tensao">
+        <option value="13.8">13,8 kV</option>
+        <option value="22">22 kV</option>
+        <option value="34.5">34,5 kV</option>
+      </select>
+
+      <button id="botao2" onclick="calcular()">Calcular</button>
+
+      <div class="result2" id="resultado2"></div>
+    </div>
+  </div>
+
+
+  <div id="protecoesdegeracao" style="display:none;">
+
+    <h1>Proteções por tipo de Subestações</h1>
+    <form id="formulario">
+      <label>Tipo de Subestação</label>
+      <div class="radio-grid" style="display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="1" style="margin:0;">
+          Subestação N°1
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="2" style="margin:0;">
+          Subestação N°2
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="4" style="margin:0;">
+          Subestação N°4
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="5" style="margin:0;">
+          Subestação N°5
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="6" style="margin:0;">
+          Subestação N°6
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
+          <input type="radio" name="subestacao" value="8" style="margin:0;">
+          Subestação N°8
+        </label>
+      </div>
+
+
+      <label>Modalidade de conexão do Gerador</label>
+      <div class="radio-group"
+        style="display:flex; justify-content:center; align-items:center; gap:18px; flex-wrap:wrap;">
+        <label><input type="radio" name="paralelismo" value="momentaneo"> Momentâneo (Diesel)</label>
+        <label><input type="radio" name="paralelismo" value="permanente"> Permanente</label>
+        <label><input type="radio" name="paralelismo" value="emergencial"> Emergência</label>
+        <label><input type="radio" name="paralelismo" value="nenhum"> Nenhum</label>
+      </div>
+
+      <div id="camposExtras">
+        <label>Modalidade de Injeção na Rede</label>
+        <div class="radio-group">
+          <label><input type="radio" name="injecao" value="com"> Com Injeção</label>
+          <label><input type="radio" name="injecao" value="sem"> Sem Injeção</label>
+        </div>
+
+        <label>Modalidade de conexão da Usina</label>
+        <div class="radio-group">
+          <label><input type="radio" name="inversor" value="com"> Com Inversor</label>
+          <label><input type="radio" name="inversor" value="sem"> Sem Inversor</label>
+        </div>
+
+        <label>Faixa de Potência da GD</label>
+        <div class="radio-group">
+          <label><input type="radio" name="faixa_gd" value="ate_75"> Até 75 kW</label>
+          <label><input type="radio" name="faixa_gd" value="75_300"> 75 kW até 300 kW</label>
+          <label><input type="radio" name="faixa_gd" value="300_2500"> 300 kW até 2500 kW</label>
+        </div>
+
+        <label>Período do Parecer de Acesso (Considerando conexão da usina em andamento)</label>
+        <div class="radio-group">
+          <label><input type="radio" name="parecer" value="antes"> Antes 15/01/2024</label>
+          <label><input type="radio" name="parecer" value="apos"> Após 15/01/2024</label>
+        </div>
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div class="resultado" id="resultado-protecoesdegeracao"></div>
+
+
+
+
+  </div>
+
+  <div id="Gerenciador de Textos de Reprovação" style="display:none;">
+
+    <div class="itens-container" id="itens-container">
+      <!-- Itens serão inseridos aqui via JavaScript -->
+
+      <div id="reprovador-container">
+        <h1>Gerenciador de Textos de Reprovação</h1>
+
+        <button type="button" id="toggle-cadastro-btn" class="reprovador-btn" style="margin-bottom:10px;">
+          Cadastrar Item de Reprovação
+        </button>
+      </div>
+
+      <div id="cadastro-panel" style="display:none;">
+        <label for="reprovador-topico">Tópico:</label>
+        <select id="reprovador-topico">
+          <option value="ART de Projeto">ART de Projeto</option>
+          <option value="Aterramento Elétrico">Aterramento Elétrico</option>
+          <option value="Diagrama Multifilar">Diagrama Multifilar</option>
+          <option value="Diagrama Unifilar">Diagrama Unifilar</option>
+          <option value="Estudo de proteção">Estudo de proteção</option>
+          <option value="Folha de Selo">Folha de Selo</option>
+          <option value="Fluxo de solicitação">Fluxo de solicitação</option>
+          <option value="Gerador a Diesel">Gerador a Diesel</option>
+          <option value="Layout do Projeto">Layout do Projeto</option>
+          <option value="Lista de materiais da Subestação">Lista de materiais da Subestação</option>
+          <option value="Notas obrigatórias">Notas obrigatórias</option>
+          <option value="Planta Localização">Planta Localização</option>
+          <option value="Proteções Elétricas">Proteções Elétricas</option>
+          <option value="Ramal de Entrada">Ramal de Entrada</option>
+          <option value="Relação de cargas">Relação de cargas</option>
+          <option value="Relé da Subestação">Relé da Subestação</option>
+          <option value="Segurança da Subestação">Segurança da Subestação</option>
+          <option value="Sem anexos">Sem anexos</option>
+          <option value="TC de Proteção">TC de Proteção</option>
+          <option value="TP de Proteção">TP de Proteção</option>
+          <option value="Transformador de Potência">Transformador de Potência</option>
+          <option value="Vistas da Subestação">Vistas da Subestação</option>
+          <option value="Outros">Outros</option>
+        </select>
+
+
+        <label for="reprovador-descricao">Texto de Reprovação:</label>
+        <textarea id="reprovador-descricao" rows="4" placeholder="Digite o texto de reprovação..."></textarea>
+
+        <button class="reprovador-btn" onclick="reprovadorCadastrar()">Cadastrar</button>
+
+        <hr>
+
+      </div>
+
+      <div id="reprovador-container">
+        <label for="reprovador-pesquisa">Pesquisar por Item de Reprovação:</label>
+        <input type="text" id="reprovador-pesquisa" placeholder="Digite o nome do item...">
+        <button class="reprovador-btn" onclick="reprovadorPesquisar()">Pesquisar</button>
+
+        <div id="reprovador-resultados"></div>
+      </div>
+
+      <!-- Modal de Edição -->
+      <div id="reprovador-modal">
+        <div id="reprovador-modal-content">
+          <h3>Editar Texto de Reprovação</h3>
+          <textarea id="reprovador-modal-texto" rows="10"></textarea>
+          <div id="reprovador-modal-buttons">
+            <button class="reprovador-btn" onclick="reprovadorSalvarEdicao()">Salvar</button>
+            <button class="reprovador-btn reprovador-btn-excluir" onclick="reprovadorFecharModal()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="conversor.js"></script>
+
+  <script>
+    // Ocultar botão de cadastro e painel de cadastro para usuários categoria "usuario"
+    document.addEventListener('DOMContentLoaded', () => {
+      const userCategoria = sessionStorage.getItem('userCategoria');
+      if (userCategoria === 'usuario') {
+        const btnToggleCadastro = document.getElementById('toggle-cadastro-btn');
+        const cadastroPanel = document.getElementById('cadastro-panel');
+        if (btnToggleCadastro) {
+          btnToggleCadastro.style.display = 'none';
+        }
+        if (cadastroPanel) {
+          cadastroPanel.style.display = 'none';
+        }
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>

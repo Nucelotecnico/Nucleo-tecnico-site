@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Análises com Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            background-attachment: fixed;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container dos botões */
+        .menu-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+
+        }
+
+        .menu-btn {
+            background: linear-gradient(145deg, #2e7d32, #43a047);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-family: Roboto;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(145deg, #ff9f68, #ffb088);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 159, 104, 0.4);
+        }
+
+        .menu-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 159, 104, 0.3);
+        }
+
+        #titulo {
+            margin: 20px 0;
+            padding: 30px 40px;
+            text-align: center;
+            width: 100%;
+            background: transparent;
+            border-radius: 20px;
+            box-shadow: none;
+            backdrop-filter: none;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            animation: titleFadeIn 0.8s ease-out;
+        }
+
+        #titulo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
+            animation: titleShine 3s infinite;
+        }
+
+        #titulo {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+            filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
+        }
+
+        @keyframes titleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes titleShine {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #66bb6a;
+            font-weight: 800;
+            margin: 30px 0 20px;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 8px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+
+
+
+        /* body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        } */
+
+        /* h1 {
+            color: #333;
+        } */
+
+        form,
+        #search {
+            margin-bottom: 20px;
+        }
+
+        input,
+        select,
+        #cadastrarns {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            /* background: #fff; */
+        }
+
+        /* Priorize a exibição das cores dos status na tabela */
+        tr.concluido {
+            background-color: #d4edda;
+        }
+
+        tr.analise {
+            background-color: #d1ecf1;
+        }
+
+        tr.andamento {
+            background-color: #fff3cd;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+        <h1 id="titulo"
+            style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+            PORTAL NÚCLEO TÉCNICO
+        </h1>
+    </div>
+    <br>
+
+  <div class="menu-container">
+    <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn"
+      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+
+    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CONTROLE ANÁLISES</h1>
+
+
+
+    <div id="container"
+        style="display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 30px;">
+        <div
+            style="max-width: 400px; width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
+            <h2 style="text-align: center;">Registro de Análises</h2>
+            <form id="form" style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center;">
+                    <label for="ns" style="width: 120px; text-align: left;" maxlength="10">Número NS</label>
+                    <input type="text" id="ns" placeholder="Número NS" required style="flex: 1;">
+                </div>
+                <div id="restante-campos" style="display: none; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <label for="in" style="width: 120px; text-align: left;" maxlength="10">IN</label>
+                        <input type="text" id="in" placeholder="IN" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="rt" style="width: 120px; text-align: left;">RT</label>
+                        <input type="text" id="rt" placeholder="RT" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="email" style="width: 120px; text-align: left;">Email</label>
+                        <input type="email" id="email" placeholder="Email" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="telefone" style="width: 120px; text-align: left;">Telefone</label>
+                        <input type="tel" id="telefone" placeholder="Telefone" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="prazo" style="width: 120px; text-align: left;">Prazo</label>
+                        <input type="date" id="prazo" placeholder="Prazo" style="flex: 1;">
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="status" style="width: 120px; text-align: left;">Status</label>
+                        <select id="status" style="flex: 1;">
+                            <option value="andamento">Andamento</option>
+                            <option value="analise">Em Análise</option>
+                            <option value="concluido">Concluído</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <label for="obs" style="width: 120px; text-align: left;">Observação</label>
+                        <input type="text" id="obs" placeholder="Observação" style="flex: 1;">
+                    </div>
+                    <button id="cadastrarns" type="submit" style="margin-left: 120px;">Salvar</button>
+                </div>
+            </form>
+        </div>
+        <script>
+            const nsInput = document.getElementById('ns');
+            const inInput = document.getElementById('in');
+            const restanteCampos = document.getElementById('restante-campos');
+            nsInput.addEventListener('input', function () {
+                if (nsInput.value.trim().length > 0) {
+                    restanteCampos.style.display = 'flex';
+                } else {
+                    restanteCampos.style.display = 'none';
+                }
+                if (nsInput.value.length > 10) {
+                    alert('Número NS deve ter no máximo 10 caracteres.');
+                    nsInput.value = nsInput.value.slice(0, 10);
+                }
+            });
+            inInput.addEventListener('input', function () {
+                if (inInput.value.length > 10) {
+                    alert('IN deve ter no máximo 10 caracteres.');
+                    inInput.value = inInput.value.slice(0, 10);
+                }
+            });
+        </script>
+
+        <div
+            style="max-width: 400px; width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 10px; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
+            <h2 style="text-align: center;">Buscar Análises</h2>
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <input type="text" id="search" placeholder="Buscar por NS..." style="width: 100%;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <select id="searchStatus" style="width: 100%;">
+                        <option value="">Todos os Status</option>
+                        <option value="andamento">Andamento</option>
+                        <option value="analise">Em Análise</option>
+                        <option value="concluido">Concluído</option>
+                    </select>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="dataInicio" style="font-weight:bold; min-width: 90px;">Data início:</label>
+                    <input type="date" id="dataInicio" style="flex: 1;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="dataFim" style="font-weight:bold; min-width: 90px;">Data final:</label>
+                    <input type="date" id="dataFim" style="flex: 1;">
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button id="btn-buscar" style="width: 100%;">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div style="flex: 2; display: flex; flex-direction: column; align-items: center;">
+        <table>
+            <thead>
+                <tr>
+                    <th>NS</th>
+                    <th>IN</th>
+                    <th>RT</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Prazo</th>
+                    <th>Status</th>
+                    <th>Observação</th>
+                    <th>Data da Análise</th>
+                </tr>
+            </thead>
+            <tbody id="tabela"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // 🔑 Substitua com suas credenciais reais do Supabase
+        const supa = window.supabase.createClient(
+            'https://nelzhukmxrgdoarsxcek.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
+        );
+
+        const form = document.getElementById('form');
+        const tabela = document.getElementById('tabela');
+        const search = document.getElementById('search');
+
+        // Função para gerar data/hora local em formato ISO
+        function getBrasiliaISODate() {
+            const now = new Date();
+            const offsetMs = -3 * 60 * 60 * 1000; // Brasília = UTC-3
+            const localDate = new Date(now.getTime() + offsetMs);
+            return localDate.toISOString().slice(0, 19); // remove o 'Z'
+        }
+
+        async function carregarAnalises(nsFiltro = '', statusFiltro = '', dataInicio = '', dataFim = '') {
+            let query = supa
+                .from('controle_analise')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (nsFiltro) {
+                query = query.ilike('ns', `%${nsFiltro}%`);
+            }
+            if (statusFiltro) {
+                query = query.eq('status', statusFiltro);
+            }
+            if (dataInicio) {
+                query = query.gte('data_analise', dataInicio + 'T00:00:00');
+            }
+            if (dataFim) {
+                query = query.lte('data_analise', dataFim + 'T23:59:59');
+            }
+
+            const { data, error } = await query;
+
+            if (error) {
+                console.error('Erro ao buscar:', error);
+                return;
+            }
+
+            tabela.innerHTML = '';
+            data.forEach(({ ns, in: inField, rt, email, telefone, prazo, status, observacao, data_analise }) => {
+                const linha = document.createElement('tr');
+                linha.className = status;
+                linha.innerHTML = `
+    <td>${ns}</td>
+    <td>${inField || ''}</td>
+    <td>${rt || ''}</td>
+    <td>${email || ''}</td>
+    <td>${telefone || ''}</td>
+    <td>${prazo ? new Date(prazo).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : ''}</td>
+    <td>${status}</td>
+    <td>${observacao || ''}</td>
+    <td>${data_analise ? new Date(data_analise).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }) : ''}</td>
+`;
+                tabela.appendChild(linha);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const ns = document.getElementById('ns').value.trim();
+            const inField = document.getElementById('in').value.trim();
+            const rt = document.getElementById('rt').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const prazoInput = document.getElementById('prazo').value;
+            const status = document.getElementById('status').value;
+            const observacao = document.getElementById('obs').value.trim();
+            const data_analise = getBrasiliaISODate();
+
+            // Validação para não permitir salvar se NS ou IN tiver mais de 10 caracteres
+            if (ns.length > 10) {
+                alert('Número NS deve ter no máximo 10 caracteres.');
+                return;
+            }
+            if (inField.length > 10) {
+                alert('IN deve ter no máximo 10 caracteres.');
+                return;
+            }
+
+            const registro = {
+                ns,
+                in: inField,
+                rt,
+                email,
+                telefone,
+                status,
+                observacao,
+                data_analise
+            };
+            if (prazoInput) {
+                registro.prazo = prazoInput;
+            }
+
+            const { error } = await supa
+                .from('controle_analise')
+                .insert([registro]);
+
+            if (error) {
+                alert('Erro ao salvar: ' + error.message);
+            } else {
+                form.reset();
+                tabela.innerHTML = ''; // limpa a tabela após salvar
+            }
+        });
+
+        search.addEventListener('input', () => {
+            const filtro = search.value.trim();
+            if (filtro.length > 0) {
+                carregarAnalises(filtro);
+            } else {
+                tabela.innerHTML = ''; // limpa a tabela se o campo estiver vazio
+            }
+        });
+
+
+        const searchStatus = document.getElementById('searchStatus');
+
+        function atualizarBusca() {
+            const filtroNS = search.value.trim();
+            const filtroStatus = searchStatus.value;
+            const dataInicio = document.getElementById('dataInicio').value;
+            const dataFim = document.getElementById('dataFim').value;
+            carregarAnalises(filtroNS, filtroStatus, dataInicio, dataFim);
+        }
+
+        document.getElementById('btn-buscar').addEventListener('click', atualizarBusca);
+
+        // search.addEventListener('input', atualizarBusca);
+        // searchStatus.addEventListener('change', atualizarBusca);
+
+        // Carrega todas as análises ao iniciar
+        //carregarAnalises();
+    </script>
+</body>
+
+</html>
