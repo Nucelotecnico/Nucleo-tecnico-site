@@ -6,86 +6,17 @@
     <title>Controle de Análises com Supabase</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="controlens.css">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
-            background-attachment: fixed;
-            color: #333;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+        @keyframes titleShine {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
         }
-
-        /* Container dos botões */
-        .menu-container {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-
-        }
-
-        .menu-btn {
-            background: linear-gradient(145deg, #2e7d32, #43a047);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 25px;
-            border: none;
-            cursor: pointer;
-            font-family: Roboto;
-            font-weight: 600;
-            font-size: 0.95em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .menu-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .menu-btn:hover::before {
-            left: 100%;
-        }
-
-        .menu-btn:hover {
-            background: linear-gradient(145deg, #ff9f68, #ffb088);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 159, 104, 0.4);
-        }
-
-        .menu-btn:active {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(255, 159, 104, 0.3);
-        }
-
-        #titulo {
-            margin: 20px 0;
-            padding: 30px 40px;
-            text-align: center;
-            width: 100%;
-            background: transparent;
-            border-radius: 20px;
-            box-shadow: none;
-            backdrop-filter: none;
-            border: none;
-            position: relative;
-            overflow: hidden;
-            animation: titleFadeIn 0.8s ease-out;
-        }
-
+        
         #titulo::before {
             content: '';
             position: absolute;
@@ -95,104 +26,6 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
             animation: titleShine 3s infinite;
-        }
-
-        #titulo {
-            background: linear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            background-clip: text !important;
-            filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
-        }
-
-        @keyframes titleFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes titleShine {
-            0% {
-                left: -100%;
-            }
-            50%, 100% {
-                left: 100%;
-            }
-        }
-
-        h1 {
-            text-align: center;
-            color: #66bb6a;
-            font-weight: 800;
-            margin: 30px 0 20px;
-            font-size: 2.2em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        button {
-            padding: 10px 20px;
-            margin-top: 8px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-
-
-
-        /* body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        } */
-
-        /* h1 {
-            color: #333;
-        } */
-
-        form,
-        #search {
-            margin-bottom: 20px;
-        }
-
-        input,
-        select,
-        #cadastrarns {
-            padding: 8px;
-            margin: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: #fff;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: left;
-            /* background: #fff; */
-        }
-
-        /* Priorize a exibição das cores dos status na tabela */
-        tr.concluido {
-            background-color: #d4edda;
-        }
-
-        tr.analise {
-            background-color: #d1ecf1;
-        }
-
-        tr.andamento {
-            background-color: #fff3cd;
         }
     </style>
 </head>
@@ -227,113 +60,116 @@
   <script src="auth.js"></script>
   <script src="menu.js"></script>
 
-    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CONTROLE ANÁLISES</h1>
+    <h1>CONTROLE ANÁLISES</h1>
 
-
-
-    <div id="container"
-        style="display: flex; flex-direction: column; align-items: center; gap: 30px; margin-bottom: 30px;">
-        <div
-            style="max-width: 400px; width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
-            <h2 style="text-align: center;">Registro de Análises</h2>
-            <form id="form" style="display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: flex; align-items: center;">
-                    <label for="ns" style="width: 120px; text-align: left;" maxlength="10">Número NS</label>
-                    <input type="text" id="ns" placeholder="Número NS" required style="flex: 1;">
+    <div class="controle-container">
+        <!-- Card Registro de Análises -->
+        <div class="controle-card">
+            <h2>Registro de Análises</h2>
+            <form id="form" class="form-controle">
+                <div class="campo">
+                    <label for="ns">Número NS:</label>
+                    <input type="text" id="ns" placeholder="Número NS" required maxlength="10">
                 </div>
-                <div id="restante-campos" style="display: none; flex-direction: column; gap: 10px;">
-                    <div style="display: flex; align-items: center;">
-                        <label for="in" style="width: 120px; text-align: left;" maxlength="10">IN</label>
-                        <input type="text" id="in" placeholder="IN" style="flex: 1;">
+                <div id="restante-campos" style="display: none;">
+                    <div class="campo">
+                        <label for="in">IN:</label>
+                        <input type="text" id="in" placeholder="IN" maxlength="10">
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="rt" style="width: 120px; text-align: left;">RT</label>
-                        <input type="text" id="rt" placeholder="RT" style="flex: 1;">
+                    <div class="campo">
+                        <label for="rt">RT:</label>
+                        <input type="text" id="rt" placeholder="RT">
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="email" style="width: 120px; text-align: left;">Email</label>
-                        <input type="email" id="email" placeholder="Email" style="flex: 1;">
+                    <div class="campo">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="Email">
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="telefone" style="width: 120px; text-align: left;">Telefone</label>
-                        <input type="tel" id="telefone" placeholder="Telefone" style="flex: 1;">
+                    <div class="campo">
+                        <label for="telefone">Telefone:</label>
+                        <input type="tel" id="telefone" placeholder="Telefone">
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="prazo" style="width: 120px; text-align: left;">Prazo</label>
-                        <input type="date" id="prazo" placeholder="Prazo" style="flex: 1;">
+                    <div class="campo">
+                        <label for="prazo">Prazo:</label>
+                        <input type="date" id="prazo">
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="status" style="width: 120px; text-align: left;">Status</label>
-                        <select id="status" style="flex: 1;">
+                    <div class="campo">
+                        <label for="status">Status:</label>
+                        <select id="status">
                             <option value="andamento">Andamento</option>
                             <option value="analise">Em Análise</option>
                             <option value="concluido">Concluído</option>
                         </select>
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <label for="obs" style="width: 120px; text-align: left;">Observação</label>
-                        <input type="text" id="obs" placeholder="Observação" style="flex: 1;">
+                    <div class="campo">
+                        <label for="obs">Observação:</label>
+                        <input type="text" id="obs" placeholder="Observação">
                     </div>
-                    <button id="cadastrarns" type="submit" style="margin-left: 120px;">Salvar</button>
+                    <div class="acoes-form">
+                        <button id="cadastrarns" type="submit" class="btn-primario">Salvar</button>
+                    </div>
                 </div>
             </form>
         </div>
-        <script>
-            const nsInput = document.getElementById('ns');
-            const inInput = document.getElementById('in');
-            const restanteCampos = document.getElementById('restante-campos');
-            nsInput.addEventListener('input', function () {
-                if (nsInput.value.trim().length > 0) {
-                    restanteCampos.style.display = 'flex';
-                } else {
-                    restanteCampos.style.display = 'none';
-                }
-                if (nsInput.value.length > 10) {
-                    alert('Número NS deve ter no máximo 10 caracteres.');
-                    nsInput.value = nsInput.value.slice(0, 10);
-                }
-            });
-            inInput.addEventListener('input', function () {
-                if (inInput.value.length > 10) {
-                    alert('IN deve ter no máximo 10 caracteres.');
-                    inInput.value = inInput.value.slice(0, 10);
-                }
-            });
-        </script>
 
-        <div
-            style="max-width: 400px; width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 10px; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 24px;">
-            <h2 style="text-align: center;">Buscar Análises</h2>
-            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <input type="text" id="search" placeholder="Buscar por NS..." style="width: 100%;">
+        <!-- Card Buscar Análises -->
+        <div class="controle-card">
+            <h2>Buscar Análises</h2>
+            <div class="form-controle">
+                <div class="campo">
+                    <label for="search">Buscar NS:</label>
+                    <input type="text" id="search" placeholder="Número NS">
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <select id="searchStatus" style="width: 100%;">
+                <div class="campo">
+                    <label for="searchStatus">Status:</label>
+                    <select id="searchStatus">
                         <option value="">Todos os Status</option>
                         <option value="andamento">Andamento</option>
                         <option value="analise">Em Análise</option>
                         <option value="concluido">Concluído</option>
                     </select>
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="dataInicio" style="font-weight:bold; min-width: 90px;">Data início:</label>
-                    <input type="date" id="dataInicio" style="flex: 1;">
+                <div class="campo">
+                    <label for="dataInicio">Data início:</label>
+                    <input type="date" id="dataInicio">
                 </div>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="dataFim" style="font-weight:bold; min-width: 90px;">Data final:</label>
-                    <input type="date" id="dataFim" style="flex: 1;">
+                <div class="campo">
+                    <label for="dataFim">Data final:</label>
+                    <input type="date" id="dataFim">
                 </div>
-                <div style="display: flex; justify-content: flex-end;">
-                    <button id="btn-buscar" style="width: 100%;">Buscar</button>
+                <div class="acoes-form">
+                    <button id="btn-buscar" class="btn-primario">Buscar</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        const nsInput = document.getElementById('ns');
+        const inInput = document.getElementById('in');
+        const restanteCampos = document.getElementById('restante-campos');
+        nsInput.addEventListener('input', function () {
+            if (nsInput.value.trim().length > 0) {
+                restanteCampos.style.display = 'grid';
+                restanteCampos.style.gap = '14px';
+            } else {
+                restanteCampos.style.display = 'none';
+            }
+            if (nsInput.value.length > 10) {
+                alert('Número NS deve ter no máximo 10 caracteres.');
+                nsInput.value = nsInput.value.slice(0, 10);
+            }
+        });
+        inInput.addEventListener('input', function () {
+            if (inInput.value.length > 10) {
+                alert('IN deve ter no máximo 10 caracteres.');
+                inInput.value = inInput.value.slice(0, 10);
+            }
+        });
+    </script>
 
 
-    <div style="flex: 2; display: flex; flex-direction: column; align-items: center;">
+
+    <div class="tabela-wrapper">
         <table>
             <thead>
                 <tr>
@@ -465,15 +301,26 @@
             }
         });
 
-        search.addEventListener('input', () => {
-            const filtro = search.value.trim();
-            if (filtro.length > 0) {
-                carregarAnalises(filtro);
-            } else {
-                tabela.innerHTML = ''; // limpa a tabela se o campo estiver vazio
+        // Busca ao pressionar Enter no campo de busca
+        search.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                atualizarBusca();
             }
         });
 
+        // Busca ao pressionar Enter no campo de data início
+        document.getElementById('dataInicio').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                atualizarBusca();
+            }
+        });
+
+        // Busca ao pressionar Enter no campo de data fim
+        document.getElementById('dataFim').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                atualizarBusca();
+            }
+        });
 
         const searchStatus = document.getElementById('searchStatus');
 
@@ -486,12 +333,6 @@
         }
 
         document.getElementById('btn-buscar').addEventListener('click', atualizarBusca);
-
-        // search.addEventListener('input', atualizarBusca);
-        // searchStatus.addEventListener('change', atualizarBusca);
-
-        // Carrega todas as análises ao iniciar
-        //carregarAnalises();
     </script>
 </body>
 

@@ -9,6 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     
     <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
@@ -20,6 +26,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
         }
 
         /* Container dos botões */
@@ -176,6 +183,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            min-width: 0;
         }
 
         #sidebar h3 {
@@ -218,18 +226,54 @@
 
         .main {
             flex: 1;
-            padding: 40px 20px;
+            padding: 24px 16px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            padding: 32px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
-            border: 2px solid rgba(102, 187, 106, 0.1);
-            backdrop-filter: blur(10px);
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            border-radius: 0;
+            border: none;
+            backdrop-filter: none;
+        }
+
+        .engenharia-layout {
+            display: flex;
+            width: 95%;
+            max-width: 1600px;
+            margin: 20px auto;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .engenharia-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fdf9 100%);
+            border: 2px solid rgba(102, 187, 106, 0.12);
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .engenharia-card h2,
+        .engenharia-card h3 {
+            margin-top: 0;
+        }
+
+        .busca-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .busca-form .btn {
+            margin-bottom: 0;
+            width: auto;
+            min-width: 140px;
         }
 
         h2,
@@ -376,11 +420,35 @@
         }
 
         #form-cadastro-engenharia {
-            background: linear-gradient(135deg, #f8fdf9 0%, #ffffff 100%);
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 32px;
-            border: 2px solid #e8f5e9;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            margin-bottom: 0;
+            border: none;
+        }
+
+        @media (max-width: 1024px) {
+            .engenharia-layout {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #sidebar {
+                width: 100%;
+                margin-right: 0;
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .busca-form {
+                grid-template-columns: 1fr;
+            }
+
+            .busca-form .btn {
+                width: 100%;
+            }
         }
     </style>
 
@@ -416,7 +484,7 @@
 
     <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">ENGENHARIA</h1>
 
-    <div style="display: flex; width: 95%; max-width: 1600px; margin: 20px auto; gap: 0;">
+    <div class="engenharia-layout">
         <div id="sidebar">
             <h3>📁 Assuntos</h3>
             <ul id="lista-assuntos"></ul>
@@ -424,25 +492,33 @@
 
         <div class="main">
             <div class="container">
-                <div id="form-cadastro-engenharia">
-                    <h2>📋 Novo Registro</h2>
-                    <input type="text" id="assunto" placeholder="Assunto">
-                    <textarea id="descricao" placeholder="Descrição detalhada..."></textarea>
-                    <select id="status">
-                        <option value="em_analise">Em análise</option>
-                        <option value="concluido">Concluído</option>
-                    </select>
-                    <div id="dropzone" tabindex="0">Clique aqui e pressione Ctrl+V para colar imagens</div>
-                    <div class="preview" id="preview"></div>
-                    <button class="btn" onclick="salvarRegistro()">Salvar Registro</button>
+                <div class="engenharia-card" id="card-cadastro-engenharia">
+                    <div id="form-cadastro-engenharia">
+                        <h2>📋 Novo Registro</h2>
+                        <input type="text" id="assunto" placeholder="Assunto">
+                        <textarea id="descricao" placeholder="Descrição detalhada..."></textarea>
+                        <select id="status">
+                            <option value="em_analise">Em análise</option>
+                            <option value="concluido">Concluído</option>
+                        </select>
+                        <div id="dropzone" tabindex="0">Clique aqui e pressione Ctrl+V para colar imagens</div>
+                        <div class="preview" id="preview"></div>
+                        <button class="btn" onclick="salvarRegistro()">Salvar Registro</button>
+                    </div>
                 </div>
 
-                <h3>🔎 Buscar Registros</h3>
-                <input type="text" id="busca" placeholder="Digite assunto ou palavras da descrição">
-                <button class="btn" onclick="buscarRegistros()">Buscar</button>
+                <div class="engenharia-card">
+                    <h3>🔎 Buscar Registros</h3>
+                    <div class="busca-form">
+                        <input type="text" id="busca" placeholder="Digite assunto ou palavras da descrição">
+                        <button class="btn" onclick="buscarRegistros()">Buscar</button>
+                    </div>
+                </div>
 
-                <h3>🗂️ Registros Salvos</h3>
-                <div id="registros"></div>
+                <div class="engenharia-card">
+                    <h3>🗂️ Registros Salvos</h3>
+                    <div id="registros"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -666,8 +742,8 @@
 
             if (data) {
                 const filtrados = data.filter(registro =>
-                    registro.assunto.toLowerCase().includes(termo) ||
-                    registro.descricao.toLowerCase().includes(termo)
+                    (registro.assunto || '').toLowerCase().includes(termo) ||
+                    (registro.descricao || '').toLowerCase().includes(termo)
                 );
 
                 if (filtrados.length === 0) {
@@ -769,9 +845,9 @@ filtrados.forEach(registro => {
         document.addEventListener('DOMContentLoaded', () => {
             const userCategoria = sessionStorage.getItem('userCategoria');
             if (userCategoria === 'usuario') {
-                const formCadastro = document.getElementById('form-cadastro-engenharia');
-                if (formCadastro) {
-                    formCadastro.style.display = 'none';
+                const cardCadastro = document.getElementById('card-cadastro-engenharia');
+                if (cardCadastro) {
+                    cardCadastro.style.display = 'none';
                 }
             }
         });

@@ -43,27 +43,39 @@
 
     <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">LINK DE ACESSO RÁPIDO</h1>
 
+    <div class="links-container">
+        <div id="form-adicionar-link" class="links-card">
+            <h2>📌 Adicionar Novo Link</h2>
+            <div class="form-links">
+                <div class="campo">
+                    <label for="title">Título do Link</label>
+                    <input type="text" id="title" placeholder="Ex: Portal AGV" />
+                </div>
+                <div class="campo">
+                    <label for="url">URL</label>
+                    <input type="text" id="url" placeholder="Ex: https://exemplo.com" />
+                </div>
+                <div class="acoes-form">
+                    <button onclick="addLink()" class="btn-primario">Adicionar Link</button>
+                </div>
+            </div>
+        </div>
 
-
-    <h2>📌 Gerenciador de Links</h2>
-
-    <div id="form-adicionar-link">
-        <input type="text" id="title" placeholder="Título do link" />
-        <input type="text" id="url" placeholder="URL do link" />
-        <button onclick="addLink()">Adicionar</button>
-    </div>
-
-    <div id="linkTableContainer">
-        <table>
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>URL</th>
-                    <th id="th-acoes">Ações</th>
-                </tr>
-            </thead>
-            <tbody id="linkTable"></tbody>
-        </table>
+        <div id="linkTableContainer" class="links-card">
+            <h2>📋 Links Cadastrados</h2>
+            <div class="tabela-wrapper">
+                <table class="tabela-links">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>URL</th>
+                            <th id="th-acoes">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="linkTable"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 

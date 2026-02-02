@@ -41,44 +41,52 @@
 
   <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CHECK LIST SERVIÇOS</h1>
 
+  <div class="checklist-container">
+    <div class="checklist-card">
+      <h2>📋 Informações do Serviço</h2>
+      <div class="form-checklist">
+        <div class="campo">
+          <label for="numerons">Número da NS</label>
+          <input type="text" id="numerons" name="inputTexto" placeholder="Digite o número da NS">
+        </div>
+      </div>
+    </div>
 
-  <div style="margin: 0px 0; text-align: center;">
-    <label for="inputTexto" style="font-weight: bold; color: #000000;">Digite o numero da NS:</label><br><br>
-    <input type="text" id="numerons" name="inputTexto" placeholder=""
-      style="padding: 8px; width: 60%; border-radius: 4px; border: 1px solid #ccc; font-size: 16px;">
-  </div>
-
-  <h2 style="text-align:center; color:#000000; margin-top:5px;">PROJETOS DE CARGA</h2>
-
-  <div style="text-align:center; margin-bottom:30px;">
-    <label for="seletorChecklist" style="font-weight:bold; color:#000000;">Selecione o tipo de Check-list:</label>
-    <select id="seletorChecklist" style="padding:8px; border-radius:4px; border:1px solid #ccc; font-size:16px;">
-      <option value="">Selecionar...</option>
-      <option value="subestacao01">Check-list Subestação N°01</option>
-      <option value="subestacao02">Check-list Subestação N°02</option>
-      <option value="subestacao04">Check-list Subestação N°04</option>
-      <option value="subestacao05">Check-list Subestação N°05</option>
-      <option value="subestacao06">Check-list Subestação N°06</option>
-      <option value="subestacao08">Check-list Subestação N°08</option>
-      <option value="coordenogramaCarga">Coordenograma Carga</option>
-      <option value="projetobt">Check-list Projeto BT</option>
-      <option value="subestacao01-GD">Check-list Subestação N°01 - GD</option>
-      <option value="subestacao02-GD">Check-list Subestação N°02 - GD</option>
-      <option value="subestacao04-GD">Check-list Subestação N°04 - GD</option>
-      <option value="subestacao05-GD">Check-list Subestação N°05 - GD</option>
-      <option value="subestacao06-GD">Check-list Subestação N°06 - GD</option>
-      <option value="subestacao08-GD">Check-list Subestação N°08 - GD</option>
-      <option value="coordenogramaGD">Coordenograma GD</option>
-      <option value="coordenogramaGridZero">Coordenograma GRID-ZERO</option>
-      <option value="autoprodutor">Autoprodutor</option>
-    </select>
-  </div>
-
-  <div style="text-align:center; margin-bottom:5px;">
-    <button id="btnResumo"
-      style="padding:10px 24px; font-size:16px; border-radius:6px; background:#184d27; color:#fff; border:none; cursor:pointer;">
-      📝 Mostrar Resumo
-    </button>
+    <div class="checklist-card">
+      <h2>⚙️ Configuração</h2>
+      <div class="form-checklist">
+        <div class="campo">
+          <label for="seletorChecklist">Tipo de Check-list</label>
+          <select id="seletorChecklist">
+            <option value="">Selecionar...</option>
+            <optgroup label="Carga">
+              <option value="subestacao01">Subestação N°01</option>
+              <option value="subestacao02">Subestação N°02</option>
+              <option value="subestacao04">Subestação N°04</option>
+              <option value="subestacao05">Subestação N°05</option>
+              <option value="subestacao06">Subestação N°06</option>
+              <option value="subestacao08">Subestação N°08</option>
+              <option value="coordenogramaCarga">Coordenograma Carga</option>
+              <option value="projetobt">Projeto BT</option>
+            </optgroup>
+            <optgroup label="Geração Distribuída">
+              <option value="subestacao01-GD">Subestação N°01 - GD</option>
+              <option value="subestacao02-GD">Subestação N°02 - GD</option>
+              <option value="subestacao04-GD">Subestação N°04 - GD</option>
+              <option value="subestacao05-GD">Subestação N°05 - GD</option>
+              <option value="subestacao06-GD">Subestação N°06 - GD</option>
+              <option value="subestacao08-GD">Subestação N°08 - GD</option>
+              <option value="coordenogramaGD">Coordenograma GD</option>
+              <option value="coordenogramaGridZero">Coordenograma GRID-ZERO</option>
+              <option value="autoprodutor">Autoprodutor</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="acoes-form">
+          <button id="btnResumo" class="btn-primario">📝 Mostrar Resumo</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="resumoModal"

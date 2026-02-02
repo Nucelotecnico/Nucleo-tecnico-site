@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
@@ -9,6 +15,7 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    overflow-x: hidden;
 }
 
 /* Container dos botões */
@@ -100,9 +107,8 @@ button {
     transition: all 0.3s ease;
 }
 
-/*fim das configurações basicas*/
-
-.checklist-container {
+/* Controle de Análises */
+.controle-container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto 30px;
@@ -112,41 +118,43 @@ button {
     justify-content: center;
 }
 
-.checklist-card {
+.controle-card {
     background: #fff;
     padding: 24px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     flex: 1 1 280px;
-    max-width: 580px;
+    max-width: 480px;
 }
 
-.checklist-card h2 {
+.controle-card h2 {
     margin: 0 0 16px;
     color: #2e7d32;
     font-size: 1.35em;
+    text-align: center;
 }
 
-.form-checklist {
+.form-controle {
     display: grid;
-    gap: 16px;
+    gap: 14px;
 }
 
 .campo {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 10px;
 }
 
 .campo label {
     font-weight: 600;
     color: #444;
     font-size: 0.95em;
+    text-align: left;
 }
 
 .campo input,
 .campo select {
-    width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
     border-radius: 6px;
@@ -155,6 +163,7 @@ button {
 }
 
 .acoes-form {
+    grid-column: 1 / -1;
     display: flex;
     justify-content: flex-end;
     margin-top: 8px;
@@ -169,6 +178,8 @@ button {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.2s ease;
+    width: auto;
+    min-width: 140px;
 }
 
 .btn-primario:hover {
@@ -176,125 +187,70 @@ button {
     transform: translateY(-1px);
 }
 
+.tabela-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 20px;
+    overflow-x: auto;
+}
+
 table {
-  width: 100%;
-  max-width: 1200px;
-  border-collapse: collapse;
-  margin: 30px auto 20px;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-tr {
-  background-color: #fff;
-}
-
-th,
-td {
-  padding: 12px 15px;
-  border: 1px solid #e0e0e0;
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
 }
 
 th {
-  background-color: #2e7d32;
-  color: white;
-  text-align: left;
-  font-weight: 700;
+    text-align: left;
+    padding: 12px 14px;
+    background: #2e7d32;
+    color: white;
+    font-weight: 700;
+    border-bottom: 2px solid #1b5e20;
 }
 
-td select,
-td textarea {
-  width: 100%;
-  font-size: 14px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #dcdcdc;
-  box-sizing: border-box;
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
 }
 
-tr.finalizado {
-  background-color: #e8f5e9;
-}
-
-tr.analise {
-  background-color: #fffde7;
-}
-
-.tabela-checklist {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.tabela-checklist th:first-child,
-.tabela-checklist td:first-child {
-  width: 45%;
-}
-
-.tabela-checklist tbody tr:nth-child(even) {
+tbody tr:nth-child(even) {
     background: #fafafa;
 }
 
-.tabela-checklist tbody tr:hover {
+tbody tr:hover {
     background: #f1f8f4;
 }
 
-
-
-
-#titulo {
-    margin: 20px 0;
-    padding: 30px 40px;
-    text-align: center;
-    width: 100%;
-    background: transparent;
-    border-radius: 20px;
-    box-shadow: none;
-    backdrop-filter: none;
-    border: none;
-    position: relative;
-    overflow: hidden;
-    animation: titleFadeIn 0.8s ease-out;
+tr.concluido {
+    background-color: #d4edda !important;
 }
 
-/* #titulo {
-  margin-top: 0px;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  align-self: flex-start;
-  text-align: center;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-} */
-
-
-
-
-
-
-.aprovado {
-  background-color: #d4edda !important;
-}
-.analise {
-  background-color: #fff3cd !important;
-}
-.vazio {
-  background-color: #f8f9fa !important;
+tr.analise {
+    background-color: #d1ecf1 !important;
 }
 
-.reprovado {
-  background-color: #f0b6ac !important;
+tr.andamento {
+    background-color: #fff3cd !important;
 }
 
+@media (max-width: 900px) {
+    .controle-container {
+        flex-direction: column;
+    }
+    
+    .controle-card {
+        max-width: 100%;
+    }
+}
 
-
-
-
-
-
+@media (max-width: 600px) {
+    .btn-primario {
+        width: 100%;
+    }
+}

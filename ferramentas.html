@@ -39,12 +39,11 @@
   <script src="auth.js"></script>
   <script src="menu.js"></script>
 
-  <div style="display: flex; justify-content: center; margin: 24px 0;">
-    <label for="ferramentaSelector" style="font-weight: bold; color: #184d27; font-size: 1.1em; margin-right: 12px;">
+  <div class="ferramentas-toolbar">
+    <label for="ferramentaSelector">
       Selecione a ferramenta:
     </label>
-    <select id="ferramentaSelector"
-      style="padding: 6px 14px; border-radius: 6px; border: 1px solid #b2bec3; font-size: 1em;">
+    <select id="ferramentaSelector">
       <option value="">-- Escolha uma opção --</option>
       <option value="conversorCoordenadas">Conversor de Coordenadas</option>
       <!-- <option value="medidor">Medidor de Distância</option> -->
@@ -59,67 +58,56 @@
 
 
   <div id="conversorCoordenadas" style="display:none;">
-    <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">CONVERSÃO DE COORDENADAS E MEDIDOR DE
-      DISTÂNCIA
-    </h1>
+    <div class="ferramentas-card">
+      <h1 class="ferramentas-title">CONVERSÃO DE COORDENADAS E MEDIDOR DE DISTÂNCIA</h1>
 
-    <div class="container">
-      <div class="box">
-        <h3>📍 Coordenada 1</h3>
-        <label>Formato:
-          <select id="formato1" onchange="atualizarCampos(1)">
-            <option value="geo">Geográfica</option>
-            <option value="utm">UTM</option>
-          </select>
-        </label><br>
-        <div id="campos1"></div>
+      <div class="container">
+        <div class="box">
+          <h3>📍 Coordenada 1</h3>
+          <label>Formato:
+            <select id="formato1" onchange="atualizarCampos(1)">
+              <option value="geo">Geográfica</option>
+              <option value="utm">UTM</option>
+            </select>
+          </label><br>
+          <div id="campos1"></div>
+        </div>
+
+        <div class="box">
+          <h3>📍 Coordenada 2</h3>
+          <label>Formato:
+            <select id="formato2" onchange="atualizarCampos(2)">
+              <option value="geo">Geográfica</option>
+              <option value="utm">UTM</option>
+            </select>
+          </label><br>
+          <div id="campos2"></div>
+        </div>
       </div>
 
-      <div class="box">
-        <h3>📍 Coordenada 2</h3>
-        <label>Formato:
-          <select id="formato2" onchange="atualizarCampos(2)">
-            <option value="geo">Geográfica</option>
-            <option value="utm">UTM</option>
-          </select>
-        </label><br>
-        <div id="campos2"></div>
+      <div class="acoes-ferramenta">
+        <button class="btn-acao" onclick="converterEPlotar()">Converter e Medir</button>
       </div>
+
+      <div class="result" id="resultado"></div>
+
+      <div id="map"></div>
     </div>
-    <br>
-    <button onclick="converterEPlotar()"
-      style="padding:8px 16px; margin-top:0px; background:linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%); color:#fff; border:none; border-radius:8px; font-size:1.1rem; font-weight:bold; cursor:pointer; box-shadow:0 2px 8px rgba(44,62,80,0.08); transition:background 0.2s, box-shadow 0.2s;"
-      onmouseover="this.style.background='linear-gradient(90deg,#2471a3 0%,#48c6ef 100%)'; this.style.boxShadow='0 4px 16px rgba(44,62,80,0.15)';"
-      onmouseout="this.style.background='linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%)'; this.style.boxShadow='0 2px 8px rgba(44,62,80,0.08)';">Converter
-      e Medir</button>
-
-
-    <div class="result" id="resultado"></div>
-
-
-    <div id="map"></div>
-    <br><br>
   </div>
 
   <div id="PesquisarRTs" style="display:none;">
-    <div class="search-container"
-      style="max-width: 400px; margin: 32px auto 0 auto; padding: 24px 28px; background: #f8fafc; border-radius: 14px; box-shadow: 0 2px 12px rgba(44,62,80,0.09); font-family: 'Roboto', Arial, sans-serif;">
-      <h2 style="margin-top: 0; color: #184d27; font-size: 1.4em; font-weight: 700; letter-spacing: 1px;">Pesquisar RTs
-      </h2>
-      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-        <input type="text" id="searchInput" placeholder="Digite o nome..." disabled
-          style="flex: 1; padding: 8px 12px; border: 1px solid #b2bec3; border-radius: 6px; font-size: 1em; background: #e9ecef; color: #888;">
-        <button id="searchBtn" disabled
-          style="padding: 8px 18px; background: linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 1em; opacity: 0.7; transition: background 0.2s, box-shadow 0.2s, opacity 0.2s; cursor: not-allowed;"
-          onmouseover="this.style.background='linear-gradient(90deg,#2471a3 0%,#48c6ef 100%)'; this.style.boxShadow='0 4px 16px rgba(44,62,80,0.15)'; this.style.opacity='1';"
-          onmouseout="this.style.background='linear-gradient(90deg,#2980b9 0%,#6dd5fa 100%)'; this.style.boxShadow='none'; this.style.opacity='0.7';">Pesquisar</button>
+    <div class="search-container">
+      <h2>Pesquisar RTs</h2>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="Digite o nome..." disabled class="search-input">
+        <button id="searchBtn" disabled class="search-btn">Pesquisar</button>
       </div>
-      <div class="results" id="results" style="min-height: 32px; color: #555; font-size: 1em;"></div>
+      <div class="results search-results" id="results"></div>
     </div>
   </div>
 
   <div id="equipamentosaterramento" style="display:none;">
-    <div class="container2">
+    <div class="container2 ferramentas-card">
       <h1>Equipamento de Aterramento</h1>
       <label for="tipo">Tipo de Aterramento:</label>
       <select id="tipo">
@@ -154,9 +142,9 @@
 
 
   <div id="protecoesdegeracao" style="display:none;">
-
-    <h1>Proteções por tipo de Subestações</h1>
-    <form id="formulario">
+    <div class="ferramentas-card">
+      <h1 class="ferramentas-title">Proteções por tipo de Subestações</h1>
+      <form id="formulario">
       <label>Tipo de Subestação</label>
       <div class="radio-grid" style="display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
         <label style="display:flex; align-items:center; gap:8px; white-space:nowrap;">
@@ -223,21 +211,18 @@
       </div>
 
       <button type="submit">Enviar</button>
-    </form>
+      </form>
 
-    <div class="resultado" id="resultado-protecoesdegeracao"></div>
-
-
-
-
+      <div class="resultado" id="resultado-protecoesdegeracao"></div>
+    </div>
   </div>
 
   <div id="Gerenciador de Textos de Reprovação" style="display:none;">
 
-    <div class="itens-container" id="itens-container">
+    <div class="itens-container ferramentas-card" id="itens-container">
       <!-- Itens serão inseridos aqui via JavaScript -->
 
-      <div id="reprovador-container">
+      <div class="reprovador-container">
         <h1>Gerenciador de Textos de Reprovação</h1>
 
         <button type="button" id="toggle-cadastro-btn" class="reprovador-btn" style="margin-bottom:10px;">
@@ -258,6 +243,7 @@
           <option value="Gerador a Diesel">Gerador a Diesel</option>
           <option value="Layout do Projeto">Layout do Projeto</option>
           <option value="Lista de materiais da Subestação">Lista de materiais da Subestação</option>
+          <option value="Modulo não Homologado">Modulo não Homologado</option>
           <option value="Notas obrigatórias">Notas obrigatórias</option>
           <option value="Planta Localização">Planta Localização</option>
           <option value="Proteções Elétricas">Proteções Elétricas</option>
@@ -283,10 +269,12 @@
 
       </div>
 
-      <div id="reprovador-container">
+      <div class="reprovador-container">
         <label for="reprovador-pesquisa">Pesquisar por Item de Reprovação:</label>
-        <input type="text" id="reprovador-pesquisa" placeholder="Digite o nome do item...">
-        <button class="reprovador-btn" onclick="reprovadorPesquisar()">Pesquisar</button>
+        <div class="reprovador-busca-row">
+          <input type="text" id="reprovador-pesquisa" placeholder="Digite o nome do item...">
+          <button class="reprovador-btn" onclick="reprovadorPesquisar()">Pesquisar</button>
+        </div>
 
         <div id="reprovador-resultados"></div>
       </div>

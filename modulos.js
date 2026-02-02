@@ -22,11 +22,10 @@ async function listarProjetos(filtro = '*') {
     const userCategoria = sessionStorage.getItem('userCategoria');
     const isUsuario = userCategoria === 'usuario';
 
-    //const projetos = filtro === '*' ? data : data.filter(item => item.name.includes(filtro));
-
-
-// ...existing code...
-    const projetos = filtro === '*' ? data : data.filter(item => item.name.includes(filtro));
+    // Busca case-insensitive
+    const projetos = filtro === '*' 
+        ? data 
+        : data.filter(item => item.name.toLowerCase().includes(filtro.toLowerCase()));
 
     // função que remove sufixo numérico (timestamp) e extensao para ordenar pelo nome "limpo"
     const cleanName = (name) =>
@@ -51,8 +50,8 @@ async function listarProjetos(filtro = '*') {
         return;
     }
 
-    resultado.innerHTML = `
-        <table>
+        resultado.innerHTML = `
+                <table class="tabela-modulos">
           <thead>
             <tr>
               <th>Nome do Projeto</th>
@@ -176,18 +175,15 @@ document.getElementById('btnBuscar').addEventListener('click', () => {
     listarProjetos(nomeBusca || '*');
 });
 
-// Ocultar formulário de cadastro para usuario
-document.addEventListener('DOMContentLoaded', () => {
-    const userCategoria = sessionStorage.getItem('userCategoria');
-    if (userCategoria === 'usuario') {
-        const formCadastro = document.getElementById('formularioCadastro');
-        if (formCadastro) {
-            formCadastro.style.display = 'none';
-        }
+// Buscar ao pressionar Enter no campo de busca
+document.getElementById('buscaProjeto').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const nomeBusca = document.getElementById('buscaProjeto').value.trim().replace(/\s+/g, '_');
+        listarProjetos(nomeBusca || '*');
     }
 });
 
-// Ocultar formulário de cadastro para usuario
+// Ocultar apenas formulário de cadastro para usuario (manter buscador visível)
 document.addEventListener('DOMContentLoaded', () => {
     const userCategoria = sessionStorage.getItem('userCategoria');
     if (userCategoria === 'usuario') {

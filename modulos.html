@@ -44,32 +44,34 @@
     <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">MÓDULOS BLINDADOS HOMOLOGADOS</h1>
 
 
-    <!-- Formulário de cadastro -->
-  <div id="formularioCadastro" style="background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px #0001; max-width: 600px; margin-bottom: 30px; margin-left: auto; margin-right: auto;">
-    <h1 style="text-align: center;">Cadastro de arquivos em PDF</h1>
-    <form id="formProjeto">
-      <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-        <div style="flex: 1 1 200px;">
-          <label for="nomeProjeto" style="font-weight: bold;">Nome do Projeto:</label>
-          <input type="text" id="nomeProjeto" required style="width: 100%; box-sizing: border-box;">
-        </div>
-        <div style="flex: 1 1 200px;">
-          <label for="arquivoPDF" style="font-weight: bold;">Arquivo PDF:</label>
-          <input type="file" id="arquivoPDF" accept="application/pdf" required style="width: 100%;">
-        </div>
-        <div style="display: flex; align-items: flex-end;">
-          <button type="submit" style="background: #3498db; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Enviar</button>
-        </div>
+    <!-- Seções: Cadastro e Busca -->
+    <div class="modulos-secoes">
+      <div id="formularioCadastro" class="modulos-card">
+        <h2>Cadastro de arquivos em PDF</h2>
+        <form id="formProjeto" class="form-modulos">
+          <div class="campo">
+            <label for="nomeProjeto">Nome do Projeto</label>
+            <input type="text" id="nomeProjeto" required>
+          </div>
+          <div class="campo">
+            <label for="arquivoPDF">Arquivo PDF</label>
+            <input type="file" id="arquivoPDF" accept="application/pdf" required>
+          </div>
+          <div class="acoes-form">
+            <button type="submit" class="btn-primario">Enviar</button>
+          </div>
+        </form>
       </div>
-    </form>
-  <!-- </div> -->
 
-  <!-- Campo de busca -->
-  <!-- <div style="max-width: 600px; margin: 0 auto;"> -->
-    <h2>Buscar Projeto</h2>
-    <input type="text" id="buscaProjeto" placeholder="Digite o nome do projeto ou * para listar todos">
-    <button id="btnBuscar">Buscar</button>
-  </div>
+      <div class="modulos-card">
+        <h2>Buscar Projeto</h2>
+        <div class="busca-modulos">
+          <input type="text" id="buscaProjeto" placeholder="Digite o nome do projeto ou * para listar todos">
+          <button id="btnBuscar" class="btn-primario">Buscar</button>
+        </div>
+        <p class="ajuda-busca">Use * para listar todos os projetos.</p>
+      </div>
+    </div>
 
   <!-- Área de resultados -->
   <div id="resultado"></div>

@@ -608,14 +608,21 @@
       const categoria = sessionStorage.getItem('userCategoria');
       const secaoUpload = document.getElementById('secaoUpload');
       const secaoDadosCadastrados = document.getElementById('secaoDadosCadastrados');
+      const btnProdutividade = document.getElementById('btnProdutividade');
 
       if (categoria === 'usuario') {
         if (secaoUpload) {
           secaoUpload.style.display = 'none';
         }
+        if (btnProdutividade) {
+          btnProdutividade.style.display = 'none';
+        }
       } else {
         if (secaoUpload) {
           secaoUpload.style.display = 'block';
+        }
+        if (btnProdutividade) {
+          btnProdutividade.style.display = 'inline-block';
         }
       }
       

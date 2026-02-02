@@ -128,41 +128,158 @@ button {
 
 /*fIM DAS ESTILIZAÇÕES BASICAS*/
 
-input {
-      padding: 8px;
-      margin-right: 10px;
-      width: 200px;
-    }
-    button {
-      padding: 8px 12px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #fff;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f4f4f4;
-    }
+.links-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
 
-    .linkTableContainer {
-        background: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.links-card {
+    background: #fff;
+    padding: 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 
-    .excluir {
-  background-color: #d32f2f;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 18px;
-  cursor: pointer;
+.links-card h2 {
+    margin: 0 0 16px;
+    color: #2e7d32;
+    font-size: 1.35em;
+}
+
+.form-links {
+    display: grid;
+    gap: 16px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-weight: 600;
+    color: #444;
+    font-size: 0.95em;
+}
+
+.campo input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 0.95em;
+}
+
+.acoes-form {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.btn-primario {
+    background: linear-gradient(145deg, #2e7d32, #43a047);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primario:hover {
+    background: linear-gradient(145deg, #1b5e20, #2e7d32);
+    transform: translateY(-1px);
+}
+
+.tabela-wrapper {
+    overflow-x: auto;
+}
+
+.tabela-links {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.tabela-links thead th {
+    text-align: left;
+    padding: 12px 14px;
+    background: #f5f5f5;
+    color: #2e7d32;
+    font-weight: 700;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.tabela-links tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.tabela-links tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.tabela-links tbody tr:hover {
+    background: #f1f8f4;
+}
+
+.tabela-links td:last-child,
+.tabela-links th:last-child {
+    text-align: center;
+    width: 180px;
+}
+
+.tabela-links td:nth-child(2),
+.tabela-links th:nth-child(2) {
+    text-align: left;
+}
+
+.tabela-links td:first-child {
+    font-weight: 600;
+    color: #333;
+}
+
+.tabela-links a {
+    color: #2e7d32;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.tabela-links a:hover {
+    color: #1b5e20;
+    text-decoration: underline;
+}
+
+.excluir {
+    background-color: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.excluir:hover {
+    background-color: #b71c1c;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .links-card {
+        padding: 16px;
+    }
+    
+    .tabela-links {
+        min-width: 500px;
+    }
 }
