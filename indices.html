@@ -21,6 +21,7 @@
     </h1>
   </div>
   <br>
+  <br>
 
   <div class="menu-container">
     <button id="btn-home" class="menu-btn" onclick="location.href='index.html'">Home</button>
@@ -31,80 +32,128 @@
     <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
     <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
       <br>Homologados</button>
-    <button id="btn-ferramentas" class="menu-btn"
-      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-ferramentas" class="menu-btn" onclick="location.href='ferramentas.html'">Ferramentas</button>
     <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
     <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
     <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
-    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+    <button class="menu-btn" onclick="logout()"
+      style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
 
   </div>
 
   <script src="auth.js"></script>
+  <script src="menu.js"></script>
 
-  <h2 style="text-align: center; color: #2e7d32; margin: 24px 0; font-weight: 600; font-size: 2.2em;">GERENCIADOR DE ÍNDICES</h2>
+  <h2 style="text-align: center; color: #2e7d32; margin: 24px 0; font-weight: 600; font-size: 2.2em;">GERENCIADOR DE
+    ÍNDICES</h2>
 
   <div style="max-width: 1400px; margin: 0 auto; padding: 20px;">
-    
+
     <!-- Seção de Upload -->
-    <div id="secaoUpload" style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div id="secaoUpload"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <h2 style="color: #2e7d32; margin-bottom: 16px;">📤 Upload de Arquivo Excel</h2>
       <div style="display: flex; gap: 12px; align-items: center;">
-        <input type="file" id="fileInput" accept=".xlsx, .xls" 
+        <input type="file" id="fileInput" accept=".xlsx, .xls"
           style="padding: 10px; border: 2px solid #e8f5e9; border-radius: 8px; flex: 1;">
-        <button onclick="processarExcel()" 
+        <button onclick="processarExcel()"
           style="background: linear-gradient(145deg, #2e7d32, #43a047); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
           Importar Dados
         </button>
-        <button onclick="limparTabela()" 
+        <button onclick="limparTabela()"
           style="background: linear-gradient(145deg, #d32f2f, #f44336); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
           Limpar Tabela
         </button>
       </div>
       <p style="color: #666; font-size: 0.9em; margin-top: 8px;">
-        ℹ️ O arquivo Excel deve conter as colunas: Nota, Área operacional, Cidade, Código medidas, Descrição, Texto medidas, Status usuário, Início planejado, Fim planejado, Concluído por, Concluída em, Modificado por
+        ℹ️ O arquivo Excel deve conter as colunas: Nota, Área operacional, Cidade, Código medidas, Descrição, Texto
+        medidas, Status usuário, Início planejado, Fim planejado, Concluído por, Concluída em, Modificado por
       </p>
     </div>
 
+    <!-- Botões do Gráfico de Quantidade notas ABER e ANDM por tipo -->
+    <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
+      <button id="btnNotasAndamento" onclick="exibirNotasAndamento()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        NOTAS EM ANDAMENTO
+      </button>
+      <button id="btnNotasConcluidas" onclick="exibirNotasConcluidas()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        NOTAS CONCLUÍDAS
+      </button>
+      <button id="btnPrazosAnalise" onclick="exibirPrazosAnalise()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        PRAZOS DE ANÁLISE
+      </button>
+      <button id="btnProdutividade" onclick="exibirProdutividade()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        PRODUTIVIDADE
+      </button>
+      <button id="btnExibirTabelaNotas" onclick="exibirTabelaNotas()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        EXIBIR TABELA DE NOTAS
+      </button>
+    </div>
+
+    <!-- Gráfico de Todos os Tipos de Descrição -->
+    <div style="max-width: 1000px; margin: 0 auto;">
+    <div id="graficoOutrosTipos"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Quantidade notas ABER e ANDM por tipo</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartOutrosTipos"></canvas>
+      </div>
+      <div id="infoOutrosTipos"
+        style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
+        <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> |
+        <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
+      </div>
+    </div>
+    </div>
+
+
+
     <!-- Gráfico de Análise Geral -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM</h2>
+    <div style="max-width: 1000px; margin: 0 auto;">
+    <div id="graficoFimPlanejado"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
-            <select id="filtroMesFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()" 
-                    style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês:</label>
+            <select id="filtroMesFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()" 
+            <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoes" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDescricoes"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()" 
+            <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidas" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidas"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleStatusFimPlanejado" onclick="toggleDropdownStatusFimPlanejado()" 
+            <button id="botaoToggleStatusFimPlanejado" onclick="toggleDropdownStatusFimPlanejado()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Status</span>
             </button>
-            <div id="containerCheckboxesStatusFimPlanejado" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesStatusFimPlanejado"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -113,19 +162,25 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartFimPlanejado"></canvas>
       </div>
-      <div id="infoGeralNotas" style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> | 
-        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> | 
+      <div id="infoGeralNotas"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
         <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
       </div>
     </div>
+    </div>
 
     <!-- Modal para exibir notas detalhadas -->
-    <div id="modalNotas" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
-      <div style="background: white; margin: 50px auto; max-width: 90%; max-height: 85vh; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <div style="background: #2e7d32; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div id="modalNotas"
+      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
+      <div
+        style="background: white; margin: 50px auto; max-width: 90%; max-height: 85vh; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div
+          style="background: #2e7d32; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
           <h3 style="margin: 0;" id="modalTitulo">Notas Detalhadas</h3>
-          <button onclick="fecharModalNotas()" style="background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+          <button onclick="fecharModalNotas()"
+            style="background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
         </div>
         <div style="padding: 20px 20px 40px 20px; max-height: calc(85vh - 80px); overflow-y: auto;">
           <div id="modalConteudo"></div>
@@ -133,25 +188,110 @@
       </div>
     </div>
 
+    <!-- Gráfico Quantidade de notas ABER e ANDM - Carga -->
+    <div style="max-width: 1000px; margin: 0 auto;">
+    <div id="graficoSemGeracoes"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasSemGeracoes" onclick="toggleDropdownCodigoMedidasSemGeracoes()"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasSemGeracoes"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartSemGeracoes"></canvas>
+      </div>
+      <div id="infoSemGeracoes"
+        style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
+        <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
+      </div>
+    </div>
+    </div>
+
+    <!-- Gráfico Quantidade de notas ABER e ANDM - GD -->
+    <div style="max-width: 1000px; margin: 0 auto;">
+    <div id="graficoMiniGeracao"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasMiniGeracao" onclick="toggleDropdownCodigoMedidasMiniGeracao()"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasMiniGeracao"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartMiniGeracao"></canvas>
+      </div>
+      <div id="infoMiniGeracao"
+        style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
+      </div>
+    </div>
+    </div>
+
+    <!-- Gráfico de Notas Concluídas por Mês -->
+    <div id="graficoNotasConcluidasPorMes"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <h2 style="color: #2e7d32; margin: 0;">📅 Notas Concluídas por Mês</h2>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+          <select id="filtroAnoNotasConcluidasPorMes" onchange="aplicarFiltroAnoNotasConcluidasPorMes()"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartNotasConcluidasPorMes"></canvas>
+      </div>
+      <div id="infoNotasConcluidasPorMes"
+        style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorMes">0</span>
+      </div>
+    </div>
+
     <!-- Gráfico de Notas Concluídas (CONC CTEC e CONC RTEC) -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+
+    <div id="graficoConcluidas"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">✅ Notas Concluídas por Data de Conclusão</h2>
         <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
-            <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()" 
-                    style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês:</label>
+            <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasConcluidas" onclick="toggleDropdownCodigoMedidasConcluidas()" 
+            <button id="botaoToggleCodigoMedidasConcluidas" onclick="toggleDropdownCodigoMedidasConcluidas()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasConcluidas" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidasConcluidas"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -160,36 +300,94 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartConcluidas"></canvas>
       </div>
-      <div id="infoConcluidas" style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-        <strong>Total de notas concluídas:</strong> <span id="totalConcluidas">0</span> | 
-        <strong style="color: #388e3c;">CONC CTEC:</strong> <span id="totalCONC_CTEC" style="color: #388e3c;">0</span> | 
-        <strong style="color: #81c784;">CONC RTEC:</strong> <span id="totalCONC_RTEC" style="color: #81c784;">0</span> | 
-        <strong style="color: #388e3c;">% Aprovação CONC CTEC:</strong> <span id="percentualAprovacao" style="color: #388e3c; font-weight: bold;">0%</span>
+      <div id="infoConcluidas"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas concluídas:</strong> <span id="totalConcluidas">0</span> |
+        <strong style="color: #388e3c;">CONC CTEC:</strong> <span id="totalCONC_CTEC" style="color: #388e3c;">0</span> |
+        <strong style="color: #81c784;">CONC RTEC:</strong> <span id="totalCONC_RTEC" style="color: #81c784;">0</span> |
+        <strong style="color: #388e3c;">% Aprovação CONC CTEC:</strong> <span id="percentualAprovacao"
+          style="color: #388e3c; font-weight: bold;">0%</span>
       </div>
     </div>
 
+      <!-- Gráfico de Concluídas por Tipo de Solicitação (Mini/Micro vs Demais) -->
+      <div id="graficoConcluidasPorTipoSolicitacao"
+        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+          <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Mini/Micro Geração</h2>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
+              <input type="checkbox" id="ocultarBarrasMini" onchange="toggleBarrasMini()" style="cursor: pointer;">
+              <span>Ocultar barras</span>
+            </label>
+            <label for="filtroAnoConcluidasPorTipoSolicitacao" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoConcluidasPorTipoSolicitacao" onchange="aplicarFiltroAnoConcluidasPorTipoSolicitacao()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
+          <canvas id="chartConcluidasPorTipoSolicitacao"></canvas>
+        </div>
+        <div id="infoConcluidasPorTipoSolicitacao"
+          style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+          <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoMini">0</span> | <strong></strong>Critério:</strong> Mini/Micro Geração (CONC CTEC e CONC RTEC)
+        </div>
+      </div>
+
+      <!-- Gráfico de Concluídas por Tipo Demais -->
+      <div id="graficoConcluidasPorTipoDemais"
+        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+          <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Carga</h2>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
+              <input type="checkbox" id="ocultarBarrasDemais" onchange="toggleBarrasDemais()" style="cursor: pointer;">
+              <span>Ocultar barras</span>
+            </label>
+            <label for="filtroAnoConcluidasPorTipoDemais" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoConcluidasPorTipoDemais" onchange="aplicarFiltroAnoConcluidasPorTipoDemais()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+        </div>
+        <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
+          <canvas id="chartConcluidasPorTipoDemais"></canvas>
+        </div>
+        <div id="infoConcluidasPorTipoDemais"
+          style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+          <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoDemais">0</span> | <strong></strong>Critério:</strong> Demais Tipos de Solicitação (CONC CTEC e CONC RTEC)
+        </div>
+      </div>
+
     <!-- Gráfico de Prazo Médio Mensal -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+    <div id="graficoPrazoMedioGeral"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal Geral(GD e Carga)</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazo" onclick="toggleDropdownDescricoesPrazo()" 
+            <button id="botaoToggleDescricoesPrazo" onclick="toggleDropdownDescricoesPrazo()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesPrazo" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDescricoesPrazo"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazo" onclick="toggleDropdownCodigoMedidasPrazo()" 
+            <button id="botaoToggleCodigoMedidasPrazo" onclick="toggleDropdownCodigoMedidasPrazo()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasPrazo" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidasPrazo"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -198,34 +396,39 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoMedio"></canvas>
       </div>
-      <div id="infoPrazoMedio" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas">0</span> | 
+      <div id="infoPrazoMedio"
+        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas">0</span> |
         <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral">0</span> dias
       </div>
     </div>
 
     <!-- Gráfico de Prazo Médio Mensal - Todos exceto Mini/Micro Geração -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+    <div id="graficoPrazoMedioCarga"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Carga</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoExceto" onclick="toggleDropdownDescricoesPrazoExceto()" 
+            <button id="botaoToggleDescricoesPrazoExceto" onclick="toggleDropdownDescricoesPrazoExceto()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesPrazoExceto" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDescricoesPrazoExceto"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoExceto" onclick="toggleDropdownCodigoMedidasPrazoExceto()" 
+            <button id="botaoToggleCodigoMedidasPrazoExceto" onclick="toggleDropdownCodigoMedidasPrazoExceto()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasPrazoExceto" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidasPrazoExceto"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -234,34 +437,39 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoMedioExceto"></canvas>
       </div>
-      <div id="infoPrazoMedioExceto" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasExceto">0</span> | 
+      <div id="infoPrazoMedioExceto"
+        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasExceto">0</span> |
         <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralExceto">0</span> dias
       </div>
     </div>
 
     <!-- Gráfico de Prazo Médio Mensal - Somente Mini/Micro Geração -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+    <div id="graficoPrazoMedioGD"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - GD</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoMiniMicro" onclick="toggleDropdownDescricoesPrazoMiniMicro()" 
+            <button id="botaoToggleDescricoesPrazoMiniMicro" onclick="toggleDropdownDescricoesPrazoMiniMicro()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesPrazoMiniMicro" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDescricoesPrazoMiniMicro"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoMiniMicro" onclick="toggleDropdownCodigoMedidasPrazoMiniMicro()" 
+            <button id="botaoToggleCodigoMedidasPrazoMiniMicro" onclick="toggleDropdownCodigoMedidasPrazoMiniMicro()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasPrazoMiniMicro" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidasPrazoMiniMicro"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -270,99 +478,51 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoMedioMiniMicro"></canvas>
       </div>
-      <div id="infoPrazoMedioMiniMicro" style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasMiniMicro">0</span> | 
+      <div id="infoPrazoMedioMiniMicro"
+        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasMiniMicro">0</span> |
         <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralMiniMicro">0</span> dias
       </div>
     </div>
 
-    <!-- Gráfico Filtrado - Mini Geração -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleCodigoMedidasMiniGeracao" onclick="toggleDropdownCodigoMedidasMiniGeracao()" 
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-            <span>▼</span>
-            <span>Filtrar por Código Medidas</span>
-          </button>
-          <div id="containerCheckboxesCodigoMedidasMiniGeracao" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-          </div>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartMiniGeracao"></canvas>
-      </div>
-      <div id="infoMiniGeracao" style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
-      </div>
-    </div>
 
-    <!-- Gráfico de Todos os Tipos de Descrição -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Quantidade tipos de notas ABER e ANDM</h2>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartOutrosTipos"></canvas>
-      </div>
-      <div id="infoOutrosTipos" style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
-        <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> | 
-        <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
-      </div>
-    </div>
 
-    <!-- Gráfico Sem Mini e Micro Geração - Por Fim Planejado -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleCodigoMedidasSemGeracoes" onclick="toggleDropdownCodigoMedidasSemGeracoes()" 
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-            <span>▼</span>
-            <span>Filtrar por Código Medidas</span>
-          </button>
-          <div id="containerCheckboxesCodigoMedidasSemGeracoes" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-          </div>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartSemGeracoes"></canvas>
-      </div>
-      <div id="infoSemGeracoes" style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
-        <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
-      </div>
-    </div>
+
 
     <!-- Gráfico: Notas Concluídas por Usuário -->
-    <div style="background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+    <div id="graficoNotasPorUsuario"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #d32f2f; margin: 0;">👥 Notas Concluídas por Usuário</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroMesNotasPorUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês (Concluída em):</label>
-            <select id="filtroMesNotasPorUsuario" onchange="aplicarFiltroMesNotasPorUsuario()" 
+            <label for="filtroMesNotasPorUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês (Concluída em):</label>
+            <select id="filtroMesNotasPorUsuario" onchange="aplicarFiltroMesNotasPorUsuario()"
               style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesNotasPorUsuario" onclick="toggleDropdownDescricoesNotasPorUsuario()" 
+            <button id="botaoToggleDescricoesNotasPorUsuario" onclick="toggleDropdownDescricoesNotasPorUsuario()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesNotasPorUsuario" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDescricoesNotasPorUsuario"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasNotasPorUsuario" onclick="toggleDropdownCodigoMedidasNotasPorUsuario()" 
+            <button id="botaoToggleCodigoMedidasNotasPorUsuario" onclick="toggleDropdownCodigoMedidasNotasPorUsuario()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasNotasPorUsuario" style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesCodigoMedidasNotasPorUsuario"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
@@ -371,31 +531,45 @@
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartNotasPorUsuario"></canvas>
       </div>
-      <div id="infoNotasPorUsuario" style="margin-top: 16px; padding: 12px; background: #ffebee; border-radius: 8px; color: #c62828;">
+      <div id="infoNotasPorUsuario"
+        style="margin-top: 16px; padding: 12px; background: #ffebee; border-radius: 8px; color: #c62828;">
         <strong>Total de notas concluídas:</strong> <span id="totalNotasPorUsuario">0</span>
       </div>
     </div>
 
     <!-- Tabela de Dados -->
-    <div id="secaoDadosCadastrados" style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
+    <div id="secaoDadosCadastrados"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
       <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Dados Cadastrados</h2>
       <div id="tabelaContainer" style="overflow-x: auto;">
         <table id="tabelaIndices" style="width: 100%; border-collapse: collapse; min-width: 1200px;">
           <thead>
             <tr style="background: #f5f5f5;">
               <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Nota</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Área Operacional</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Cidade</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Código Medidas</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Descrição</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Texto Medidas</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Status Usuário</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Início Planejado</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Fim Planejado</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluído Por</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluída Em</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Modificado Por</th>
-              <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd; white-space: nowrap;">Ações</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Área
+                Operacional</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Cidade
+              </th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Código
+                Medidas</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Descrição
+              </th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Texto
+                Medidas</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Status
+                Usuário</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Início
+                Planejado</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Fim
+                Planejado</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluído
+                Por</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluída
+                Em</th>
+              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">
+                Modificado Por</th>
+              <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd; white-space: nowrap;">Ações
+              </th>
             </tr>
           </thead>
           <tbody id="tabelaBody">
@@ -408,6 +582,8 @@
         </table>
       </div>
     </div>
+
+
 
   </div>
 
@@ -422,47 +598,51 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Registrar o plugin ChartDataLabels assim que os scripts carregarem
+    if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
+      Chart.register(ChartDataLabels);
+    }
+
     // Controlar acesso à seção de upload para usuário comum
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const categoria = sessionStorage.getItem('userCategoria');
       const secaoUpload = document.getElementById('secaoUpload');
       const secaoDadosCadastrados = document.getElementById('secaoDadosCadastrados');
-      
+
       if (categoria === 'usuario') {
         if (secaoUpload) {
           secaoUpload.style.display = 'none';
-        }
-        if (secaoDadosCadastrados) {
-          secaoDadosCadastrados.style.display = 'none';
         }
       } else {
         if (secaoUpload) {
           secaoUpload.style.display = 'block';
         }
-        if (secaoDadosCadastrados) {
-          secaoDadosCadastrados.style.display = 'block';
-        }
+      }
+      
+      // Sempre manter a tabela oculta na inicialização
+      if (secaoDadosCadastrados) {
+        secaoDadosCadastrados.style.display = 'none';
       }
     });
 
-    window.processarExcel = async function() {
+    window.processarExcel = async function () {
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
-      
+
       if (!file) {
         alert('Por favor, selecione um arquivo Excel.');
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = async function(e) {
+      reader.onload = async function (e) {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: 'array' });
           const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          
+
           // Ler como array de arrays (ignora cabeçalhos problemáticos)
-          const arrayData = XLSX.utils.sheet_to_json(firstSheet, { 
+          const arrayData = XLSX.utils.sheet_to_json(firstSheet, {
             header: 1, // Retorna array de arrays
             defval: '' // Define valor padrão para células vazias
           });
@@ -473,7 +653,7 @@
           console.log('Terceira linha (dados):', arrayData[2]);
 
           // Remover linha de cabeçalho
-          const dadosLinhas = arrayData.slice(1).filter(row => 
+          const dadosLinhas = arrayData.slice(1).filter(row =>
             row && row.length > 0 && row.some(cell => cell !== '' && cell !== null && cell !== undefined)
           );
 
@@ -529,13 +709,13 @@
     };
 
     // Funções para o modal de notas
-    window.abrirModalNotas = function(notas, data, status) {
+    window.abrirModalNotas = function (notas, data, status) {
       const modal = document.getElementById('modalNotas');
       const titulo = document.getElementById('modalTitulo');
       const conteudo = document.getElementById('modalConteudo');
-      
+
       titulo.textContent = `${status} - ${data} (${notas.length} notas)`;
-      
+
       if (notas.length === 0) {
         conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
       } else {
@@ -549,10 +729,11 @@
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Responsável</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Ações</th>';
         html += '</tr></thead><tbody>';
-        
+
         notas.forEach((nota, index) => {
           const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
           html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
@@ -563,7 +744,8 @@
           html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluido_${nota.id}" value="${nota.concluido_por || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluida_em_${nota.id}" value="${nota.concluida_em || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
           html += `<td style="padding: 10px;">${nota.responsavel || ''}</td>`;
           html += `<td style="padding: 10px;">`;
           html += `<select id="status_${index}" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">`;
@@ -578,56 +760,302 @@
           html += `</td>`;
           html += '</tr>';
         });
-        
+
         html += '</tbody></table>';
         conteudo.innerHTML = html;
       }
-      
+
       modal.style.display = 'block';
     };
 
-    window.atualizarStatusNota = async function(notaId, rowIndex) {
+    window.atualizarStatusNota = async function (notaId, rowIndex) {
       const selectElement = document.getElementById(`status_${rowIndex}`);
       const novoStatus = selectElement.value;
-      
+
       if (!novoStatus || novoStatus === 'Selecione') {
         alert('Por favor, selecione um status válido');
         return;
       }
-      
+
+      // Também tenta ler o campo 'Concluído Por' e 'Concluída Em' do modal (se presente)
+      const inputConcluido = document.getElementById(`modal_concluido_${notaId}`);
+      const inputConcluida = document.getElementById(`modal_concluida_em_${notaId}`);
+      const concluidoValor = inputConcluido ? inputConcluido.value : null;
+      const concluidaValor = inputConcluida ? inputConcluida.value : null;
+
       try {
+        const updatePayload = { status_usuario: novoStatus };
+        if (concluidoValor !== null) updatePayload.concluido_por = concluidoValor;
+        if (concluidaValor !== null) updatePayload.concluida_em = concluidaValor;
+
         const { error } = await supabaseClient
           .from('indices')
-          .update({ status_usuario: novoStatus })
+          .update(updatePayload)
           .eq('id', notaId);
-        
+
         if (error) {
-          console.error('Erro ao atualizar status:', error);
-          alert('Erro ao atualizar status: ' + error.message);
+          console.error('Erro ao atualizar status/concluído:', error);
+          alert('Erro ao atualizar: ' + error.message);
         } else {
-          alert('Status atualizado com sucesso!');
-          // Recarregar os dados para atualizar os gráficos
-          carregarDados();
+          // Atualiza dados locais (sem recarregar tudo) para que o modal permaneça aberto
+          if (typeof dadosGlobais !== 'undefined' && Array.isArray(dadosGlobais)) {
+            for (let i = 0; i < dadosGlobais.length; i++) {
+              if (String(dadosGlobais[i].id) === String(notaId)) {
+                dadosGlobais[i].status_usuario = novoStatus;
+                if (concluidoValor !== null) dadosGlobais[i].concluido_por = concluidoValor;
+                if (concluidaValor !== null) dadosGlobais[i].concluida_em = concluidaValor;
+                break;
+              }
+            }
+          }
+          if (typeof dadosGlobaisCompletos !== 'undefined' && Array.isArray(dadosGlobaisCompletos)) {
+            for (let i = 0; i < dadosGlobaisCompletos.length; i++) {
+              if (String(dadosGlobaisCompletos[i].id) === String(notaId)) {
+                dadosGlobaisCompletos[i].status_usuario = novoStatus;
+                if (concluidoValor !== null) dadosGlobaisCompletos[i].concluido_por = concluidoValor;
+                if (concluidaValor !== null) dadosGlobaisCompletos[i].concluida_em = concluidaValor;
+                break;
+              }
+            }
+          }
+
+          // Atualiza gráficos que dependem desses arrays (mantendo modal aberto)
+          try {
+            if (typeof gerarGrafico === 'function' && typeof dadosGlobaisCompletos !== 'undefined') gerarGrafico(dadosGlobaisCompletos);
+            if (typeof gerarGraficoNotasPorUsuario === 'function' && typeof dadosGlobais !== 'undefined') await gerarGraficoNotasPorUsuario(dadosGlobais);
+            // Atualizar gráfico de notas concluídas quando pertinente
+            if (typeof gerarGraficoConcluidas === 'function') {
+              const mesSel = document.getElementById('filtroMesConcluidas')?.value || null;
+              gerarGraficoConcluidas(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais, mesSel);
+            }
+          } catch (e) {
+            console.warn('Erro ao atualizar gráficos localmente:', e);
+          }
+
+          alert('Alterações salvas com sucesso! (modal permanece aberto)');
         }
       } catch (error) {
-        console.error('Erro ao atualizar status:', error);
-        alert('Erro ao atualizar status: ' + error.message);
+        console.error('Erro ao atualizar status/concluído:', error);
+        alert('Erro ao atualizar: ' + error.message);
       }
     };
 
-    window.fecharModalNotas = function() {
+    window.atualizarConcluidoPor = async function (id) {
+      // Atualiza somente a partir do input do modal
+      const input = document.getElementById(`modal_concluido_${id}`);
+      if (!input) {
+        alert('Campo Concluído Por no modal não encontrado. Abra o modal para editar.');
+        return;
+      }
+
+      const novoValor = input.value;
+
+      try {
+        const { error } = await supabaseClient
+          .from('indices')
+          .update({ concluido_por: novoValor })
+          .eq('id', id);
+
+        if (error) {
+          console.error('Erro ao atualizar Concluído Por:', error);
+          alert('Erro ao atualizar: ' + error.message);
+        } else {
+          alert('Concluído Por atualizado com sucesso!');
+          carregarDados();
+        }
+      } catch (error) {
+        console.error('Erro ao atualizar Concluído Por:', error);
+        alert('Erro ao atualizar: ' + error.message);
+      }
+    };
+
+    window.fecharModalNotas = function () {
       document.getElementById('modalNotas').style.display = 'none';
     };
 
+    // Função para ativar o botão clicado
+    window.ativarBotao = function(botaoId) {
+      // Lista de todos os botões
+      const botoes = ['btnNotasAndamento', 'btnNotasConcluidas', 'btnPrazosAnalise', 'btnProdutividade', 'btnExibirTabelaNotas'];
+      
+      // Resetar todos os botões para a cor verde
+      botoes.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.style.background = '#2e7d32';
+        }
+      });
+      
+      // Ativar o botão clicado com a cor laranja (mesma do hover do cabeçalho)
+      const botaoAtivo = document.getElementById(botaoId);
+      if (botaoAtivo) {
+        botaoAtivo.style.background = 'linear-gradient(145deg, #ff9f68, #ffb088)';
+      }
+    };
+
+    // Função para exibir gráficos de "Notas em Andamento"
+    window.exibirNotasAndamento = function () {
+      ativarBotao('btnNotasAndamento');
+      // Mostrar os 4 gráficos
+      document.getElementById('graficoOutrosTipos').style.display = 'block';
+      document.getElementById('graficoFimPlanejado').style.display = 'block';
+      document.getElementById('graficoSemGeracoes').style.display = 'block';
+      document.getElementById('graficoMiniGeracao').style.display = 'block';
+      // Ocultar outros gráficos
+      document.getElementById('graficoConcluidas').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'none';
+      document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('secaoDadosCadastrados').style.display = 'none';
+    };
+
+    // Função para exibir gráficos de "Notas Concluídas"
+    window.exibirNotasConcluidas = function () {
+      ativarBotao('btnNotasConcluidas');
+      // Mostrar apenas o gráfico de notas concluídas
+      document.getElementById('graficoConcluidas').style.display = 'block';
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'block';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'block';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'block';
+      // Ocultar outros gráficos
+      document.getElementById('graficoOutrosTipos').style.display = 'none';
+      document.getElementById('graficoFimPlanejado').style.display = 'none';
+      document.getElementById('graficoSemGeracoes').style.display = 'none';
+      document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'none';
+      document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('secaoDadosCadastrados').style.display = 'none';
+      
+      // Popular os meses e gerar o gráfico com a seleção automática
+      const dados = typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais;
+      if (typeof popularFiltroMeses === 'function') {
+        popularFiltroMeses(dados);
+      }
+    };
+
+    // Função para exibir gráficos de "Prazos de Análise"
+    window.exibirPrazosAnalise = function () {
+      ativarBotao('btnPrazosAnalise');
+      // Mostrar os 3 gráficos de prazo
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'block';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'block';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'block';
+      // Ocultar outros gráficos
+      document.getElementById('graficoOutrosTipos').style.display = 'none';
+      document.getElementById('graficoFimPlanejado').style.display = 'none';
+      document.getElementById('graficoSemGeracoes').style.display = 'none';
+      document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoConcluidas').style.display = 'none';
+      document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('secaoDadosCadastrados').style.display = 'none';
+    };
+
+    // Função para exibir gráficos de "Produtividade"
+    window.exibirProdutividade = function () {
+      ativarBotao('btnProdutividade');
+      // Mostrar o gráfico de notas concluídas por usuário
+      document.getElementById('graficoNotasPorUsuario').style.display = 'block';
+      // Ocultar outros gráficos
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('graficoFimPlanejado').style.display = 'none';
+      document.getElementById('graficoSemGeracoes').style.display = 'none';
+      document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoConcluidas').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('secaoDadosCadastrados').style.display = 'none';
+    };
+
+    // Função para exibir tabela de notas
+    window.exibirTabelaNotas = function () {
+      ativarBotao('btnExibirTabelaNotas');
+      // Ocultar todos os gráficos
+      document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('graficoFimPlanejado').style.display = 'none';
+      document.getElementById('graficoSemGeracoes').style.display = 'none';
+      document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoConcluidas').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'none';
+      
+      // Exibir a seção de Dados Cadastrados
+      document.getElementById('secaoDadosCadastrados').style.display = 'block';
+    };
+
+    // Função para abrir modal com notas SEM possibilidade de edição
+    window.abrirModalNotasSemEdicao = function (notas, titulo) {
+      const modal = document.getElementById('modalNotas');
+      const tituloEl = document.getElementById('modalTitulo');
+      const conteudo = document.getElementById('modalConteudo');
+
+      tituloEl.textContent = `${titulo} (${notas.length} notas)`;
+
+      if (notas.length === 0) {
+        conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
+      } else {
+        let html = '<table style="width: 100%; border-collapse: collapse;">';
+        html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Regional</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Responsável</th>';
+        html += '</tr></thead><tbody>';
+
+        notas.forEach((nota, index) => {
+          const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
+          html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
+          html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.regional || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluida_em || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.responsavel || ''}</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteudo.innerHTML = html;
+      }
+
+      modal.style.display = 'block';
+    };
+
     // Fechar modal ao clicar fora dele
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       const modal = document.getElementById('modalNotas');
       if (event.target === modal) {
         fecharModalNotas();
       }
     };
 
-    window.carregarDados = async function() {
+    window.carregarDados = async function () {
       try {
         // Buscar todos os registros usando paginação (Supabase tem limite de 1000 por padrão)
         let todosOsDados = [];
@@ -666,17 +1094,17 @@
         dadosGlobaisCompletos = todosOsDados;
 
         exibirDados(todosOsDados);
-        
+
         // Popular filtro de descrições e de meses ANTES de gerar o gráfico
         popularFiltroDescricoes(dadosGlobaisCompletos);
         popularFiltroMesesFimPlanejado(todosOsDados);
         popularFiltroMeses(todosOsDados);
         popularFiltroCodigoMedidas(dadosGlobaisCompletos);
         popularFiltroStatusFimPlanejado(dadosGlobaisCompletos);
-        
+
         // Gerar gráfico DEPOIS de popular os filtros
         gerarGrafico(dadosGlobaisCompletos);
-        
+
         gerarGraficoPrazoMedio(todosOsDados);
         popularFiltroDescricoesPrazo(todosOsDados);
         popularFiltroCodigoMedidasPrazo(todosOsDados);
@@ -696,19 +1124,28 @@
         popularFiltroCodigoMedidasSemGeracoes(todosOsDados);
 
         gerarGraficoSemGeracoes(todosOsDados);
-        
+
         popularFiltroDescricoesNotasPorUsuario(todosOsDados);
         popularFiltroMesesNotasPorUsuario(todosOsDados);
         popularFiltroCodigoMedidasNotasPorUsuario(todosOsDados);
-        gerarGraficoNotasPorUsuario(todosOsDados);
+        await gerarGraficoNotasPorUsuario(todosOsDados);
+
+        popularFiltroAnoNotasConcluidasPorMes(todosOsDados);
+        gerarGraficoNotasConcluidasPorMes(todosOsDados);
+
+        popularFiltroAnoConcluidasPorTipoSolicitacao(todosOsDados);
+        gerarGraficoConcluidasPorTipoSolicitacao(todosOsDados);
+
+        popularFiltroAnoConcluidasPorTipoDemais(todosOsDados);
+        gerarGraficoConcluidasPorTipoDemais(todosOsDados);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       }
     };
 
-    window.exibirDados = function(dados) {
+    window.exibirDados = function (dados) {
       const tbody = document.getElementById('tabelaBody');
-      
+
       if (!dados || dados.length === 0) {
         tbody.innerHTML = `
           <tr>
@@ -721,17 +1158,17 @@
       }
 
       tbody.innerHTML = dados.map(item => `
-        <tr style="border-bottom: 1px solid #eee;">
+        <tr id="row_${item.id}" style="border-bottom: 1px solid #eee;">
           <td style="padding: 12px;">${item.nota || ''}</td>
           <td style="padding: 12px;">${item.area_operacional || ''}</td>
           <td style="padding: 12px;">${item.cidade || ''}</td>
           <td style="padding: 12px;">${item.codigo_medidas || ''}</td>
           <td style="padding: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${item.descricao || ''}">${item.descricao || ''}</td>
           <td style="padding: 12px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;" title="${item.texto_medidas || ''}">${item.texto_medidas || ''}</td>
-          <td style="padding: 12px;">${item.status_usuario || ''}</td>
+          <td id="status_cell_${item.id}" style="padding: 12px;">${item.status_usuario || ''}</td>
           <td style="padding: 12px;">${item.inicio_planejado || ''}</td>
           <td style="padding: 12px;">${item.fim_planejado || ''}</td>
-          <td style="padding: 12px;">${item.concluido_por || ''}</td>
+          <td id="concluido_cell_${item.id}" style="padding: 12px;">${item.concluido_por || ''}</td>
           <td style="padding: 12px;">${item.concluida_em || ''}</td>
           <td style="padding: 12px;">${item.modificado_por || ''}</td>
           <td style="padding: 12px; text-align: center;">
@@ -744,7 +1181,7 @@
       `).join('');
     };
 
-    window.excluirRegistro = async function(id) {
+    window.excluirRegistro = async function (id) {
       if (!confirm('Tem certeza que deseja excluir este registro?')) return;
 
       const { error } = await supabaseClient
@@ -760,9 +1197,9 @@
       }
     };
 
-    window.limparTabela = async function() {
+    window.limparTabela = async function () {
       if (!confirm('⚠️ ATENÇÃO: Isso irá excluir TODOS os dados da tabela. Deseja continuar?')) return;
-      
+
       if (!confirm('Tem certeza ABSOLUTA? Esta ação não pode ser desfeita!')) return;
 
       const { error } = await supabaseClient
@@ -778,7 +1215,7 @@
       }
     };
 
-    window.aplicarFiltros = async function() {
+    window.aplicarFiltros = async function () {
       const filtroNota = document.getElementById('filtroNota').value.toLowerCase();
       const filtroCidade = document.getElementById('filtroCidade').value.toLowerCase();
       const filtroStatus = document.getElementById('filtroStatus').value.toLowerCase();
@@ -830,12 +1267,12 @@
       } else {
         // Armazenar dados globalmente
         dadosGlobais = dadosFiltrados;
-        
+
         console.log('Dados carregados, total:', dadosFiltrados.length);
         console.log('Primeira descrição:', dadosFiltrados[0]?.descricao);
-        
+
         exibirDados(dadosFiltrados);
-        
+
         // Buscar dados completos com paginação
         let todosOsDadosCompletos = [];
         let inicio = 0;
@@ -866,7 +1303,7 @@
         dadosGlobaisCompletos = todosOsDadosCompletos.length > 0 ? todosOsDadosCompletos : dadosFiltrados;
 
         gerarGrafico(dadosGlobaisCompletos);
-        
+
         // Popular filtro de descrições e de meses
         console.log('Chamando popularFiltroDescricoes...');
         popularFiltroDescricoes(dadosGlobaisCompletos);
@@ -875,7 +1312,7 @@
         popularFiltroMeses(dadosFiltrados);
         popularFiltroCodigoMedidas(dadosGlobaisCompletos);
         popularFiltroStatusFimPlanejado(dadosGlobaisCompletos);
-        
+
         gerarGraficoPrazoMedio(dadosFiltrados);
         popularFiltroDescricoesPrazo(dadosFiltrados);
         popularFiltroCodigoMedidasPrazo(dadosFiltrados);
@@ -895,15 +1332,15 @@
         popularFiltroCodigoMedidasSemGeracoes(dadosFiltrados);
 
         gerarGraficoSemGeracoes(dadosFiltrados);
-        
+
         popularFiltroDescricoesNotasPorUsuario(dadosFiltrados);
         popularFiltroMesesNotasPorUsuario(dadosFiltrados);
         popularFiltroCodigoMedidasNotasPorUsuario(dadosFiltrados);
-        gerarGraficoNotasPorUsuario(dadosFiltrados);
+        await gerarGraficoNotasPorUsuario(dadosFiltrados);
       }
     };
 
-    window.limparFiltros = function() {
+    window.limparFiltros = function () {
       document.getElementById('filtroNota').value = '';
       document.getElementById('filtroCidade').value = '';
       document.getElementById('filtroStatus').value = '';
@@ -911,10 +1348,10 @@
     };
 
     // Função para toggle dropdown de descrições
-    window.toggleDropdownDescricoes = function() {
+    window.toggleDropdownDescricoes = function () {
       const container = document.getElementById('containerCheckboxesDescricoes');
       const botao = document.getElementById('botaoToggleDescricoes');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -927,10 +1364,10 @@
     };
 
     // Função para toggle dropdown de descrições do Prazo Médio
-    window.toggleDropdownDescricoesPrazo = function() {
+    window.toggleDropdownDescricoesPrazo = function () {
       const container = document.getElementById('containerCheckboxesDescricoesPrazo');
       const botao = document.getElementById('botaoToggleDescricoesPrazo');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -943,10 +1380,10 @@
     };
 
     // Função para toggle dropdown de descrições do Prazo Médio - Exceto Mini/Micro
-    window.toggleDropdownDescricoesPrazoExceto = function() {
+    window.toggleDropdownDescricoesPrazoExceto = function () {
       const container = document.getElementById('containerCheckboxesDescricoesPrazoExceto');
       const botao = document.getElementById('botaoToggleDescricoesPrazoExceto');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -959,10 +1396,10 @@
     };
 
     // Função para toggle dropdown de descrições do Prazo Médio - Mini/Micro
-    window.toggleDropdownDescricoesPrazoMiniMicro = function() {
+    window.toggleDropdownDescricoesPrazoMiniMicro = function () {
       const container = document.getElementById('containerCheckboxesDescricoesPrazoMiniMicro');
       const botao = document.getElementById('botaoToggleDescricoesPrazoMiniMicro');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -975,10 +1412,10 @@
     };
 
     // Função para toggle dropdown de descrições do gráfico de Notas por Usuário
-    window.toggleDropdownDescricoesNotasPorUsuario = function() {
+    window.toggleDropdownDescricoesNotasPorUsuario = function () {
       const container = document.getElementById('containerCheckboxesDescricoesNotasPorUsuario');
       const botao = document.getElementById('botaoToggleDescricoesNotasPorUsuario');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -991,10 +1428,10 @@
     };
 
     // Função para toggle dropdown de Código Medidas do gráfico de Notas por Usuário
-    window.toggleDropdownCodigoMedidasNotasPorUsuario = function() {
+    window.toggleDropdownCodigoMedidasNotasPorUsuario = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasNotasPorUsuario');
       const botao = document.getElementById('botaoToggleCodigoMedidasNotasPorUsuario');
-      
+
       if (container.style.display === 'none') {
         container.style.display = 'flex';
         botao.style.background = '#1b5e20';
@@ -1007,7 +1444,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do gráfico de Fim Planejado
-    window.toggleDropdownCodigoMedidas = function() {
+    window.toggleDropdownCodigoMedidas = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidas');
       const botao = document.getElementById('botaoToggleCodigoMedidas');
 
@@ -1023,7 +1460,7 @@
     };
 
     // Função para toggle dropdown de Status do gráfico de Fim Planejado
-    window.toggleDropdownStatusFimPlanejado = function() {
+    window.toggleDropdownStatusFimPlanejado = function () {
       const container = document.getElementById('containerCheckboxesStatusFimPlanejado');
       const botao = document.getElementById('botaoToggleStatusFimPlanejado');
 
@@ -1039,7 +1476,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do gráfico de Concluídas
-    window.toggleDropdownCodigoMedidasConcluidas = function() {
+    window.toggleDropdownCodigoMedidasConcluidas = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasConcluidas');
       const botao = document.getElementById('botaoToggleCodigoMedidasConcluidas');
 
@@ -1055,7 +1492,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do Prazo Médio (CONC)
-    window.toggleDropdownCodigoMedidasPrazo = function() {
+    window.toggleDropdownCodigoMedidasPrazo = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasPrazo');
       const botao = document.getElementById('botaoToggleCodigoMedidasPrazo');
 
@@ -1071,7 +1508,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do Prazo Médio - Exceto Mini/Micro
-    window.toggleDropdownCodigoMedidasPrazoExceto = function() {
+    window.toggleDropdownCodigoMedidasPrazoExceto = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoExceto');
       const botao = document.getElementById('botaoToggleCodigoMedidasPrazoExceto');
 
@@ -1087,7 +1524,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do Prazo Médio - Mini/Micro
-    window.toggleDropdownCodigoMedidasPrazoMiniMicro = function() {
+    window.toggleDropdownCodigoMedidasPrazoMiniMicro = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasPrazoMiniMicro');
       const botao = document.getElementById('botaoToggleCodigoMedidasPrazoMiniMicro');
 
@@ -1103,7 +1540,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do gráfico Mini Geração
-    window.toggleDropdownCodigoMedidasMiniGeracao = function() {
+    window.toggleDropdownCodigoMedidasMiniGeracao = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasMiniGeracao');
       const botao = document.getElementById('botaoToggleCodigoMedidasMiniGeracao');
 
@@ -1119,7 +1556,7 @@
     };
 
     // Função para toggle dropdown de Código Medidas do gráfico Sem Mini/Micro Geração
-    window.toggleDropdownCodigoMedidasSemGeracoes = function() {
+    window.toggleDropdownCodigoMedidasSemGeracoes = function () {
       const container = document.getElementById('containerCheckboxesCodigoMedidasSemGeracoes');
       const botao = document.getElementById('botaoToggleCodigoMedidasSemGeracoes');
 
@@ -1135,40 +1572,40 @@
     };
 
     // Função para popular o filtro de descrições do gráfico de Fim Planejado com checkboxes
-    window.popularFiltroDescricoes = function(dados) {
+    window.popularFiltroDescricoes = function (dados) {
       console.log('=== INICIANDO popularFiltroDescricoes ===');
       console.log('Total de dados recebidos:', dados?.length || 0);
-      
+
       if (!dados || dados.length === 0) {
         console.warn('Sem dados para popular filtro de descrições');
         return;
       }
 
       const descricoes = new Set();
-      
+
       dados.forEach((item, idx) => {
         const descricao = item.descricao || item.Descrição || '';
         if (descricao) {
           descricoes.add(descricao);
         }
       });
-      
+
       console.log('Descrições encontradas:', Array.from(descricoes));
       console.log('Total de descrições únicas:', descricoes.size);
-      
+
       const container = document.getElementById('containerCheckboxesDescricoes');
       console.log('Container encontrado?', !!container);
-      
+
       if (!container) {
         console.error('❌ Container "containerCheckboxesDescricoes" não encontrado!');
         return;
       }
-      
+
       container.innerHTML = ''; // Limpar conteúdo anterior
-      
+
       // Adicionar checkboxes para cada descrição
       const descricoesArray = Array.from(descricoes).sort();
-      
+
       descricoesArray.forEach((desc, index) => {
         const checkboxId = 'checkbox_desc_' + index;
         const label = document.createElement('label');
@@ -1180,7 +1617,7 @@
         label.style.color = '#333';
         label.style.padding = '6px 0';
         label.style.width = '100%';
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = checkboxId;
@@ -1190,40 +1627,40 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           console.log('Checkbox alterado:', desc, 'Marcado:', this.checked);
           aplicarFiltroDescricaoFimPlanejado();
         };
-        
+
         const span = document.createElement('span');
         span.textContent = desc;
         span.style.userSelect = 'none';
-        
+
         label.appendChild(checkbox);
         label.appendChild(span);
         container.appendChild(label);
       });
-      
+
       console.log('✅ Checkboxes criados com sucesso! Total:', descricoesArray.length);
     };
 
     // Função para aplicar filtro de descrição com checkboxes
-    window.aplicarFiltroDescricaoFimPlanejado = function() {
+    window.aplicarFiltroDescricaoFimPlanejado = function () {
       gerarGrafico(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Fim Planejado
-    window.popularFiltroCodigoMedidas = function(dados) {
+    window.popularFiltroCodigoMedidas = function (dados) {
       // Buscar todos os códigos de medidas existentes no banco
       const codigos = new Set();
-      
+
       dados.forEach(item => {
         const codigo = (item.codigo_medidas || '').trim();
         if (codigo) {
           codigos.add(codigo);
         }
       });
-      
+
       const container = document.getElementById('containerCheckboxesCodigoMedidas');
       if (!container) {
         console.error('❌ Container "containerCheckboxesCodigoMedidas" não encontrado!');
@@ -1254,7 +1691,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasFimPlanejado();
         };
 
@@ -1269,7 +1706,7 @@
     };
 
     // Função para popular filtro de Status - Fim Planejado
-    window.popularFiltroStatusFimPlanejado = function(dados) {
+    window.popularFiltroStatusFimPlanejado = function (dados) {
       const statusSet = new Set();
       dados.forEach(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
@@ -1314,7 +1751,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroStatusFimPlanejado();
         };
 
@@ -1328,38 +1765,38 @@
       });
     };
 
-    window.aplicarFiltroStatusFimPlanejado = function() {
+    window.aplicarFiltroStatusFimPlanejado = function () {
       const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
       gerarGrafico(dadosBase);
     };
 
-    window.aplicarFiltroCodigoMedidasFimPlanejado = function() {
+    window.aplicarFiltroCodigoMedidasFimPlanejado = function () {
       gerarGrafico(dadosGlobais);
     };
 
     // Função para popular o filtro de descrições do Prazo Médio com checkboxes
-    window.popularFiltroDescricoesPrazo = function(dados) {
+    window.popularFiltroDescricoesPrazo = function (dados) {
       console.log('=== INICIANDO popularFiltroDescricoesPrazo ===');
-      
+
       const descricoes = new Set();
-      
+
       dados.forEach(item => {
         const descricao = item.descricao || '';
         if (descricao) {
           descricoes.add(descricao);
         }
       });
-      
+
       const container = document.getElementById('containerCheckboxesDescricoesPrazo');
       if (!container) {
         console.error('❌ Container "containerCheckboxesDescricoesPrazo" não encontrado!');
         return;
       }
-      
+
       container.innerHTML = ''; // Limpar conteúdo anterior
-      
+
       const descricoesArray = Array.from(descricoes).sort();
-      
+
       descricoesArray.forEach((desc, index) => {
         const checkboxId = 'checkbox_prazo_desc_' + index;
         const label = document.createElement('label');
@@ -1371,7 +1808,7 @@
         label.style.color = '#333';
         label.style.padding = '6px 0';
         label.style.width = '100%';
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = checkboxId;
@@ -1381,29 +1818,29 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroDescricaoPrazo();
         };
-        
+
         const span = document.createElement('span');
         span.textContent = desc;
         span.style.userSelect = 'none';
-        
+
         label.appendChild(checkbox);
         label.appendChild(span);
         container.appendChild(label);
       });
-      
+
       console.log('✅ Checkboxes do Prazo Médio criados com sucesso!');
     };
 
     // Função para aplicar filtro de descrição ao Prazo Médio
-    window.aplicarFiltroDescricaoPrazo = function() {
+    window.aplicarFiltroDescricaoPrazo = function () {
       gerarGraficoPrazoMedio(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Prazo Médio (CONC)
-    window.popularFiltroCodigoMedidasPrazo = function(dados) {
+    window.popularFiltroCodigoMedidasPrazo = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const status = item.status_usuario || '';
@@ -1440,7 +1877,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasPrazo();
         };
 
@@ -1454,12 +1891,12 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasPrazo = function() {
+    window.aplicarFiltroCodigoMedidasPrazo = function () {
       gerarGraficoPrazoMedio(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Concluídas
-    window.popularFiltroCodigoMedidasConcluidas = function(dados) {
+    window.popularFiltroCodigoMedidasConcluidas = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const status = item.status_usuario || '';
@@ -1499,7 +1936,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasConcluidas();
         };
 
@@ -1513,13 +1950,13 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasConcluidas = function() {
+    window.aplicarFiltroCodigoMedidasConcluidas = function () {
       const mesSelecionado = document.getElementById('filtroMesConcluidas')?.value || 'todos';
       gerarGraficoConcluidas(dadosGlobais, mesSelecionado);
     };
 
     // Função para popular filtro de descrições - Prazo Médio Exceto Mini/Micro
-    window.popularFiltroDescricoesPrazoExceto = function(dados) {
+    window.popularFiltroDescricoesPrazoExceto = function (dados) {
       const descricoes = new Set();
       dados.forEach(item => {
         const descricao = item.descricao || '';
@@ -1527,11 +1964,11 @@
           descricoes.add(descricao);
         }
       });
-      
+
       const container = document.getElementById('containerCheckboxesDescricoesPrazoExceto');
       container.innerHTML = '';
       const descricoesArray = Array.from(descricoes).sort();
-      
+
       descricoesArray.forEach((desc, index) => {
         const checkboxId = 'checkbox_prazo_exceto_' + index;
         const label = document.createElement('label');
@@ -1543,7 +1980,7 @@
         label.style.color = '#333';
         label.style.padding = '6px 0';
         label.style.width = '100%';
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = checkboxId;
@@ -1554,23 +1991,23 @@
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
         checkbox.onchange = aplicarFiltroDescricaoPrazoExceto;
-        
+
         const span = document.createElement('span');
         span.textContent = desc;
         span.style.userSelect = 'none';
-        
+
         label.appendChild(checkbox);
         label.appendChild(span);
         container.appendChild(label);
       });
     };
 
-    window.aplicarFiltroDescricaoPrazoExceto = function() {
+    window.aplicarFiltroDescricaoPrazoExceto = function () {
       gerarGraficoPrazoMedioExceto(dadosGlobais);
     };
 
     // Função para popular filtro de descrições - Prazo Médio Mini/Micro Geração
-    window.popularFiltroDescricoesPrazoMiniMicro = function(dados) {
+    window.popularFiltroDescricoesPrazoMiniMicro = function (dados) {
       const descricoes = new Set();
       dados.forEach(item => {
         const descricao = item.descricao || '';
@@ -1578,11 +2015,11 @@
           descricoes.add(descricao);
         }
       });
-      
+
       const container = document.getElementById('containerCheckboxesDescricoesPrazoMiniMicro');
       container.innerHTML = '';
       const descricoesArray = Array.from(descricoes).sort();
-      
+
       descricoesArray.forEach((desc, index) => {
         const checkboxId = 'checkbox_prazo_minimicro_' + index;
         const label = document.createElement('label');
@@ -1594,7 +2031,7 @@
         label.style.color = '#333';
         label.style.padding = '6px 0';
         label.style.width = '100%';
-        
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = checkboxId;
@@ -1605,23 +2042,23 @@
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
         checkbox.onchange = aplicarFiltroDescricaoPrazoMiniMicro;
-        
+
         const span = document.createElement('span');
         span.textContent = desc;
         span.style.userSelect = 'none';
-        
+
         label.appendChild(checkbox);
         label.appendChild(span);
         container.appendChild(label);
       });
     };
 
-    window.aplicarFiltroDescricaoPrazoMiniMicro = function() {
+    window.aplicarFiltroDescricaoPrazoMiniMicro = function () {
       gerarGraficoPrazoMedioMiniMicro(dadosGlobais);
     };
 
     // Função para popular o filtro de descrições do gráfico de Notas por Usuário
-    window.popularFiltroDescricoesNotasPorUsuario = function(dados) {
+    window.popularFiltroDescricoesNotasPorUsuario = function (dados) {
       const descricoes = new Set();
       dados.forEach(item => {
         const descricao = item.descricao || '';
@@ -1660,7 +2097,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroDescricaoNotasPorUsuario();
         };
 
@@ -1674,12 +2111,12 @@
       });
     };
 
-    window.aplicarFiltroDescricaoNotasPorUsuario = function() {
-      gerarGraficoNotasPorUsuario(dadosGlobais);
+    window.aplicarFiltroDescricaoNotasPorUsuario = async function () {
+      await gerarGraficoNotasPorUsuario(dadosGlobais);
     };
 
     // Função para popular o filtro de meses do gráfico de Notas por Usuário (Concluída em)
-    window.popularFiltroMesesNotasPorUsuario = function(dados) {
+    window.popularFiltroMesesNotasPorUsuario = function (dados) {
       const mesesSet = new Set();
 
       dados.forEach(item => {
@@ -1708,14 +2145,15 @@
 
       mesesArray.forEach(mesAno => {
         const [mes, ano] = mesAno.split('.');
-        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
+        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
         const option = document.createElement('option');
         option.value = mesAno;
         option.textContent = `${nomeMes}/${ano}`;
         selectMes.appendChild(option);
       });
 
+      // Selecionar mês atual ou anterior se houver dados
       const dataAtual = new Date();
       const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
       const anoAtual = dataAtual.getFullYear();
@@ -1723,15 +2161,33 @@
 
       if (mesesArray.includes(mesAnoAtual)) {
         selectMes.value = mesAnoAtual;
+      } else {
+        // Se o mês atual não tem dados, tenta o mês anterior
+        const dataAnterior = new Date(anoAtual, parseInt(mesAtual) - 2, 1);
+        const mesAnterior = String(dataAnterior.getMonth() + 1).padStart(2, '0');
+        const anoAnterior = dataAnterior.getFullYear();
+        const mesAnoAnterior = `${mesAnterior}.${anoAnterior}`;
+        
+        if (mesesArray.includes(mesAnoAnterior)) {
+          selectMes.value = mesAnoAnterior;
+        } else if (mesesArray.length > 0) {
+          // Se também não houver mês anterior, usa o último mês disponível
+          selectMes.value = mesesArray[mesesArray.length - 1];
+        }
+      }
+      
+      // Gerar o gráfico com o mês selecionado
+      if (typeof gerarGraficoNotasPorUsuario === 'function') {
+        gerarGraficoNotasPorUsuario(dados);
       }
     };
 
-    window.aplicarFiltroMesNotasPorUsuario = function() {
-      gerarGraficoNotasPorUsuario(dadosGlobais);
+    window.aplicarFiltroMesNotasPorUsuario = async function () {
+      await gerarGraficoNotasPorUsuario(dadosGlobais);
     };
 
     // Função para popular o filtro de Código Medidas do gráfico de Notas por Usuário
-    window.popularFiltroCodigoMedidasNotasPorUsuario = function(dados) {
+    window.popularFiltroCodigoMedidasNotasPorUsuario = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const codigo = item.codigo_medidas || '';
@@ -1770,7 +2226,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasNotasPorUsuario();
         };
 
@@ -1784,19 +2240,143 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasNotasPorUsuario = function() {
-      gerarGraficoNotasPorUsuario(dadosGlobais);
+    window.aplicarFiltroCodigoMedidasNotasPorUsuario = async function () {
+      await gerarGraficoNotasPorUsuario(dadosGlobais);
+    };
+
+    // Função para popular o filtro de ano do gráfico de Notas Concluídas por Mês
+    window.popularFiltroAnoNotasConcluidasPorMes = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = item.concluida_em || '';
+
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
+        const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+
+        if (eNotaConcluida && statusValido && temAnexo && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            anosSet.add(partes[2]);
+          }
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoNotasConcluidasPorMes');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoNotasConcluidasPorMes = function () {
+      gerarGraficoNotasConcluidasPorMes(dadosGlobais);
+    };
+
+    // Função para popular o filtro de ano do gráfico Concluídas por Tipo de Solicitação
+    window.popularFiltroAnoConcluidasPorTipoSolicitacao = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const concluidaEm = item.concluida_em || '';
+        if (status !== 'CONC CTEC' && status !== 'CONC RTEC') return;
+        if (!concluidaEm) return;
+        const partes = concluidaEm.split('.');
+        if (partes.length >= 3) {
+          anosSet.add(partes[2]);
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoConcluidasPorTipoSolicitacao');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoConcluidasPorTipoSolicitacao = function () {
+      gerarGraficoConcluidasPorTipoSolicitacao(dadosGlobais);
+    };
+
+    // Funções de filtro para gráfico Concluídas por Tipo Demais
+    window.popularFiltroAnoConcluidasPorTipoDemais = function (dados) {
+      // Coletar anos únicos das notas conclusivas (CONC CTEC e CONC RTEC)
+      const anos = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC')) {
+          const concluidaEm = item.concluida_em || '';
+          if (concluidaEm) {
+            const partes = concluidaEm.split('.');
+            if (partes.length >= 3) {
+              anos.add(partes[2]);
+            }
+          }
+        }
+      });
+
+      const anosArray = Array.from(anos).sort((a, b) => b - a);
+      const selectAno = document.getElementById('filtroAnoConcluidasPorTipoDemais');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoConcluidasPorTipoDemais = function () {
+      gerarGraficoConcluidasPorTipoDemais(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Prazo Médio Exceto Mini/Micro
-    window.popularFiltroCodigoMedidasPrazoExceto = function(dados) {
+    window.popularFiltroCodigoMedidasPrazoExceto = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const status = item.status_usuario || '';
         const codigo = item.codigo_medidas || '';
         const descricao = (item.descricao || '').toLowerCase();
         if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo && item.inicio_planejado && item.concluida_em &&
-            !descricao.includes('mini geração') && !descricao.includes('micro geração')) {
+          !descricao.includes('mini geração') && !descricao.includes('micro geração')) {
           codigos.add(codigo);
         }
       });
@@ -1828,7 +2408,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasPrazoExceto();
         };
 
@@ -1842,19 +2422,19 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasPrazoExceto = function() {
+    window.aplicarFiltroCodigoMedidasPrazoExceto = function () {
       gerarGraficoPrazoMedioExceto(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Prazo Médio Mini/Micro
-    window.popularFiltroCodigoMedidasPrazoMiniMicro = function(dados) {
+    window.popularFiltroCodigoMedidasPrazoMiniMicro = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const status = item.status_usuario || '';
         const codigo = item.codigo_medidas || '';
         const descricao = (item.descricao || '').toLowerCase();
         if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigo && item.inicio_planejado && item.concluida_em &&
-            (descricao.includes('mini geração') || descricao.includes('micro geração'))) {
+          (descricao.includes('mini geração') || descricao.includes('micro geração'))) {
           codigos.add(codigo);
         }
       });
@@ -1886,7 +2466,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasPrazoMiniMicro();
         };
 
@@ -1900,12 +2480,12 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasPrazoMiniMicro = function() {
+    window.aplicarFiltroCodigoMedidasPrazoMiniMicro = function () {
       gerarGraficoPrazoMedioMiniMicro(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Mini Geração
-    window.popularFiltroCodigoMedidasMiniGeracao = function(dados) {
+    window.popularFiltroCodigoMedidasMiniGeracao = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const codigo = item.codigo_medidas || '';
@@ -1942,7 +2522,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasMiniGeracao();
         };
 
@@ -1956,12 +2536,12 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasMiniGeracao = function() {
+    window.aplicarFiltroCodigoMedidasMiniGeracao = function () {
       gerarGraficoMiniGeracao(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Sem Gerações
-    window.popularFiltroCodigoMedidasSemGeracoes = function(dados) {
+    window.popularFiltroCodigoMedidasSemGeracoes = function (dados) {
       const codigos = new Set();
       dados.forEach(item => {
         const codigo = item.codigo_medidas || '';
@@ -1998,7 +2578,7 @@
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
         checkbox.style.height = '16px';
-        checkbox.onchange = function() {
+        checkbox.onchange = function () {
           aplicarFiltroCodigoMedidasSemGeracoes();
         };
 
@@ -2012,7 +2592,7 @@
       });
     };
 
-    window.aplicarFiltroCodigoMedidasSemGeracoes = function() {
+    window.aplicarFiltroCodigoMedidasSemGeracoes = function () {
       gerarGraficoOutrosTipos(dadosGlobais);
     };
 
@@ -2021,13 +2601,13 @@
     let dadosGlobaisCompletos = [];
 
     // Função para popular o filtro de meses
-    window.popularFiltroMeses = function(dados) {
+    window.popularFiltroMeses = function (dados) {
       const mesesSet = new Set();
-      
+
       dados.forEach(item => {
         const concluidaEm = item.concluida_em || '';
         const status = item.status_usuario || '';
-        
+
         if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm) {
           const partes = concluidaEm.split('.');
           if (partes.length >= 3) {
@@ -2036,7 +2616,7 @@
           }
         }
       });
-      
+
       const mesesArray = Array.from(mesesSet).sort((a, b) => {
         const [mesA, anoA] = a.split('.');
         const [mesB, anoB] = b.split('.');
@@ -2044,36 +2624,56 @@
         const dataB = new Date(parseInt(anoB), parseInt(mesB) - 1);
         return dataA - dataB;
       });
-      
+
       const selectMes = document.getElementById('filtroMesConcluidas');
       // Manter a opção "Todos os meses"
       selectMes.innerHTML = '<option value="todos">Todos os meses</option>';
-      
+
       // Adicionar opções de meses
       mesesArray.forEach(mesAno => {
         const [mes, ano] = mesAno.split('.');
-        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
+        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
         const option = document.createElement('option');
         option.value = mesAno;
         option.textContent = `${nomeMes}/${ano}`;
         selectMes.appendChild(option);
       });
 
-      // Selecionar mês atual por padrão, se existir
+      // Selecionar mês atual por padrão
       const dataAtual = new Date();
       const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
       const anoAtual = dataAtual.getFullYear();
       const mesAnoAtual = `${mesAtual}.${anoAtual}`;
 
-      if (mesesArray.includes(mesAnoAtual) && selectMes.value === 'todos') {
+      if (mesesArray.includes(mesAnoAtual)) {
         selectMes.value = mesAnoAtual;
         gerarGraficoConcluidas(dados, mesAnoAtual);
+      } else {
+        // Se o mês atual não tem dados, tenta o mês anterior
+        const dataAnterior = new Date(anoAtual, parseInt(mesAtual) - 2, 1); // -2 porque meses são 0-indexed
+        const mesAnterior = String(dataAnterior.getMonth() + 1).padStart(2, '0');
+        const anoAnterior = dataAnterior.getFullYear();
+        const mesAnoAnterior = `${mesAnterior}.${anoAnterior}`;
+        
+        if (mesesArray.includes(mesAnoAnterior)) {
+          selectMes.value = mesAnoAnterior;
+          gerarGraficoConcluidas(dados, mesAnoAnterior);
+        } else {
+          // Se também não houver mês anterior, usa o último mês disponível
+          if (mesesArray.length > 0) {
+            const ultimoMes = mesesArray[mesesArray.length - 1];
+            selectMes.value = ultimoMes;
+            gerarGraficoConcluidas(dados, ultimoMes);
+          } else {
+            gerarGraficoConcluidas(dados, 'todos');
+          }
+        }
       }
     };
 
     // Função para popular o filtro de meses do gráfico ABER/ANDM (fim_planejado)
-    window.popularFiltroMesesFimPlanejado = function(dados) {
+    window.popularFiltroMesesFimPlanejado = function (dados) {
       const mesesSet = new Set();
 
       dados.forEach(item => {
@@ -2105,8 +2705,8 @@
 
       mesesArray.forEach(mesAno => {
         const [mes, ano] = mesAno.split('.');
-        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-                         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
+        const nomeMes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][parseInt(mes) - 1];
         const option = document.createElement('option');
         option.value = mesAno;
         option.textContent = `${nomeMes}/${ano}`;
@@ -2118,14 +2718,14 @@
       }
     };
 
-    window.filtrarGraficoFimPlanejadoPorMes = function() {
+    window.filtrarGraficoFimPlanejadoPorMes = function () {
       const mesSelecionado = document.getElementById('filtroMesFimPlanejado')?.value || 'todos';
       const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
       gerarGrafico(dadosBase, mesSelecionado);
     };
 
     // Função para filtrar gráfico de concluídas por mês
-    window.filtrarGraficoConcluidasPorMes = function() {
+    window.filtrarGraficoConcluidasPorMes = function () {
       const mesSelecionado = document.getElementById('filtroMesConcluidas').value;
       gerarGraficoConcluidas(dadosGlobais, mesSelecionado);
     };
@@ -2139,17 +2739,50 @@
     let chartMiniGeracaoInstance = null;
     let chartOutrosTiposInstance = null;
     let chartSemGeracoesInstance = null;
-    let chartNotasPorUsuarioInstance = null;
 
+    let chartNotasPorUsuarioInstance = null;
+    let chartNotasConcluidasPorMesInstance = null;
+    let chartConcluidasPorTipoSolicitacaoInstance = null;
+
+    // Função para toggle barras no gráfico Mini/Micro
+    window.toggleBarrasMini = function () {
+      if (!chartConcluidasPorTipoSolicitacaoInstance) return;
+      
+      const checkbox = document.getElementById('ocultarBarrasMini');
+      const ocultarBarras = checkbox.checked;
+      
+      // Ocultar ou mostrar os datasets das barras (índices 0 e 1)
+      chartConcluidasPorTipoSolicitacaoInstance.data.datasets[0].hidden = ocultarBarras;
+      chartConcluidasPorTipoSolicitacaoInstance.data.datasets[1].hidden = ocultarBarras;
+      
+      // A linha (índice 2) permanece sempre visível
+      chartConcluidasPorTipoSolicitacaoInstance.update();
+    };
+    let chartConcluidasPorTipoDemaisInstance = null;
+
+    // Função para toggle barras no gráfico Demais
+    window.toggleBarrasDemais = function () {
+      if (!chartConcluidasPorTipoDemaisInstance) return;
+      
+      const checkbox = document.getElementById('ocultarBarrasDemais');
+      const ocultarBarras = checkbox.checked;
+      
+      // Ocultar ou mostrar os datasets das barras (índices 0 e 1)
+      chartConcluidasPorTipoDemaisInstance.data.datasets[0].hidden = ocultarBarras;
+      chartConcluidasPorTipoDemaisInstance.data.datasets[1].hidden = ocultarBarras;
+      
+      // A linha (índice 2) permanece sempre visível
+      chartConcluidasPorTipoDemaisInstance.update();
+    };
     // Função para gerar gráfico de barras
-    window.gerarGrafico = function(dados, mesFiltro = null) {
+    window.gerarGrafico = function (dados, mesFiltro = null) {
       if (!dados || dados.length === 0) {
         return;
       }
 
       const mesSelecionado = mesFiltro ?? (document.getElementById('filtroMesFimPlanejado')?.value || 'todos');
 
-      const normalizarStatusBase = function(status) {
+      const normalizarStatusBase = function (status) {
         const statusNormalizado = (status || '').trim().toUpperCase();
         if (statusNormalizado.includes('ABER')) return 'ABER';
         if (statusNormalizado.includes('ANDM')) return 'ANDM';
@@ -2204,7 +2837,7 @@
       let rejeitadosPorStatus = 0;
       let rejeitadosPorDescricao = 0;
       let rejeitadosPorCodigo = 0;
-      
+
       const dadosFiltrados = dados.filter(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBase(status);
@@ -2222,7 +2855,7 @@
             mesOk = false;
           }
         }
-        
+
         const statusOk = nenhumStatusMarcado
           ? (statusBase === 'ABER' || statusBase === 'ANDM')
           : (todosStatusMarcados || statusChecados.size === 0)
@@ -2230,14 +2863,14 @@
             : statusChecados.has(statusBase);
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = todosCodigosMarcados || codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        
+
         if (!statusOk) rejeitadosPorStatus++;
         if (!descricaoOk) rejeitadosPorDescricao++;
         if (!codigoOk) rejeitadosPorCodigo++;
-        
+
         return statusOk && descricaoOk && codigoOk && mesOk;
       });
-      
+
       console.log('===== ANÁLISE DE FILTROS =====');
       console.log('Total de dados recebidos:', dados.length);
       console.log('Total de dados filtrados:', dadosFiltrados.length);
@@ -2253,7 +2886,7 @@
       const agrupamentoPorData = {};
       const totaisPorStatus = {};
       const statusPresentes = new Set();
-      
+
       dadosFiltrados.forEach(item => {
         const fimPlanejado = item.fim_planejado || 'Sem data';
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
@@ -2262,7 +2895,7 @@
           return;
         }
         statusPresentes.add(statusBase);
-        
+
         if (!agrupamentoPorData[fimPlanejado]) {
           agrupamentoPorData[fimPlanejado] = {};
         }
@@ -2289,7 +2922,7 @@
         if (b === 'Sem data') return -1;
         return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
       });
-      
+
       console.log('Total de labels (datas únicas):', labels.length);
       console.log('Todas as labels:', labels);
 
@@ -2316,12 +2949,16 @@
           hoverBackgroundColor: colors.bg,
           hoverBorderColor: colors.border,
           datalabels: {
-            color: '#fff',
+            color: '#2e7d32',
+            anchor: 'end',
+            align: 'top',
+            offset: 4,
             font: {
               weight: 'bold',
-              size: 12
+              size: 11,
+              family: 'Roboto'
             },
-            formatter: function(value) {
+            formatter: function (value) {
               return value > 0 ? value : '';
             }
           }
@@ -2351,7 +2988,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
               const statusLabel = statusOrdenados[datasetIndex];
-              
+
               // Filtrar notas correspondentes à barra clicada
               const notasFiltradas = dadosFiltrados.filter(item => {
                 const fimPlanejado = item.fim_planejado || 'Sem data';
@@ -2359,19 +2996,14 @@
                 const statusBase = normalizarStatusBase(status);
                 return fimPlanejado === dataLabel && statusBase === statusLabel;
               });
-              
+
               abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
             }
           },
           plugins: {
-            datalabels: {
-              display: true,
-              align: 'center',
-              anchor: 'center'
-            },
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -2395,7 +3027,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return context.dataset.label + ': ' + context.parsed.y;
                 }
               }
@@ -2456,7 +3088,7 @@
     };
 
     // Função para gerar gráfico de Notas Concluídas (CONC CTEC e CONC RTEC)
-    window.gerarGraficoConcluidas = function(dados, mesFiltro = null) {
+    window.gerarGraficoConcluidas = function (dados, mesFiltro = null) {
       if (!dados || dados.length === 0) {
         return;
       }
@@ -2490,18 +3122,25 @@
       const agrupamentoPorData = {};
       let totalCONC_CTEC = 0;
       let totalCONC_RTEC = 0;
-      
+
       dadosFiltrados.forEach(item => {
         const concluidaEm = item.concluida_em || 'Sem data';
         const status = item.status_usuario || '';
         const codigoMedidas = item.codigo_medidas || '';
-        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
         
-        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigoOk) {
+        // Verificar se tem anexo
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+        
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigoOk && temAnexo) {
           if (!agrupamentoPorData[concluidaEm]) {
             agrupamentoPorData[concluidaEm] = { CONC_CTEC: 0, CONC_RTEC: 0 };
           }
-          
+
           if (status === 'CONC CTEC') {
             agrupamentoPorData[concluidaEm].CONC_CTEC++;
             totalCONC_CTEC++;
@@ -2515,7 +3154,7 @@
       // Atualizar contadores na interface
       const totalConcluidas = totalCONC_CTEC + totalCONC_RTEC;
       const percentualAprovacao = totalConcluidas > 0 ? ((totalCONC_CTEC / totalConcluidas) * 100).toFixed(1) : 0;
-      
+
       document.getElementById('totalConcluidas').textContent = totalConcluidas;
       document.getElementById('totalCONC_CTEC').textContent = totalCONC_CTEC;
       document.getElementById('totalCONC_RTEC').textContent = totalCONC_RTEC;
@@ -2568,7 +3207,7 @@
                   weight: 'bold',
                   size: 12
                 },
-                formatter: function(value) {
+                formatter: function (value) {
                   return value > 0 ? value : '';
                 }
               }
@@ -2588,7 +3227,7 @@
                   weight: 'bold',
                   size: 12
                 },
-                formatter: function(value) {
+                formatter: function (value) {
                   return value > 0 ? value : '';
                 }
               }
@@ -2605,7 +3244,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
               const statusLabel = datasetIndex === 0 ? 'CONC CTEC' : 'CONC RTEC';
-              
+
               // Filtrar notas correspondentes à barra clicada
               const notasFiltradas = dadosFiltrados.filter(item => {
                 const concluidaEm = item.concluida_em || 'Sem data';
@@ -2614,7 +3253,7 @@
                 const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
                 return concluidaEm === dataLabel && status === statusLabel && codigoOk;
               });
-              
+
               abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
             }
           },
@@ -2626,7 +3265,7 @@
             },
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -2650,7 +3289,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return context.dataset.label + ': ' + context.parsed.y;
                 }
               }
@@ -2711,7 +3350,7 @@
     };
 
     // Função para gerar gráfico de Prazo Médio Mensal
-    window.gerarGraficoPrazoMedio = function(dados) {
+    window.gerarGraficoPrazoMedio = function (dados) {
       if (!dados || dados.length === 0) {
         return;
       }
@@ -2740,15 +3379,15 @@
         const descricao = item.descricao || '';
         const codigoMedidas = item.codigo_medidas || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
-        
+
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
-        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') || 
-                          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
-                          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
-        
-        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
-               item.inicio_planejado &&
-               item.concluida_em;
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
+          item.inicio_planejado &&
+          item.concluida_em;
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         return statusOk && descricaoOk && codigoOk && temAnexo;
@@ -2781,21 +3420,21 @@
       notasConcluidas.forEach(item => {
         const inicioPlanejado = parseData(item.inicio_planejado);
         const concluida = parseData(item.concluida_em);
-        
+
         if (inicioPlanejado && concluida) {
           // Calcular diferença em dias (data de conclusão - início planejado)
           const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
-          
+
           // Agrupar por mês/ano (baseado na data de conclusão)
           const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-          
+
           if (!prazosPorMes[mesAno]) {
             prazosPorMes[mesAno] = { soma: 0, count: 0 };
           }
-          
+
           prazosPorMes[mesAno].soma += diferencaDias;
           prazosPorMes[mesAno].count++;
-          
+
           somaTotalDias += diferencaDias;
           totalNotasValidas++;
         }
@@ -2855,7 +3494,7 @@
             },
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -2879,10 +3518,10 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Prazo médio: ' + context.parsed.y + ' dias';
                 },
-                afterLabel: function(context) {
+                afterLabel: function (context) {
                   const mes = labels[context.dataIndex];
                   const info = prazosPorMes[mes];
                   return 'Notas: ' + info.count;
@@ -2921,7 +3560,7 @@
                   family: 'Roboto'
                 },
                 color: '#666',
-                callback: function(value) {
+                callback: function (value) {
                   return value + ' dias';
                 }
               },
@@ -2945,7 +3584,7 @@
     };
 
     // Gráfico Prazo Médio (Exceto Mini/Micro Geração)
-    window.gerarGraficoPrazoMedioExceto = function(dados) {
+    window.gerarGraficoPrazoMedioExceto = function (dados) {
       if (!dados || dados.length === 0) {
         return;
       }
@@ -2974,18 +3613,18 @@
         const descricao = item.descricao || '';
         const codigoMedidas = item.codigo_medidas || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
-        
+
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
-        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') || 
-                          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
-                          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
-        
-        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
-               item.inicio_planejado &&
-               item.concluida_em;
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
+          item.inicio_planejado &&
+          item.concluida_em;
         // Excluir mini e micro geração
-        const naoEMiniMicro = !descricao.toLowerCase().includes('mini geração') && 
-                              !descricao.toLowerCase().includes('micro geração');
+        const naoEMiniMicro = !descricao.toLowerCase().includes('mini geração') &&
+          !descricao.toLowerCase().includes('micro geração');
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         return statusOk && naoEMiniMicro && descricaoOk && codigoOk && temAnexo;
@@ -3017,18 +3656,18 @@
       notasConcluidas.forEach(item => {
         const inicioPlanejado = parseData(item.inicio_planejado);
         const concluida = parseData(item.concluida_em);
-        
+
         if (inicioPlanejado && concluida) {
           const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
           const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-          
+
           if (!prazosPorMes[mesAno]) {
             prazosPorMes[mesAno] = { soma: 0, count: 0 };
           }
-          
+
           prazosPorMes[mesAno].soma += diferencaDias;
           prazosPorMes[mesAno].count++;
-          
+
           somaTotalDias += diferencaDias;
           totalNotasValidas++;
         }
@@ -3084,7 +3723,7 @@
             },
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -3108,10 +3747,10 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Prazo médio: ' + context.parsed.y + ' dias';
                 },
-                afterLabel: function(context) {
+                afterLabel: function (context) {
                   const mes = labels[context.dataIndex];
                   const info = prazosPorMes[mes];
                   return 'Notas: ' + info.count;
@@ -3150,7 +3789,7 @@
                   family: 'Roboto'
                 },
                 color: '#666',
-                callback: function(value) {
+                callback: function (value) {
                   return value + ' dias';
                 }
               },
@@ -3174,7 +3813,7 @@
     };
 
     // Gráfico Prazo Médio (Somente Mini/Micro Geração)
-    window.gerarGraficoPrazoMedioMiniMicro = function(dados) {
+    window.gerarGraficoPrazoMedioMiniMicro = function (dados) {
       if (!dados || dados.length === 0) {
         return;
       }
@@ -3203,18 +3842,18 @@
         const descricao = item.descricao || '';
         const codigoMedidas = item.codigo_medidas || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
-        
+
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
-        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') || 
-                          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
-                          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
-        
-        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') && 
-               item.inicio_planejado &&
-               item.concluida_em;
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
+          item.inicio_planejado &&
+          item.concluida_em;
         // Incluir apenas mini e micro geração
-        const ehMiniMicro = descricao.toLowerCase().includes('mini geração') || 
-                            descricao.toLowerCase().includes('micro geração');
+        const ehMiniMicro = descricao.toLowerCase().includes('mini geração') ||
+          descricao.toLowerCase().includes('micro geração');
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         return statusOk && ehMiniMicro && descricaoOk && codigoOk && temAnexo;
@@ -3246,18 +3885,18 @@
       notasConcluidas.forEach(item => {
         const inicioPlanejado = parseData(item.inicio_planejado);
         const concluida = parseData(item.concluida_em);
-        
+
         if (inicioPlanejado && concluida) {
           const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
           const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-          
+
           if (!prazosPorMes[mesAno]) {
             prazosPorMes[mesAno] = { soma: 0, count: 0 };
           }
-          
+
           prazosPorMes[mesAno].soma += diferencaDias;
           prazosPorMes[mesAno].count++;
-          
+
           somaTotalDias += diferencaDias;
           totalNotasValidas++;
         }
@@ -3313,7 +3952,7 @@
             },
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -3337,10 +3976,10 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Prazo médio: ' + context.parsed.y + ' dias';
                 },
-                afterLabel: function(context) {
+                afterLabel: function (context) {
                   const mes = labels[context.dataIndex];
                   const info = prazosPorMes[mes];
                   return 'Notas: ' + info.count;
@@ -3379,7 +4018,7 @@
                   family: 'Roboto'
                 },
                 color: '#666',
-                callback: function(value) {
+                callback: function (value) {
                   return value + ' dias';
                 }
               },
@@ -3403,7 +4042,7 @@
     };
 
     // Função para gerar gráfico filtrado de Mini Geração
-    window.gerarGraficoMiniGeracao = function(dados) {
+    window.gerarGraficoMiniGeracao = function (dados) {
       if (!dados || dados.length === 0) {
         document.getElementById('totalMiniGeracao').textContent = '0';
         return;
@@ -3477,17 +4116,44 @@
             borderWidth: 2,
             borderRadius: 8,
             hoverBackgroundColor: 'rgba(255, 167, 38, 0.8)',
-            hoverBorderColor: 'rgba(255, 167, 38, 1)'
+            hoverBorderColor: 'rgba(255, 167, 38, 1)',
+            datalabels: {
+              display: true,
+              anchor: 'end',
+              align: 'top',
+              offset: 4,
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#ff9800'
+            }
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+              const statusLabel = 'GD';
+
+              // Filtrar notas correspondentes à barra clicada
+              const notasFiltradas = dadosFiltrados.filter(item => {
+                const fimPlanejado = item.fim_planejado || 'Sem data';
+                return fimPlanejado === dataLabel;
+              });
+
+              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+            }
+          },
           plugins: {
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -3511,7 +4177,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Notas: ' + context.parsed.y;
                 }
               }
@@ -3572,7 +4238,7 @@
     };
 
     // Função para gerar gráfico com todos os tipos de descrição (incluindo Mini Geração)
-    window.gerarGraficoOutrosTipos = function(dados) {
+    window.gerarGraficoOutrosTipos = function (dados) {
       // Obter códigos medidas selecionados nos checkboxes
       const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasSemGeracoes input[type="checkbox"]');
       const codigosChecados = new Set();
@@ -3641,17 +4307,43 @@
             borderWidth: 2,
             borderRadius: 8,
             hoverBackgroundColor: 'rgba(66, 165, 245, 0.8)',
-            hoverBorderColor: 'rgba(66, 165, 245, 1)'
+            hoverBorderColor: 'rgba(66, 165, 245, 1)',
+            datalabels: {
+              display: true,
+              anchor: 'end',
+              align: 'top',
+              offset: 4,
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#1976d2'
+            }
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const descricaoLabel = labels[index];
+
+              // Filtrar notas correspondentes à barra clicada
+              const notasFiltradas = dadosFiltrados.filter(item => {
+                const descricao = item.descricao || 'Sem descrição';
+                return descricao === descricaoLabel;
+              });
+
+              abrirModalNotasSemEdicao(notasFiltradas, descricaoLabel);
+            }
+          },
           plugins: {
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -3675,7 +4367,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Notas: ' + context.parsed.y;
                 }
               }
@@ -3736,14 +4428,14 @@
     };
 
     // Função para gerar gráfico sem Mini e Micro Geração - Por Fim Planejado
-    window.gerarGraficoSemGeracoes = function(dados) {
+    window.gerarGraficoSemGeracoes = function (dados) {
       // Filtrar dados excluindo mini e micro geração E considerando apenas ANDM e ABER
       const dadosFiltrados = dados.filter(item => {
         const descricao = (item.descricao || '').toLowerCase();
         const status = item.status_usuario || '';
-        return !descricao.includes('mini geração') && 
-               !descricao.includes('micro geração') &&
-               (status === 'ANDM' || status === 'ABER');
+        return !descricao.includes('mini geração') &&
+          !descricao.includes('micro geração') &&
+          (status === 'ANDM' || status === 'ABER');
       });
 
       // Atualizar contador total
@@ -3791,22 +4483,49 @@
           datasets: [{
             label: 'Quantidade de Notas - Sem Mini/Micro Geração',
             data: valores,
-            backgroundColor: 'rgba(123, 31, 162, 0.7)',
-            borderColor: 'rgba(123, 31, 162, 1)',
+            backgroundColor: 'rgba(46, 125, 50, 0.7)',
+            borderColor: 'rgba(46, 125, 50, 1)',
             borderWidth: 2,
             borderRadius: 8,
-            hoverBackgroundColor: 'rgba(156, 39, 176, 0.8)',
-            hoverBorderColor: 'rgba(156, 39, 176, 1)'
+            hoverBackgroundColor: 'rgba(56, 142, 60, 0.9)',
+            hoverBorderColor: 'rgba(56, 142, 60, 1)',
+            datalabels: {
+              display: true,
+              anchor: 'end',
+              align: 'top',
+              offset: 4,
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#2e7d32'
+            }
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+              const statusLabel = 'CARGA';
+
+              // Filtrar notas correspondentes à barra clicada
+              const notasFiltradas = dadosFiltrados.filter(item => {
+                const fimPlanejado = item.fim_planejado || 'Sem data';
+                return fimPlanejado === dataLabel;
+              });
+
+              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+            }
+          },
           plugins: {
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -3819,7 +4538,7 @@
               display: false
             },
             tooltip: {
-              backgroundColor: 'rgba(123, 31, 162, 0.9)',
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
               titleFont: {
                 size: 14,
                 family: 'Roboto'
@@ -3830,7 +4549,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Notas: ' + context.parsed.y;
                 }
               }
@@ -3891,7 +4610,7 @@
     };
 
     // Gráfico de Notas Concluídas por Usuário
-    window.gerarGraficoNotasPorUsuario = function(dados) {
+    window.gerarGraficoNotasPorUsuario = async function (dados) {
       if (!dados || dados.length === 0) {
         document.getElementById('totalNotasPorUsuario').textContent = '0';
         if (chartNotasPorUsuarioInstance) {
@@ -3923,13 +4642,19 @@
         }
       });
 
-      // Filtrar apenas notas concluídas (status CONC CTEC ou CONC RTEC) com usuário preenchido
+      // Filtrar apenas notas concluídas (status CONC CTEC ou CONC RTEC) com usuário preenchido e com anexo
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
         const usuario = (item.concluido_por || '').trim();
         const descricao = item.descricao || '';
         const codigoMedidas = item.codigo_medidas || '';
         const concluidaEm = item.concluida_em || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Verificar se tem anexo
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
 
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
@@ -3945,7 +4670,7 @@
           }
         }
 
-        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && descricaoOk && codigoOk && mesOk;
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && descricaoOk && codigoOk && mesOk && temAnexo;
       });
 
       if (notasConcluidas.length === 0) {
@@ -3960,10 +4685,13 @@
       // Atualizar total
       document.getElementById('totalNotasPorUsuario').textContent = notasConcluidas.length;
 
-      // Agrupar por usuário (concluido_por)
+      // Agrupar por usuário (concluido_por) - mantém a matrícula como chave
       const agrupamentoUsuario = {};
+      const usuariosUnicos = new Set();
+      
       notasConcluidas.forEach(item => {
         const usuario = (item.concluido_por || 'Desconhecido').trim();
+        usuariosUnicos.add(usuario);
         if (agrupamentoUsuario[usuario]) {
           agrupamentoUsuario[usuario]++;
         } else {
@@ -3971,24 +4699,62 @@
         }
       });
 
-      // Converter para arrays e ordenar por quantidade (decrescente)
+      // Buscar dados de usuários da tabela user_login_nt
+      let mapaNomesUsuarios = {};
+      try {
+        // Criar um array com os valores únicos para fazer o filtro
+        const usuariosArray = Array.from(usuariosUnicos);
+        
+        if (usuariosArray.length > 0) {
+          // Fazer consulta para todas as matrículas de uma vez
+          const { data: usuariosData, error } = await supabaseClient
+            .from('user_login_nt')
+            .select('matricula, nome_usuario');
+
+          if (!error && usuariosData) {
+            // Criar mapa de matrícula (lowercase) -> nome do usuário
+            usuariosData.forEach(user => {
+              if (user.matricula && user.nome_usuario) {
+                // Converter matrícula para lowercase para comparação case-insensitive
+                mapaNomesUsuarios[user.matricula.toLowerCase()] = user.nome_usuario;
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao buscar dados de usuários:', err);
+      }
+
+      // Converter para arrays, ordenar por quantidade (decrescente) e substituir nomes
       const labels = Object.keys(agrupamentoUsuario).sort((a, b) => {
         return agrupamentoUsuario[b] - agrupamentoUsuario[a];
+      }).map(matricula => {
+        // Se encontrou nome do usuário, exibe "Nome (Matricula)", senão apenas "(Matricula)"
+        // Buscar usando lowercase para case-insensitive
+        const nomeUsuario = mapaNomesUsuarios[matricula.toLowerCase()];
+        if (nomeUsuario) {
+          return `${nomeUsuario} (${matricula})`;
+        } else {
+          return `(${matricula})`;
+        }
       });
-      const valores = labels.map(label => agrupamentoUsuario[label]);
 
-      // Cores alternadas para melhor visualização
+      const valores = Object.keys(agrupamentoUsuario).sort((a, b) => {
+        return agrupamentoUsuario[b] - agrupamentoUsuario[a];
+      }).map(label => agrupamentoUsuario[label]);
+
+      // Cores em tons de verde para melhor visualização
       const cores = [
-        'rgba(255, 87, 34, 0.7)',   // Deep Orange
-        'rgba(244, 67, 54, 0.7)',   // Red
-        'rgba(233, 30, 99, 0.7)',   // Pink
-        'rgba(156, 39, 176, 0.7)',  // Purple
-        'rgba(103, 58, 183, 0.7)',  // Deep Purple
-        'rgba(63, 81, 181, 0.7)',   // Indigo
-        'rgba(33, 150, 243, 0.7)',  // Blue
-        'rgba(0, 172, 193, 0.7)',   // Cyan
-        'rgba(0, 150, 136, 0.7)',   // Teal
-        'rgba(76, 175, 80, 0.7)'    // Green
+        'rgba(46, 125, 50, 0.7)',   // Verde escuro
+        'rgba(56, 142, 60, 0.7)',   // Verde médio-escuro
+        'rgba(67, 160, 71, 0.7)',   // Verde médio
+        'rgba(76, 175, 80, 0.7)',   // Verde padrão
+        'rgba(102, 187, 106, 0.7)', // Verde claro
+        'rgba(129, 199, 132, 0.7)', // Verde muito claro
+        'rgba(27, 94, 32, 0.7)',    // Verde escuro intenso
+        'rgba(46, 125, 50, 0.7)',   // Verde escuro (repetido)
+        'rgba(56, 142, 60, 0.7)',   // Verde médio-escuro (repetido)
+        'rgba(76, 175, 80, 0.7)'    // Verde padrão (repetido)
       ];
 
       const backgroundColors = labels.map((_, index) => cores[index % cores.length]);
@@ -4022,10 +4788,29 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.0,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const usuarioLabel = labels[index];
+              
+              // Extrair matrícula do label (está no formato "Nome (Matricula)" ou "(Matricula)")
+              const matriculaMatch = usuarioLabel.match(/\(([^)]+)\)$/);
+              const matricula = matriculaMatch ? matriculaMatch[1] : usuarioLabel;
+
+              // Filtrar notas correspondentes ao usuário clicado (usando a matrícula)
+              // Comparação case-insensitive
+              const notasFiltradas = notasConcluidas.filter(item => {
+                const usuario = (item.concluido_por || '').trim();
+                return usuario.toLowerCase() === matricula.toLowerCase();
+              });
+
+              abrirModalNotasSemEdicao(notasFiltradas, `Notas de ${usuarioLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
-              position: 'top',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 14,
@@ -4049,7 +4834,7 @@
               },
               padding: 12,
               callbacks: {
-                label: function(context) {
+                label: function (context) {
                   return 'Notas: ' + context.parsed.x;
                 }
               }
@@ -4107,11 +4892,813 @@
       });
     };
 
+    // Função para gerar gráfico de Notas Concluídas por Mês
+    window.gerarGraficoNotasConcluidasPorMes = function (dados) {
+      if (!dados || dados.length === 0) {
+        document.getElementById('totalNotasConcluidasPorMes').textContent = '0';
+        if (chartNotasConcluidasPorMesInstance) {
+          chartNotasConcluidasPorMesInstance.destroy();
+          chartNotasConcluidasPorMesInstance = null;
+        }
+        return;
+      }
+
+      // Filtrar notas: apenas CONC CTEC e CONC RTEC, desconsiderando SEM ANEXO e status ANDM/ABER/CANC
+      const notasFiltradas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        // Apenas notas concluídas
+        const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
+
+        // Desconsiderar ANDM, ABER ou CANC (status não concluídos)
+        const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+
+        return eNotaConcluida && temAnexo && statusValido;
+      });
+
+      // Obter ano selecionado
+      const selectAno = document.getElementById('filtroAnoNotasConcluidasPorMes');
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+
+      const notasFiltradasPorAno = anoSelecionado === 'todos'
+        ? notasFiltradas
+        : notasFiltradas.filter(item => {
+            const concluidaEm = item.concluida_em || '';
+            if (!concluidaEm) return false;
+            const partes = concluidaEm.split('.');
+            if (partes.length >= 3) {
+              return partes[2] === anoSelecionado;
+            }
+            return false;
+          });
+
+      if (notasFiltradasPorAno.length === 0) {
+        document.getElementById('totalNotasConcluidasPorMes').textContent = '0';
+        if (chartNotasConcluidasPorMesInstance) {
+          chartNotasConcluidasPorMesInstance.destroy();
+          chartNotasConcluidasPorMesInstance = null;
+        }
+        return;
+      }
+
+      // Atualizar total
+      document.getElementById('totalNotasConcluidasPorMes').textContent = notasFiltradasPorAno.length;
+
+      // Agrupar por mês (MM.AAAA) usando concluida_em
+      const agrupamentoMes = {};
+      notasFiltradasPorAno.forEach(item => {
+        const concluidaEm = item.concluida_em || '';
+        let mesAno = 'Sem data';
+
+        if (concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            mesAno = partes[1] + '.' + partes[2];
+          }
+        }
+
+        if (agrupamentoMes[mesAno]) {
+          agrupamentoMes[mesAno]++;
+        } else {
+          agrupamentoMes[mesAno] = 1;
+        }
+      });
+
+      // Converter para arrays e ordenar por mês/ano
+      const labels = Object.keys(agrupamentoMes).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dateA = new Date(`${anoA}-${mesA}-01`);
+        const dateB = new Date(`${anoB}-${mesB}-01`);
+        return dateA - dateB;
+      });
+      const valores = labels.map(label => agrupamentoMes[label]);
+
+      // Destruir gráfico anterior se existir
+      if (chartNotasConcluidasPorMesInstance) {
+        chartNotasConcluidasPorMesInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartNotasConcluidasPorMes').getContext('2d');
+      chartNotasConcluidasPorMesInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas Concluídas',
+            data: valores,
+            backgroundColor: 'rgba(46, 125, 50, 0.7)',
+            borderColor: 'rgba(46, 125, 50, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(56, 142, 60, 0.9)',
+            hoverBorderColor: 'rgba(56, 142, 60, 1)'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function (context) {
+                  return context.dataset.label + ': ' + context.parsed.y;
+                }
+              }
+            },
+            datalabels: {
+              color: '#ffffff',
+              anchor: 'center',
+              align: 'center',
+              font: {
+                weight: 'bold',
+                size: 13
+              },
+              formatter: function(value) {
+                return value;
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Data de Conclusão',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
+    // Gerar gráfico de notas concluídas por tipo de solicitação (Mini/Micro vs Demais)
+    window.gerarGraficoConcluidasPorTipoSolicitacao = function (dados) {
+      // Verificar se há dados disponíveis
+      if (!dados || dados.length === 0) {
+        console.warn('Nenhum dado disponível para gerar o gráfico de Concluídas por Tipo de Solicitação.');
+        return;
+      }
+
+      // Obter o ano selecionado do filtro
+      const anoSelecionado = parseInt(document.getElementById('filtroAnoConcluidasPorTipoSolicitacao').value);
+      
+      console.log('Ano selecionado:', anoSelecionado);
+      console.log('Total de dados recebidos:', dados.length);
+
+      // Filtrar dados por status CONC CTEC ou CONC RTEC
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        // Apenas notas concluídas
+        const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
+
+        // Desconsiderar ANDM, ABER ou CANC
+        const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+
+        // Apenas Mini/Micro Geração
+        const isMiniMicro = descricao.includes('mini geração') || descricao.includes('micro geração');
+
+        if (!eNotaConcluida || !temAnexo || !statusValido || !isMiniMicro) return false;
+
+        // Filtrar pelo ano selecionado
+        const concluida_em = item.concluida_em || '';
+        if (concluida_em) {
+          const partes = concluida_em.split('.');
+          if (partes.length === 3) {
+            const ano = parseInt(partes[2]);
+            if (ano !== anoSelecionado) return false;
+          }
+        }
+
+        return true;
+      });
+
+      console.log('Notas concluídas filtradas:', notasConcluidas.length);
+      
+      if (notasConcluidas.length === 0) {
+        console.warn('Nenhuma nota concluída após filtragem para o ano', anoSelecionado);
+        // Destruir gráfico se existir
+        if (chartConcluidasPorTipoSolicitacaoInstance) {
+          chartConcluidasPorTipoSolicitacaoInstance.destroy();
+          chartConcluidasPorTipoSolicitacaoInstance = null;
+        }
+        return;
+      }
+
+      // Agrupar por mês
+      const mesesMap = {};
+
+      notasConcluidas.forEach(item => {
+        const concluida_em = item.concluida_em || '';
+        if (!concluida_em) return;
+
+        const partes = concluida_em.split('.');
+        if (partes.length !== 3) return;
+
+        const dia = partes[0];
+        const mes = partes[1];
+        const ano = partes[2];
+        const mesAno = `${mes}.${ano}`;
+
+        if (!mesesMap[mesAno]) {
+          mesesMap[mesAno] = {
+            miniCTEC: 0,
+            miniRTEC: 0
+          };
+        }
+
+        const status = item.status_usuario || '';
+        if (status === 'CONC CTEC') {
+          mesesMap[mesAno].miniCTEC++;
+        } else if (status === 'CONC RTEC') {
+          mesesMap[mesAno].miniRTEC++;
+        }
+      });
+
+      // Converter para arrays e ordenar por data
+      let meses = Object.keys(mesesMap).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dataA = new Date(`${anoA}-${mesA}-01`);
+        const dataB = new Date(`${anoB}-${mesB}-01`);
+        return dataA - dataB;
+      });
+
+      const miniCTEC = meses.map(mes => mesesMap[mes].miniCTEC);
+      const miniRTEC = meses.map(mes => mesesMap[mes].miniRTEC);
+      const demaisCTEC = meses.map(mes => mesesMap[mes].demaisCTEC);
+      const demaisRTEC = meses.map(mes => mesesMap[mes].demaisRTEC);
+
+      console.log('Meses encontrados:', meses);
+      console.log('Mini CTEC:', miniCTEC);
+      console.log('Mini RTEC:', miniRTEC);
+      console.log('Demais CTEC:', demaisCTEC);
+      console.log('Demais RTEC:', demaisRTEC);
+
+      // Calcular percentuais
+      const percentuaisMini = meses.map(mes => {
+        const totalMini = mesesMap[mes].miniCTEC + mesesMap[mes].miniRTEC;
+        return totalMini > 0 ? ((mesesMap[mes].miniCTEC / totalMini) * 100).toFixed(1) : 0;
+      });
+
+      const percentuaisDemais = meses.map(mes => {
+        const totalDemais = mesesMap[mes].demaisCTEC + mesesMap[mes].demaisRTEC;
+        return totalDemais > 0 ? ((mesesMap[mes].demaisCTEC / totalDemais) * 100).toFixed(1) : 0;
+      });
+
+      // Converter percentuais para números para as barras
+      const miniCTECPercentual = percentuaisMini.map(p => parseFloat(p));
+      const miniRTECPercentual = meses.map((mes, i) => 100 - parseFloat(percentuaisMini[i]));
+
+      // Destruir gráfico existente se houver
+      if (chartConcluidasPorTipoSolicitacaoInstance) {
+        chartConcluidasPorTipoSolicitacaoInstance.destroy();
+      }
+
+      // Criar gráfico
+      const ctx = document.getElementById('chartConcluidasPorTipoSolicitacao').getContext('2d');
+      chartConcluidasPorTipoSolicitacaoInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: meses,
+          datasets: [
+            {
+              label: 'Mini/Micro - CONC CTEC',
+              data: miniCTECPercentual,
+              backgroundColor: 'rgba(56, 142, 60, 0.8)',
+              stack: 'mini',
+              datalabels: {
+                display: false
+              }
+            },
+            {
+              label: 'Mini/Micro - CONC RTEC',
+              data: miniRTECPercentual,
+              backgroundColor: 'rgba(129, 199, 132, 0.8)',
+              stack: 'mini',
+              hidden: true,
+              datalabels: {
+                display: true,
+                formatter: (value, context) => {
+                  return percentuaisMini[context.dataIndex] + '%';
+                },
+                anchor: 'end',
+                align: 'top',
+                offset: 4,
+                clip: false,
+                font: {
+                  size: 12,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#2e7d32',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                borderRadius: 4,
+                padding: 4
+              }
+            },
+            {
+              label: 'Taxa de Aprovação (%)',
+              data: percentuaisMini.map(p => parseFloat(p)),
+              type: 'line',
+              borderColor: 'rgba(27, 94, 32, 1)',
+              backgroundColor: 'rgba(27, 94, 32, 0.1)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: 'rgba(27, 94, 32, 1)',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              fill: false,
+              tension: 0.4,
+              yAxisID: 'y',
+              datalabels: {
+                display: true,
+                formatter: (value, context) => {
+                  return value.toFixed(1) + '%';
+                },
+                anchor: 'end',
+                align: 'top',
+                offset: 6,
+                clip: false,
+                font: {
+                  size: 11,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#1b5e20',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                borderRadius: 4,
+                padding: 3
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 60
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              align: 'start',
+              labels: {
+                padding: 16,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#333',
+                usePointStyle: true,
+                pointStyle: 'rect'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const label = context.dataset.label || '';
+                  const value = context.parsed.y;
+                  
+                  return `${label}: ${value}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              ticks: {
+                stepSize: 10,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function (value) {
+                  return value + '%';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Percentual de Aprovação (%)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+
+      // Atualizar total de notas
+      const totalNotas = notasConcluidas.length;
+      document.getElementById('totalNotasConcluidasPorTipoMini').textContent = totalNotas;
+    };
+
+    // Gerar gráfico de notas concluídas por tipo de solicitação (apenas Demais Tipos)
+    window.gerarGraficoConcluidasPorTipoDemais = function (dados) {
+      // Verificar se há dados disponíveis
+      if (!dados || dados.length === 0) {
+        console.warn('Nenhum dado disponível para gerar o gráfico de Concluídas por Tipo Demais.');
+        return;
+      }
+
+      // Obter o ano selecionado do filtro
+      const anoSelecionado = parseInt(document.getElementById('filtroAnoConcluidasPorTipoDemais').value);
+      
+      console.log('Ano selecionado (Demais):', anoSelecionado);
+      console.log('Total de dados recebidos:', dados.length);
+
+      // Filtrar dados por status CONC CTEC ou CONC RTEC
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        // Apenas notas concluídas
+        const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
+
+        // Desconsiderar ANDM, ABER ou CANC
+        const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+
+        // Apenas Demais (NÃO mini ou micro)
+        const isDemais = !(descricao.includes('mini geração') || descricao.includes('micro geração'));
+
+        if (!eNotaConcluida || !temAnexo || !statusValido || !isDemais) return false;
+
+        // Filtrar pelo ano selecionado
+        const concluida_em = item.concluida_em || '';
+        if (concluida_em) {
+          const partes = concluida_em.split('.');
+          if (partes.length === 3) {
+            const ano = parseInt(partes[2]);
+            if (ano !== anoSelecionado) return false;
+          }
+        }
+
+        return true;
+      });
+
+      console.log('Notas Demais filtradas:', notasConcluidas.length);
+      
+      if (notasConcluidas.length === 0) {
+        console.warn('Nenhuma nota Demais após filtragem para o ano', anoSelecionado);
+        if (chartConcluidasPorTipoDemaisInstance) {
+          chartConcluidasPorTipoDemaisInstance.destroy();
+          chartConcluidasPorTipoDemaisInstance = null;
+        }
+        return;
+      }
+
+      // Agrupar por mês
+      const mesesMap = {};
+
+      notasConcluidas.forEach(item => {
+        const concluida_em = item.concluida_em || '';
+        if (!concluida_em) return;
+
+        const partes = concluida_em.split('.');
+        if (partes.length !== 3) return;
+
+        const dia = partes[0];
+        const mes = partes[1];
+        const ano = partes[2];
+        const mesAno = `${mes}.${ano}`;
+
+        if (!mesesMap[mesAno]) {
+          mesesMap[mesAno] = {
+            demaisCTEC: 0,
+            demaisRTEC: 0
+          };
+        }
+
+        const status = item.status_usuario || '';
+
+        if (status === 'CONC CTEC') {
+          mesesMap[mesAno].demaisCTEC++;
+        } else if (status === 'CONC RTEC') {
+          mesesMap[mesAno].demaisRTEC++;
+        }
+      });
+
+      // Converter para arrays e ordenar por data
+      let meses = Object.keys(mesesMap).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dataA = new Date(`${anoA}-${mesA}-01`);
+        const dataB = new Date(`${anoB}-${mesB}-01`);
+        return dataA - dataB;
+      });
+
+      const demaisCTEC = meses.map(mes => mesesMap[mes].demaisCTEC);
+      const demaisRTEC = meses.map(mes => mesesMap[mes].demaisRTEC);
+
+      console.log('Meses encontrados (Demais):', meses);
+      console.log('Demais CTEC:', demaisCTEC);
+      console.log('Demais RTEC:', demaisRTEC);
+
+      // Calcular percentuais
+      const percentuaisDemais = meses.map(mes => {
+        const totalDemais = mesesMap[mes].demaisCTEC + mesesMap[mes].demaisRTEC;
+        return totalDemais > 0 ? ((mesesMap[mes].demaisCTEC / totalDemais) * 100).toFixed(1) : 0;
+      });
+
+      // Converter percentuais para números para as barras
+      const demaisCTECPercentual = percentuaisDemais.map(p => parseFloat(p));
+      const demaisRTECPercentual = meses.map((mes, i) => 100 - parseFloat(percentuaisDemais[i]));
+
+      // Destruir gráfico existente se houver
+      if (chartConcluidasPorTipoDemaisInstance) {
+        chartConcluidasPorTipoDemaisInstance.destroy();
+      }
+
+      // Criar gráfico
+      const ctx = document.getElementById('chartConcluidasPorTipoDemais').getContext('2d');
+      chartConcluidasPorTipoDemaisInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: meses,
+          datasets: [
+            {
+              label: 'Demais - CONC CTEC',
+              data: demaisCTECPercentual,
+              backgroundColor: 'rgba(46, 125, 50, 0.7)',
+              stack: 'demais',
+              datalabels: {
+                display: false
+              }
+            },
+            {
+              label: 'Demais - CONC RTEC',
+              data: demaisRTECPercentual,
+              backgroundColor: 'rgba(76, 175, 80, 0.7)',
+              stack: 'demais',
+              hidden: true,
+              datalabels: {
+                display: true,
+                formatter: (value, context) => {
+                  return percentuaisDemais[context.dataIndex] + '%';
+                },
+                anchor: 'end',
+                align: 'top',
+                offset: 4,
+                clip: false,
+                font: {
+                  size: 12,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#2e7d32',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                borderRadius: 4,
+                padding: 4
+              }
+            },
+            {
+              label: 'Taxa de Aprovação (%)',
+              data: percentuaisDemais.map(p => parseFloat(p)),
+              type: 'line',
+              borderColor: 'rgba(27, 94, 32, 1)',
+              backgroundColor: 'rgba(27, 94, 32, 0.1)',
+              borderWidth: 3,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointBackgroundColor: 'rgba(27, 94, 32, 1)',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              fill: false,
+              tension: 0.4,
+              yAxisID: 'y',
+              datalabels: {
+                display: true,
+                formatter: (value, context) => {
+                  return value.toFixed(1) + '%';
+                },
+                anchor: 'end',
+                align: 'top',
+                offset: 6,
+                clip: false,
+                font: {
+                  size: 11,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#1b5e20',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                borderRadius: 4,
+                padding: 3
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              top: 60
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              align: 'start',
+              labels: {
+                padding: 16,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#333',
+                usePointStyle: true,
+                pointStyle: 'rect'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const label = context.dataset.label || '';
+                  const value = context.parsed.y;
+                  
+                  return `${label}: ${value}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              ticks: {
+                stepSize: 10,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function (value) {
+                  return value + '%';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Percentual de Aprovação (%)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+
+      // Atualizar total de notas
+      const totalNotas = notasConcluidas.length;
+      document.getElementById('totalNotasConcluidasPorTipoDemais').textContent = totalNotas;
+    };
+
     // Carregar dados ao iniciar a página
-    window.addEventListener('DOMContentLoaded', carregarDados);
+    window.addEventListener('DOMContentLoaded', function() {
+      carregarDados();
+      // Exibir gráficos de "Notas em Andamento" por padrão
+      exibirNotasAndamento();
+    });
   </script>
 
-  
+
 
 </body>
 
