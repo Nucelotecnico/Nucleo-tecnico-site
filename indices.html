@@ -465,7 +465,14 @@
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal Geral(GD e Carga)</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroAnoPrazoMedio" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoPrazoMedio" onchange="aplicarFiltroAnoPrazoMedio()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleDescricoesPrazo" onclick="toggleDropdownDescricoesPrazo()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
@@ -506,7 +513,14 @@
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Carga</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroAnoPrazoMedioExceto" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoPrazoMedioExceto" onchange="aplicarFiltroAnoPrazoMedioExceto()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleDescricoesPrazoExceto" onclick="toggleDropdownDescricoesPrazoExceto()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
@@ -547,7 +561,14 @@
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - GD</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroAnoPrazoMedioMiniMicro" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoPrazoMedioMiniMicro" onchange="aplicarFiltroAnoPrazoMedioMiniMicro()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleDescricoesPrazoMiniMicro" onclick="toggleDropdownDescricoesPrazoMiniMicro()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
@@ -1199,6 +1220,22 @@
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
+
+      // Popular os filtros de ano e gerar os gráficos
+      const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0 
+        ? dadosGlobaisCompletos 
+        : dadosGlobais;
+      
+      if (dados && dados.length > 0) {
+        popularFiltroAnoPrazoMedio(dados);
+        gerarGraficoPrazoMedio(dados);
+        
+        popularFiltroAnoPrazoMedioExceto(dados);
+        gerarGraficoPrazoMedioExceto(dados);
+        
+        popularFiltroAnoPrazoMedioMiniMicro(dados);
+        gerarGraficoPrazoMedioMiniMicro(dados);
+      }
     };
 
     // Função para exibir gráficos de "Produtividade"
@@ -1361,14 +1398,17 @@
         // Gerar gráfico DEPOIS de popular os filtros
         gerarGrafico(dadosCodigosPadrao);
 
+        popularFiltroAnoPrazoMedio(dadosCodigosPadrao);
         gerarGraficoPrazoMedio(dadosCodigosPadrao);
         popularFiltroDescricoesPrazo(dadosCodigosPadrao);
         popularFiltroCodigoMedidasPrazo(dadosCodigosPadrao);
 
+        popularFiltroAnoPrazoMedioExceto(dadosCodigosPadrao);
         gerarGraficoPrazoMedioExceto(dadosCodigosPadrao);
         popularFiltroDescricoesPrazoExceto(dadosCodigosPadrao);
         popularFiltroCodigoMedidasPrazoExceto(dadosCodigosPadrao);
 
+        popularFiltroAnoPrazoMedioMiniMicro(dadosCodigosPadrao);
         gerarGraficoPrazoMedioMiniMicro(dadosCodigosPadrao);
         popularFiltroDescricoesPrazoMiniMicro(dadosCodigosPadrao);
         popularFiltroCodigoMedidasPrazoMiniMicro(dadosCodigosPadrao);
@@ -2338,6 +2378,138 @@
 
     window.aplicarFiltroCodigoMedidasPrazo = function () {
       gerarGraficoPrazoMedio(dadosGlobais);
+    };
+
+    // Função para popular filtro de ano do gráfico Prazo Médio Geral
+    window.popularFiltroAnoPrazoMedio = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const concluidaEm = item.concluida_em || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+        
+        if (status !== 'CONC CTEC' && status !== 'CONC RTEC') return;
+        if (!concluidaEm) return;
+        
+        const partes = concluidaEm.split('.');
+        if (partes.length >= 3) {
+          anosSet.add(partes[2]);
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoPrazoMedio');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoPrazoMedio = function () {
+      gerarGraficoPrazoMedio(dadosGlobais);
+    };
+
+    // Função para popular filtro de ano do gráfico Prazo Médio Carga
+    window.popularFiltroAnoPrazoMedioExceto = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const concluidaEm = item.concluida_em || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+        
+        if (status !== 'CONC CTEC' && status !== 'CONC RTEC') return;
+        if (!concluidaEm) return;
+        
+        const partes = concluidaEm.split('.');
+        if (partes.length >= 3) {
+          anosSet.add(partes[2]);
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoPrazoMedioExceto');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoPrazoMedioExceto = function () {
+      gerarGraficoPrazoMedioExceto(dadosGlobais);
+    };
+
+    // Função para popular filtro de ano do gráfico Prazo Médio GD (Mini/Micro)
+    window.popularFiltroAnoPrazoMedioMiniMicro = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const concluidaEm = item.concluida_em || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+        
+        if (status !== 'CONC CTEC' && status !== 'CONC RTEC') return;
+        if (!concluidaEm) return;
+        
+        const partes = concluidaEm.split('.');
+        if (partes.length >= 3) {
+          anosSet.add(partes[2]);
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoPrazoMedioMiniMicro');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoPrazoMedioMiniMicro = function () {
+      gerarGraficoPrazoMedioMiniMicro(dadosGlobais);
     };
 
     // Função para popular filtro de Código Medidas - Concluídas
@@ -4466,6 +4638,10 @@
         return;
       }
 
+      // Obter ano selecionado no dropdown
+      const filtroAnoPrazoMedioElement = document.getElementById('filtroAnoPrazoMedio');
+      const anoSelecionado = filtroAnoPrazoMedioElement ? filtroAnoPrazoMedioElement.value : 'todos';
+
       // Obter descrições selecionadas nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazo input[type="checkbox"]');
       const descricoesChecadas = new Set();
@@ -4490,10 +4666,20 @@
         const descricao = item.descricao || '';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
 
         // Verificar códigos permitidos (0040, 0041, 0042, 0045)
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         if (!codigosPermitidos.includes(codigoMedidas)) return false;
+
+        // Aplicar filtro de ano
+        let anoOk = true;
+        if (anoSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            anoOk = partes[2] === anoSelecionado;
+          }
+        }
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -4505,7 +4691,7 @@
           item.concluida_em;
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && descricaoOk && codigoOk && temAnexo;
+        return statusOk && descricaoOk && codigoOk && anoOk && temAnexo;
       });
 
       if (notasConcluidas.length === 0) {
@@ -4719,6 +4905,10 @@
         return;
       }
 
+      // Obter ano selecionado no filtro
+      const selectAno = document.getElementById('filtroAnoPrazoMedioExceto');
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+
       // Obter descrições selecionadas nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoExceto input[type="checkbox"]');
       const descricoesChecadas = new Set();
@@ -4743,10 +4933,20 @@
         const descricao = item.descricao || '';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
 
         // Verificar códigos permitidos (0040, 0041, 0042, 0045)
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         if (!codigosPermitidos.includes(codigoMedidas)) return false;
+
+        // Aplicar filtro de ano
+        let anoOk = true;
+        if (anoSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            anoOk = partes[2] === anoSelecionado;
+          }
+        }
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -4761,7 +4961,7 @@
           !descricao.toLowerCase().includes('micro geração');
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && naoEMiniMicro && descricaoOk && codigoOk && temAnexo;
+        return statusOk && naoEMiniMicro && descricaoOk && codigoOk && anoOk && temAnexo;
       });
 
       if (notasConcluidas.length === 0) {
@@ -4967,6 +5167,10 @@
         return;
       }
 
+      // Obter ano selecionado no filtro
+      const selectAno = document.getElementById('filtroAnoPrazoMedioMiniMicro');
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+
       // Obter descrições selecionadas nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoMiniMicro input[type="checkbox"]');
       const descricoesChecadas = new Set();
@@ -4991,10 +5195,20 @@
         const descricao = item.descricao || '';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
 
         // Verificar códigos permitidos (0040, 0041, 0042, 0045)
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         if (!codigosPermitidos.includes(codigoMedidas)) return false;
+
+        // Aplicar filtro de ano
+        let anoOk = true;
+        if (anoSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            anoOk = partes[2] === anoSelecionado;
+          }
+        }
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -5009,7 +5223,7 @@
           descricao.toLowerCase().includes('micro geração');
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && ehMiniMicro && descricaoOk && codigoOk && temAnexo;
+        return statusOk && ehMiniMicro && descricaoOk && codigoOk && anoOk && temAnexo;
       });
 
       if (notasConcluidas.length === 0) {
