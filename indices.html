@@ -459,6 +459,50 @@
         </div>
       </div>
 
+      <!-- Gráfico RPVD (Recondução por Vencimento de Documentação) -->
+      <div id="graficoRPVD"
+        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+          <h2 style="color: #2e7d32; margin: 0;">📊 RPVD - Notas Reprovada por Motivos Não Técnicos</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="filtroMesRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
+              <select id="filtroMesRPVD" onchange="aplicarFiltroMesRPVD()"
+                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+                <option value="todos">Todos</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="filtroAnoRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+              <select id="filtroAnoRPVD" onchange="aplicarFiltroAnoRPVD()"
+                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+                <option value="todos">Todos</option>
+              </select>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button id="botaoToggleDescricoesRPVD" onclick="toggleDropdownDescricoesRPVD()"
+                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                <span>▼</span>
+                <span>Filtrar por descrição</span>
+              </button>
+              <div id="containerCheckboxesDescricoesRPVD"
+                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="max-width: 600px; margin: 0 auto; height: 400px;">
+          <canvas id="chartRPVD"></canvas>
+        </div>
+        <div id="infoRPVD"
+          style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+          <strong>Total de notas CONC RTEC:</strong> <span id="totalNotasRTEC">0</span> | 
+          <strong>Notas com RPVD:</strong> <span id="totalNotasRPVD">0</span> | 
+          <strong>Percentual:</strong> <span id="percentualRPVD">0%</span>
+        </div>
+      </div>
+
     <!-- Gráfico de Prazo Médio Mensal -->
     <div id="graficoPrazoMedioGeral"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
@@ -1173,6 +1217,7 @@
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'block';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'block';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'block';
+      document.getElementById('graficoRPVD').style.display = 'block';
       // Ocultar outros gráficos
       document.getElementById('graficoMedidas0034').style.display = 'none';
       document.getElementById('graficoPrazoMedio0034').style.display = 'none';
@@ -1194,6 +1239,64 @@
       const dados = filtrarDadosCodigosPadrao(dadosTodos);
       if (typeof popularFiltroMeses === 'function') {
         popularFiltroMeses(dados);
+      }
+
+      // Popular e gerar gráfico RPVD
+      if (typeof popularFiltroMesRPVD === 'function') {
+        popularFiltroMesRPVD(dados);
+      }
+      if (typeof popularFiltroDescricoesRPVD === 'function') {
+        popularFiltroDescricoesRPVD(dados);
+      }
+      if (typeof popularFiltroAnoRPVD === 'function') {
+        popularFiltroAnoRPVD(dados);
+      }
+      
+      // Inicializar com o mês e ano vigente
+      const dataAtual = new Date();
+      const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+      const anoAtual = dataAtual.getFullYear();
+      const mesAnoAtual = mesAtual + '.' + anoAtual;
+      
+      const filtroMesRPVD = document.getElementById('filtroMesRPVD');
+      const filtroAnoRPVD = document.getElementById('filtroAnoRPVD');
+      
+      // Definir o mês vigente
+      if (filtroMesRPVD) {
+        // Verificar se a opção existe
+        let mesEncontrado = false;
+        for (let option of filtroMesRPVD.options) {
+          if (option.value === mesAnoAtual) {
+            filtroMesRPVD.value = mesAnoAtual;
+            mesEncontrado = true;
+            break;
+          }
+        }
+        // Se o mês atual não existir, deixar em "Todos"
+        if (!mesEncontrado) {
+          filtroMesRPVD.value = 'todos';
+        }
+      }
+      
+      // Definir o ano vigente
+      if (filtroAnoRPVD) {
+        // Verificar se a opção existe
+        let anoEncontrado = false;
+        for (let option of filtroAnoRPVD.options) {
+          if (option.value == anoAtual) {
+            filtroAnoRPVD.value = anoAtual;
+            anoEncontrado = true;
+            break;
+          }
+        }
+        // Se o ano atual não existir, deixar em "Todos"
+        if (!anoEncontrado) {
+          filtroAnoRPVD.value = 'todos';
+        }
+      }
+      
+      if (typeof gerarGraficoRPVD === 'function') {
+        gerarGraficoRPVD(dados);
       }
     };
 
@@ -3032,6 +3135,486 @@
       gerarGraficoConcluidasPorTipoDemais(dadosGlobais);
     };
 
+    // Função para gerar gráfico RPVD (Recondução por Vencimento de Documentação)
+    window.gerarGraficoRPVD = function (dados) {
+      if (!dados || dados.length === 0) {
+        console.warn('Nenhum dado disponível para gerar o gráfico RPVD.');
+        return;
+      }
+
+      // Obter o mês selecionado do filtro
+      const filtroMesRPVDElement = document.getElementById('filtroMesRPVD');
+      const mesSelecionado = filtroMesRPVDElement ? filtroMesRPVDElement.value : 'todos';
+
+      // Obter o ano selecionado do filtro
+      const filtroAnoRPVDElement = document.getElementById('filtroAnoRPVD');
+      const anoSelecionado = filtroAnoRPVDElement ? parseInt(filtroAnoRPVDElement.value) : null;
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesRPVD input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      // Filtrar notas CONC RTEC com códigos permitidos (EXCLUINDO notas sem anexo)
+      const notasRTEC = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
+        const descricao = (item.descricao || '').trim();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
+
+        // Apenas notas com status CONC RTEC
+        if (status !== 'CONC RTEC') return false;
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+        
+        if (!temAnexo) return false;
+
+        // Filtrar por descrição selecionada
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        if (!descricaoOk) return false;
+
+        // Filtrar pelo mês selecionado se não for "todos"
+        if (mesSelecionado && mesSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length === 3) {
+            const mesAno = partes[1] + '.' + partes[2]; // MM.YYYY
+            if (mesAno !== mesSelecionado) return false;
+          }
+        }
+
+        // Filtrar pelo ano selecionado se não for "todos"
+        if (anoSelecionado && anoSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length === 3) {
+            const ano = parseInt(partes[2]);
+            if (ano !== anoSelecionado) return false;
+          }
+        }
+
+        return true;
+      });
+
+      // Filtrar notas RPVD (com texto "RPVD")
+      const notasRPVD = notasRTEC.filter(item => {
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        return textoMedidas.includes('RPVD');
+      });
+
+      const totalRTEC = notasRTEC.length;
+      const totalRPVD = notasRPVD.length;
+      const percentualRPVD = totalRTEC > 0 ? ((totalRPVD / totalRTEC) * 100).toFixed(1) : 0;
+
+      // Log para debug
+      console.log('RPVD - Ano selecionado:', anoSelecionado);
+      console.log('RPVD - Total notas CONC RTEC (com anexo):', totalRTEC);
+      console.log('RPVD - Total notas RPVD:', totalRPVD);
+      console.log('RPVD - Percentual:', percentualRPVD);
+
+      // Atualizar informações
+      document.getElementById('totalNotasRTEC').textContent = totalRTEC;
+      document.getElementById('totalNotasRPVD').textContent = totalRPVD;
+      document.getElementById('percentualRPVD').textContent = percentualRPVD + '%';
+
+      if (totalRTEC === 0) {
+        if (chartRPVDInstance) {
+          chartRPVDInstance.destroy();
+          chartRPVDInstance = null;
+        }
+        return;
+      }
+
+      // Destruir gráfico existente se houver
+      if (chartRPVDInstance) {
+        chartRPVDInstance.destroy();
+      }
+
+      // Preparar dados para o gráfico
+      const labels = ['Com RPVD', 'Sem RPVD'];
+      const valores = [totalRPVD, totalRTEC - totalRPVD];
+      const cores = ['rgba(244, 67, 54, 0.7)', 'rgba(76, 175, 80, 0.7)'];
+
+      console.log('RPVD - Preparando gráfico com labels:', labels);
+      console.log('RPVD - Valores:', valores);
+
+      // Criar gráfico
+      const canvasElement = document.getElementById('chartRPVD');
+      if (!canvasElement) {
+        console.error('RPVD - Elemento canvas não encontrado!');
+        return;
+      }
+
+      const ctx = canvasElement.getContext('2d');
+      console.log('RPVD - Contexto do canvas obtido');
+
+      try {
+        if (chartRPVDInstance) {
+          chartRPVDInstance.destroy();
+        }
+        
+        chartRPVDInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: valores,
+              backgroundColor: cores,
+              borderColor: ['#f44336', '#4caf50'],
+              borderWidth: 2,
+              datalabels: {
+                display: true,
+                color: '#fff',
+                font: {
+                  weight: 'bold',
+                  size: 14
+                },
+                formatter: function (value, context) {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = ((value / total) * 100).toFixed(1);
+                  return value + '\n(' + percentage + '%)';
+                }
+              }
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  font: {
+                    size: 14,
+                    weight: 'bold'
+                  },
+                  color: '#333'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const label = context.label || '';
+                    const value = context.parsed || 0;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return label + ': ' + value + ' (' + percentage + '%)';
+                  }
+                }
+              }
+            },
+            onClick: function (event, activeElements) {
+              if (activeElements.length > 0) {
+                const elementIndex = activeElements[0].index;
+                let notasParaExibir;
+
+                if (elementIndex === 0) {
+                  // Clicou em "Com RPVD"
+                  notasParaExibir = notasRPVD;
+                } else {
+                  // Clicou em "Sem RPVD"
+                  notasParaExibir = notasRTEC.filter(item => {
+                    const textoMedidas = (item.texto_medidas || '').toUpperCase();
+                    return !textoMedidas.includes('RPVD');
+                  });
+                }
+
+                // Exibir as notas em um modal ou tabela
+                window.exibirNotasRPVD(notasParaExibir, labels[elementIndex]);
+              }
+            }
+          }
+        });
+        console.log('RPVD - Gráfico criado com sucesso');
+      } catch (error) {
+        console.error('RPVD - Erro ao criar gráfico:', error);
+      }
+    };
+
+    // Função para aplicar filtro de ano no gráfico RPVD
+    window.aplicarFiltroAnoRPVD = function () {
+      gerarGraficoRPVD(dadosGlobais);
+    };
+
+    // Função para aplicar filtro de mês no gráfico RPVD
+    window.aplicarFiltroMesRPVD = function () {
+      gerarGraficoRPVD(dadosGlobais);
+    };
+
+    // Função para popular filtro de mês RPVD
+    window.popularFiltroMesRPVD = function (dados) {
+      const selectMes = document.getElementById('filtroMesRPVD');
+      const mesesSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
+
+        // Verificar códigos permitidos
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+
+        // Apenas CONC RTEC
+        if (status !== 'CONC RTEC') return;
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+        
+        if (!temAnexo) return;
+
+        if (concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length === 3) {
+            mesesSet.add(partes[1] + '.' + partes[2]); // MM.YYYY
+          }
+        }
+      });
+
+      // Limpar opções existentes (manter "Todos")
+      while (selectMes.options.length > 1) {
+        selectMes.remove(1);
+      }
+
+      // Adicionar meses ordenados
+      const meses = Array.from(mesesSet).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        const dataA = new Date(`${anoA}-${mesA}-01`);
+        const dataB = new Date(`${anoB}-${mesB}-01`);
+        return dataB - dataA; // Decrescente (mais recentes primeiro)
+      });
+
+      // Meses em português
+      const nomeMeses = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+      meses.forEach(mes => {
+        const [mesNum, ano] = mes.split('.');
+        const nomeMes = nomeMeses[parseInt(mesNum)];
+        const option = document.createElement('option');
+        option.value = mes;
+        option.textContent = `${nomeMes}/${ano}`;
+        selectMes.appendChild(option);
+      });
+    };
+
+    // Função para popular filtro de ano RPVD
+    window.popularFiltroAnoRPVD = function (dados) {
+      const selectAno = document.getElementById('filtroAnoRPVD');
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const concluidaEm = (item.concluida_em || '').trim();
+
+        // Verificar códigos permitidos
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+
+        // Apenas CONC RTEC
+        if (status !== 'CONC RTEC') return;
+
+        if (concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length === 3) {
+            anosSet.add(partes[2]);
+          }
+        }
+      });
+
+      // Limpar opções existentes (manter "Todos")
+      while (selectAno.options.length > 1) {
+        selectAno.remove(1);
+      }
+
+      // Adicionar anos
+      const anos = Array.from(anosSet).sort().reverse();
+      anos.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+    };
+
+    // Função para popular filtro de descrições RPVD
+    window.popularFiltroDescricoesRPVD = function (dados) {
+      const container = document.getElementById('containerCheckboxesDescricoesRPVD');
+      const descricoesSet = new Set();
+
+      // Coletar todas as descrições únicas
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const descricao = (item.descricao || '').trim();
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Filtrar apenas por código e status
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return;
+        if (status !== 'CONC RTEC') return;
+
+        // Verificar se tem anexo
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+        if (!temAnexo) return;
+
+        if (descricao) {
+          descricoesSet.add(descricao);
+        }
+      });
+
+      // Limpar container
+      container.innerHTML = '';
+
+      // Adicionar botões de selecionar/desmarcar todos
+      const botoesDiv = document.createElement('div');
+      botoesDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; width: 100%;';
+
+      const botaoSelecionarTodos = document.createElement('button');
+      botaoSelecionarTodos.textContent = 'Selecionar Todos';
+      botaoSelecionarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #1b5e20; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoSelecionarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = true;
+        });
+        window.aplicarFiltroDescricoesRPVD();
+      };
+
+      const botaoDesmarcarTodos = document.createElement('button');
+      botaoDesmarcarTodos.textContent = 'Desmarcar Todos';
+      botaoDesmarcarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoDesmarcarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = false;
+        });
+        window.aplicarFiltroDescricoesRPVD();
+      };
+
+      botoesDiv.appendChild(botaoSelecionarTodos);
+      botoesDiv.appendChild(botaoDesmarcarTodos);
+      container.appendChild(botoesDiv);
+
+      // Adicionar checkboxes para cada descrição
+      const descricoes = Array.from(descricoesSet).sort();
+      descricoes.forEach(descricao => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display: flex; align-items: center; gap: 6px; font-size: 13px; color: #666; cursor: pointer; white-space: nowrap;';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.value = descricao;
+        checkbox.onchange = function () {
+          window.aplicarFiltroDescricoesRPVD();
+        };
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(descricao));
+        container.appendChild(label);
+      });
+    };
+
+    // Função para aplicar filtro de descrições RPVD
+    window.aplicarFiltroDescricoesRPVD = function () {
+      gerarGraficoRPVD(dadosGlobais);
+    };
+
+    // Função para toggle do dropdown de descrições RPVD
+    window.toggleDropdownDescricoesRPVD = function () {
+      const container = document.getElementById('containerCheckboxesDescricoesRPVD');
+      const botao = document.getElementById('botaoToggleDescricoesRPVD');
+
+      if (container.style.display === 'none' || container.style.display === '') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para exibir as notas RPVD selecionadas
+    window.exibirNotasRPVD = function (notas, titulo) {
+      // Criar uma janela modal para exibir as notas
+      let modal = document.getElementById('modalNotasRPVD');
+      
+      if (!modal) {
+        // Criar modal se não existir
+        modal = document.createElement('div');
+        modal.id = 'modalNotasRPVD';
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 10000;
+        `;
+        document.body.appendChild(modal);
+      }
+
+      // Criar conteúdo do modal
+      let tabelaHTML = '<div style="max-height: 70vh; overflow-y: auto;">' +
+        '<table style="width: 100%; border-collapse: collapse; font-size: 12px;">' +
+        '<thead>' +
+        '<tr style="background: #2e7d32; color: white; position: sticky; top: 0;">' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">ID</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Código Medidas</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Descrição</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Texto Medidas</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Status</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Concluída em</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody>';
+
+      notas.forEach((nota, index) => {
+        tabelaHTML += '<tr style="background: ' + (index % 2 === 0 ? '#f5f5f5' : '#fff') + '; border-bottom: 1px solid #ddd;">' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (index + 1) + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.codigo_medidas || '-') + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.descricao || '-') + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.texto_medidas || '-') + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.status_usuario || '-') + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.concluida_em || '-') + '</td>' +
+          '</tr>';
+      });
+
+      tabelaHTML += '</tbody></table></div>';
+
+      modal.innerHTML = '<div style="background: white; border-radius: 10px; padding: 24px; max-width: 90vw; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">' +
+        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">' +
+        '<h2 style="color: #2e7d32; margin: 0;">' + titulo + ' (' + notas.length + ' notas)</h2>' +
+        '<button onclick="document.getElementById(\'modalNotasRPVD\').style.display = \'none\';" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">Fechar</button>' +
+        '</div>' +
+        tabelaHTML +
+        '</div>';
+
+      modal.style.display = 'flex';
+    };
+
     // Função para popular filtro de Código Medidas - Prazo Médio Exceto Mini/Micro
     window.popularFiltroCodigoMedidasPrazoExceto = function (dados) {
       const codigos = new Set();
@@ -3437,6 +4020,7 @@
       chartConcluidasPorTipoSolicitacaoInstance.update();
     };
     let chartConcluidasPorTipoDemaisInstance = null;
+    let chartRPVDInstance = null;
 
     // Função para toggle barras no gráfico Demais
     window.toggleBarrasDemais = function () {
