@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="indices.css">
 
@@ -73,6 +74,9 @@
 
     <!-- Botões do Gráfico de Quantidade notas ABER e ANDM por tipo -->
     <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
+      <button id="btnMedidas0034" onclick="exibirMedidas0034()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+        MEDIDAS 0034
+      </button>
       <button id="btnNotasAndamento" onclick="exibirNotasAndamento()" style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         NOTAS EM ANDAMENTO
       </button>
@@ -107,6 +111,99 @@
     </div>
 
 
+
+    <!-- Gráfico de Texto Medidas -->
+    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoTextoMedidas"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📝 Quantidade de Notas por Texto de Medidas</h2>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartTextoMedidas"></canvas>
+      </div>
+      <div id="infoTextoMedidas"
+        style="margin-top: 16px; padding: 12px; background: #f0f4f8; border-radius: 8px; color: #1976d2;">
+        <strong>Total de notas:</strong> <span id="totalTextoMedidas">0</span> |
+        <strong>Categorias únicas:</strong> <span id="categoriasUnicasTextoMedidas">0</span>
+      </div>
+    </div>
+    </div>
+
+    <!-- Gráfico Medidas 0034 -->
+    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoMedidas0034"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroMesMedidas0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
+            <select id="filtroMesMedidas0034" onchange="filtrarGraficoMedidas0034PorMes()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesMedidas0034" onclick="toggleDropdownDescricoesMedidas0034()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesMedidas0034"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartMedidas0034"></canvas>
+      </div>
+      <div id="infoMedidas0034"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalMedidas0034">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034" style="color: #2e7d32;">0</span> |
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABERMedidas0034" style="color: #66bb6a;">0</span>
+      </div>
+    </div>
+    </div>
+
+    <!-- Gráfico Prazo Médio Medidas 0034 -->
+    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoPrazoMedio0034"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📈 Prazo Médio Mensal - Código 0034</h2>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroAnoPrazo0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            <select id="filtroAnoPrazo0034" onchange="aplicarFiltroAnoPrazo0034()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              <option value="todos">Todos</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesPrazo0034" onclick="toggleDropdownDescricoesPrazo0034()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesPrazo0034"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartPrazoMedio0034"></canvas>
+      </div>
+      <div id="infoPrazoMedio0034"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas0034">0</span> |
+        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral0034">0</span> dias
+      </div>
+    </div>
+    </div>
 
     <!-- Gráfico de Análise Geral -->
     <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
@@ -537,6 +634,91 @@
       </div>
     </div>
 
+    <!-- Gráfico: Percentual de Aprovação/Reprovação por Usuário -->
+    <div id="graficoAprovacaoReprovacaoPorUsuario"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Percentual de Aprovação e Reprovação por Usuário</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="filtroMesAprovacaoReprovacao" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês (Concluída em):</label>
+            <select id="filtroMesAprovacaoReprovacao" onchange="aplicarFiltroMesAprovacaoReprovacao()"
+              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesAprovacaoReprovacao" onclick="toggleDropdownDescricoesAprovacaoReprovacao()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesAprovacaoReprovacao"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidasAprovacaoReprovacao" onclick="toggleDropdownCodigoMedidasAprovacaoReprovacao()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidasAprovacaoReprovacao"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1400px; margin: 0 auto;">
+        <canvas id="chartAprovacaoReprovacaoPorUsuario"></canvas>
+      </div>
+      <div id="infoAprovacaoReprovacaoPorUsuario"
+        style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas concluídas:</strong> <span id="totalNotasAprovacaoReprovacao">0</span>
+      </div>
+    </div>
+
+    <!-- Gráfico: Notas Concluídas por Dia por Usuário -->
+    <div id="graficoNotasConcluidasPorDiaUsuario"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #1976d2; margin: 0;">📅 Notas Concluídas por Dia por Usuário</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="filtroMesNotasConcluidasPorDiaUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês (Concluída em):</label>
+            <select id="filtroMesNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroMesNotasConcluidasPorDiaUsuario()"
+              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleUsuariosNotasConcluidasPorDia" onclick="toggleDropdownUsuariosNotasConcluidasPorDia()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Usuário</span>
+            </button>
+            <div id="containerCheckboxesUsuariosNotasConcluidasPorDia"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-height: 300px; overflow-y: auto;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1400px; margin: 0 auto;">
+        <canvas id="chartNotasConcluidasPorDiaUsuario"></canvas>
+      </div>
+      <div id="infoNotasConcluidasPorDiaUsuario"
+        style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1565c0;">
+        <strong>Total de notas concluídas:</strong> <span id="totalNotasConcluidasPorDiaUsuario">0</span>
+      </div>
+    </div>
+
     <!-- Tabela de Dados -->
     <div id="secaoDadosCadastrados"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
@@ -883,7 +1065,7 @@
     // Função para ativar o botão clicado
     window.ativarBotao = function(botaoId) {
       // Lista de todos os botões
-      const botoes = ['btnNotasAndamento', 'btnNotasConcluidas', 'btnPrazosAnalise', 'btnProdutividade', 'btnExibirTabelaNotas'];
+      const botoes = ['btnMedidas0034', 'btnNotasAndamento', 'btnNotasConcluidas', 'btnPrazosAnalise', 'btnProdutividade', 'btnExibirTabelaNotas'];
       
       // Resetar todos os botões para a cor verde
       botoes.forEach(id => {
@@ -900,20 +1082,62 @@
       }
     };
 
-    // Função para exibir gráficos de "Notas em Andamento"
-    window.exibirNotasAndamento = function () {
-      ativarBotao('btnNotasAndamento');
-      // Mostrar os 4 gráficos
-      document.getElementById('graficoOutrosTipos').style.display = 'block';
-      document.getElementById('graficoFimPlanejado').style.display = 'block';
-      document.getElementById('graficoSemGeracoes').style.display = 'block';
-      document.getElementById('graficoMiniGeracao').style.display = 'block';
-      // Ocultar outros gráficos
+    // Função para exibir gráficos de "Medidas 0034"
+    window.exibirMedidas0034 = function () {
+      ativarBotao('btnMedidas0034');
+      // Mostrar apenas os gráficos de Medidas 0034
+      document.getElementById('graficoMedidas0034').style.display = 'block';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'block';
+      // Ocultar todos os outros gráficos
+      document.getElementById('graficoOutrosTipos').style.display = 'none';
+      document.getElementById('graficoFimPlanejado').style.display = 'none';
+      document.getElementById('graficoSemGeracoes').style.display = 'none';
+      document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoConcluidas').style.display = 'none';
       document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
       document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
       document.getElementById('graficoPrazoMedioGD').style.display = 'none';
       document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
+      document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
+      document.getElementById('secaoDadosCadastrados').style.display = 'none';
+      
+      // Gerar os gráficos se houver dados
+      const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0 
+        ? dadosGlobaisCompletos 
+        : dadosGlobais;
+      
+      if (dados && dados.length > 0) {
+        gerarGraficoMedidas0034(dados);
+        popularFiltroDescricoesPrazo0034(dados);
+        popularFiltroAnoPrazo0034(dados);
+        gerarGraficoPrazoMedio0034(dados);
+      }
+    };
+
+    // Função para exibir gráficos de "Notas em Andamento"
+    window.exibirNotasAndamento = function () {
+      ativarBotao('btnNotasAndamento');
+      // Mostrar os gráficos
+      document.getElementById('graficoOutrosTipos').style.display = 'block';
+      document.getElementById('graficoFimPlanejado').style.display = 'block';
+      document.getElementById('graficoSemGeracoes').style.display = 'block';
+      document.getElementById('graficoMiniGeracao').style.display = 'block';
+      document.getElementById('graficoTextoMedidas').style.display = 'block';
+      // Ocultar outros gráficos
+      document.getElementById('graficoMedidas0034').style.display = 'none';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'none';
+      document.getElementById('graficoConcluidas').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
+      document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
+      document.getElementById('graficoPrazoMedioGD').style.display = 'none';
+      document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
@@ -929,18 +1153,24 @@
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'block';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'block';
       // Ocultar outros gráficos
+      document.getElementById('graficoMedidas0034').style.display = 'none';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'none';
       document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
       document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
       document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
       document.getElementById('graficoPrazoMedioGD').style.display = 'none';
       document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
       
-      // Popular os meses e gerar o gráfico com a seleção automática
-      const dados = typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais;
+      // Popular os meses e gerar o gráfico com a seleção automática - usando apenas códigos 0040-0045
+      const dadosTodos = typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais;
+      const dados = filtrarDadosCodigosPadrao(dadosTodos);
       if (typeof popularFiltroMeses === 'function') {
         popularFiltroMeses(dados);
       }
@@ -954,12 +1184,17 @@
       document.getElementById('graficoPrazoMedioCarga').style.display = 'block';
       document.getElementById('graficoPrazoMedioGD').style.display = 'block';
       // Ocultar outros gráficos
+      document.getElementById('graficoMedidas0034').style.display = 'none';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'none';
       document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
       document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoConcluidas').style.display = 'none';
       document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
@@ -969,15 +1204,20 @@
     // Função para exibir gráficos de "Produtividade"
     window.exibirProdutividade = function () {
       ativarBotao('btnProdutividade');
-      // Mostrar o gráfico de notas concluídas por usuário
+      // Mostrar os gráficos de produtividade
       document.getElementById('graficoNotasPorUsuario').style.display = 'block';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'block';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'block';
       // Ocultar outros gráficos
+      document.getElementById('graficoMedidas0034').style.display = 'none';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
       document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoConcluidas').style.display = 'none';
       document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
       document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
@@ -990,13 +1230,18 @@
     window.exibirTabelaNotas = function () {
       ativarBotao('btnExibirTabelaNotas');
       // Ocultar todos os gráficos
+      document.getElementById('graficoMedidas0034').style.display = 'none';
+      document.getElementById('graficoPrazoMedio0034').style.display = 'none';
       document.getElementById('graficoNotasPorUsuario').style.display = 'none';
+      document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
+      document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
       document.getElementById('graficoMiniGeracao').style.display = 'none';
+      document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoConcluidas').style.display = 'none';
       document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
       document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
@@ -1100,55 +1345,80 @@
         dadosGlobais = todosOsDados;
         dadosGlobaisCompletos = todosOsDados;
 
+        const dadosCodigosPadrao = filtrarDadosCodigosPadrao(todosOsDados);
+
         exibirDados(todosOsDados);
 
         // Popular filtro de descrições e de meses ANTES de gerar o gráfico
-        popularFiltroDescricoes(dadosGlobaisCompletos);
-        popularFiltroMesesFimPlanejado(todosOsDados);
-        popularFiltroMeses(todosOsDados);
-        popularFiltroCodigoMedidas(dadosGlobaisCompletos);
-        popularFiltroStatusFimPlanejado(dadosGlobaisCompletos);
+        popularFiltroDescricoes(dadosCodigosPadrao);
+        popularFiltroDescricoesMedidas0034(todosOsDados);
+        popularFiltroMesesFimPlanejado(dadosCodigosPadrao);
+        popularFiltroMeses(dadosCodigosPadrao);
+        popularFiltroCodigoMedidas(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasConcluidas(dadosCodigosPadrao);
+        popularFiltroStatusFimPlanejado(dadosCodigosPadrao);
 
         // Gerar gráfico DEPOIS de popular os filtros
-        gerarGrafico(dadosGlobaisCompletos);
+        gerarGrafico(dadosCodigosPadrao);
 
-        gerarGraficoPrazoMedio(todosOsDados);
-        popularFiltroDescricoesPrazo(todosOsDados);
-        popularFiltroCodigoMedidasPrazo(todosOsDados);
+        gerarGraficoPrazoMedio(dadosCodigosPadrao);
+        popularFiltroDescricoesPrazo(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasPrazo(dadosCodigosPadrao);
 
-        gerarGraficoPrazoMedioExceto(todosOsDados);
-        popularFiltroDescricoesPrazoExceto(todosOsDados);
-        popularFiltroCodigoMedidasPrazoExceto(todosOsDados);
+        gerarGraficoPrazoMedioExceto(dadosCodigosPadrao);
+        popularFiltroDescricoesPrazoExceto(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasPrazoExceto(dadosCodigosPadrao);
 
-        gerarGraficoPrazoMedioMiniMicro(todosOsDados);
-        popularFiltroDescricoesPrazoMiniMicro(todosOsDados);
-        popularFiltroCodigoMedidasPrazoMiniMicro(todosOsDados);
+        gerarGraficoPrazoMedioMiniMicro(dadosCodigosPadrao);
+        popularFiltroDescricoesPrazoMiniMicro(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasPrazoMiniMicro(dadosCodigosPadrao);
 
-        gerarGraficoMiniGeracao(todosOsDados);
-        popularFiltroCodigoMedidasMiniGeracao(todosOsDados);
+        gerarGraficoMiniGeracao(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasMiniGeracao(dadosCodigosPadrao);
 
-        gerarGraficoOutrosTipos(todosOsDados);
-        popularFiltroCodigoMedidasSemGeracoes(todosOsDados);
+        gerarGraficoOutrosTipos(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasSemGeracoes(dadosCodigosPadrao);
 
-        gerarGraficoSemGeracoes(todosOsDados);
+        gerarGraficoTextoMedidas(dadosCodigosPadrao);
 
-        popularFiltroDescricoesNotasPorUsuario(todosOsDados);
-        popularFiltroMesesNotasPorUsuario(todosOsDados);
-        popularFiltroCodigoMedidasNotasPorUsuario(todosOsDados);
-        await gerarGraficoNotasPorUsuario(todosOsDados);
+        gerarGraficoMedidas0034(todosOsDados);
+
+        gerarGraficoSemGeracoes(dadosCodigosPadrao);
+
+        popularFiltroDescricoesNotasPorUsuario(dadosCodigosPadrao);
+        popularFiltroMesesNotasPorUsuario(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasNotasPorUsuario(dadosCodigosPadrao);
+        await gerarGraficoNotasPorUsuario(dadosCodigosPadrao);
+
+        popularFiltroDescricoesAprovacaoReprovacao(dadosCodigosPadrao);
+        popularFiltroMesesAprovacaoReprovacao(dadosCodigosPadrao);
+        popularFiltroCodigoMedidasAprovacaoReprovacao(dadosCodigosPadrao);
+        await gerarGraficoAprovacaoReprovacaoPorUsuario(dadosCodigosPadrao);
+
+        popularFiltroMesesNotasConcluidasPorDiaUsuario(dadosCodigosPadrao);
+        popularFiltroUsuariosNotasConcluidasPorDia(dadosCodigosPadrao);
+        await gerarGraficoNotasConcluidasPorDiaUsuario(dadosCodigosPadrao);
 
         popularFiltroAnoNotasConcluidasPorMes(todosOsDados);
-        gerarGraficoNotasConcluidasPorMes(todosOsDados);
+        gerarGraficoNotasConcluidasPorMes(dadosCodigosPadrao);
 
-        popularFiltroAnoConcluidasPorTipoSolicitacao(todosOsDados);
-        gerarGraficoConcluidasPorTipoSolicitacao(todosOsDados);
+        popularFiltroAnoConcluidasPorTipoSolicitacao(dadosCodigosPadrao);
+        gerarGraficoConcluidasPorTipoSolicitacao(dadosCodigosPadrao);
 
-        popularFiltroAnoConcluidasPorTipoDemais(todosOsDados);
-        gerarGraficoConcluidasPorTipoDemais(todosOsDados);
+        popularFiltroAnoConcluidasPorTipoDemais(dadosCodigosPadrao);
+        gerarGraficoConcluidasPorTipoDemais(dadosCodigosPadrao);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       }
     };
+
+    function filtrarDadosCodigosPadrao(dados) {
+      const codigosPermitidos = new Set(['0040', '0041', '0042', '0045']);
+      return (dados || []).filter(item => {
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        return codigosPermitidos.has(codigoMedidas);
+      });
+    }
 
     window.exibirDados = function (dados) {
       const tbody = document.getElementById('tabelaBody');
@@ -1358,6 +1628,46 @@
     window.toggleDropdownDescricoes = function () {
       const container = document.getElementById('containerCheckboxesDescricoes');
       const botao = document.getElementById('botaoToggleDescricoes');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições - Medidas 0034
+    window.toggleDropdownDescricoesMedidas0034 = function () {
+      const container = document.getElementById('containerCheckboxesDescricoesMedidas0034');
+      const botao = document.getElementById('botaoToggleDescricoesMedidas0034');
+
+      if (!container || !botao) {
+        return;
+      }
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições do Prazo 0034
+    window.toggleDropdownDescricoesPrazo0034 = function () {
+      const container = document.getElementById('containerCheckboxesDescricoesPrazo0034');
+      const botao = document.getElementById('botaoToggleDescricoesPrazo0034');
+
+      if (!container || !botao) {
+        return;
+      }
 
       if (container.style.display === 'none') {
         container.style.display = 'flex';
@@ -1649,6 +1959,134 @@
       });
 
       console.log('✅ Checkboxes criados com sucesso! Total:', descricoesArray.length);
+    };
+
+    // Função para popular o filtro de descrições do gráfico Medidas 0034
+    window.popularFiltroDescricoesMedidas0034 = function (dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      const descricoes = new Set();
+
+      dados.forEach(item => {
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        if (eh0034 && descricao) {
+          descricoes.add(descricao);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesDescricoesMedidas0034');
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = '';
+
+      const descricoesArray = Array.from(descricoes).sort();
+      const descricaoInicial = 'Analisar Carga Acessante Mini Geração';
+      const existeDescricaoInicial = descricoesArray.includes(descricaoInicial);
+
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_desc_0034_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = existeDescricaoInicial ? desc === descricaoInicial : true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function () {
+          filtrarGraficoMedidas0034PorMes();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    // Função para popular filtro de descrição do Prazo 0034
+    window.popularFiltroDescricoesPrazo0034 = function (dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      const descricoes = new Set();
+
+      dados.forEach(item => {
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        const status = item.status_usuario || '';
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC');
+        if (eh0034 && statusOk && descricao) {
+          descricoes.add(descricao);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesDescricoesPrazo0034');
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = '';
+
+      const descricoesArray = Array.from(descricoes).sort();
+      const descricaoInicial = 'Analisar Carga Acessante Mini Geração';
+      const existeDescricaoInicial = descricoesArray.includes(descricaoInicial);
+
+      descricoesArray.forEach((desc, index) => {
+        const checkboxId = 'checkbox_desc_prazo0034_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = desc;
+        checkbox.checked = existeDescricaoInicial ? desc === descricaoInicial : true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function () {
+          gerarGraficoPrazoMedio0034(dadosGlobaisCompletos || dadosGlobais);
+        };
+
+        const span = document.createElement('span');
+        span.textContent = desc;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
     };
 
     // Função para aplicar filtro de descrição com checkboxes
@@ -2336,6 +2774,53 @@
       gerarGraficoConcluidasPorTipoSolicitacao(dadosGlobais);
     };
 
+    // Função para popular o filtro de ano do gráfico Prazo Médio 0034
+    window.popularFiltroAnoPrazo0034 = function (dados) {
+      const anosSet = new Set();
+
+      dados.forEach(item => {
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        const status = item.status_usuario || '';
+        const concluidaEm = item.concluida_em || '';
+        
+        if (!eh0034) return;
+        if (status !== 'CONC CTEC' && status !== 'CONC RTEC') return;
+        if (!concluidaEm) return;
+        
+        const partes = concluidaEm.split('.');
+        if (partes.length >= 3) {
+          anosSet.add(partes[2]);
+        }
+      });
+
+      const anosArray = Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10));
+      const selectAno = document.getElementById('filtroAnoPrazo0034');
+      if (!selectAno) return;
+
+      selectAno.innerHTML = '<option value="todos">Todos</option>';
+
+      anosArray.forEach(ano => {
+        const option = document.createElement('option');
+        option.value = ano;
+        option.textContent = ano;
+        selectAno.appendChild(option);
+      });
+
+      const anoAtual = String(new Date().getFullYear());
+      if (anosArray.includes(anoAtual)) {
+        selectAno.value = anoAtual;
+      }
+    };
+
+    window.aplicarFiltroAnoPrazo0034 = function () {
+      const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0 
+        ? dadosGlobaisCompletos 
+        : dadosGlobais;
+      gerarGraficoPrazoMedio0034(dados);
+    };
+
     // Funções de filtro para gráfico Concluídas por Tipo Demais
     window.popularFiltroAnoConcluidasPorTipoDemais = function (dados) {
       // Coletar anos únicos das notas conclusivas (CONC CTEC e CONC RTEC)
@@ -2601,6 +3086,8 @@
 
     window.aplicarFiltroCodigoMedidasSemGeracoes = function () {
       gerarGraficoOutrosTipos(dadosGlobais);
+      gerarGraficoTextoMedidas(dadosGlobais);
+      gerarGraficoSemGeracoes(dadosGlobais);
     };
 
     // Variável global para armazenar dados
@@ -2731,6 +3218,13 @@
       gerarGrafico(dadosBase, mesSelecionado);
     };
 
+    // Função para filtrar gráfico Medidas 0034 por mês
+    window.filtrarGraficoMedidas0034PorMes = function () {
+      const mesSelecionado = document.getElementById('filtroMesMedidas0034')?.value || 'todos';
+      const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+      gerarGraficoMedidas0034(dadosBase, mesSelecionado);
+    };
+
     // Função para filtrar gráfico de concluídas por mês
     window.filtrarGraficoConcluidasPorMes = function () {
       const mesSelecionado = document.getElementById('filtroMesConcluidas').value;
@@ -2746,10 +3240,15 @@
     let chartMiniGeracaoInstance = null;
     let chartOutrosTiposInstance = null;
     let chartSemGeracoesInstance = null;
+    let chartTextoMedidasInstance = null;
 
     let chartNotasPorUsuarioInstance = null;
+    let chartAprovacaoReprovacaoPorUsuarioInstance = null;
+    let chartNotasConcluidasPorDiaUsuarioInstance = null;
     let chartNotasConcluidasPorMesInstance = null;
     let chartConcluidasPorTipoSolicitacaoInstance = null;
+    let chartMedidas0034Instance = null;
+    let chartPrazoMedio0034Instance = null;
 
     // Função para toggle barras no gráfico Mini/Micro
     window.toggleBarrasMini = function () {
@@ -3094,6 +3593,611 @@
       });
     };
 
+    // Função para gerar gráfico de Medidas 0034
+    window.gerarGraficoMedidas0034 = function (dados, mesFiltro = null) {
+      if (!dados || dados.length === 0) {
+        console.log('Medidas 0034: Nenhum dado recebido');
+        return;
+      }
+
+      console.log('===== MEDIDAS 0034 - INÍCIO =====');
+      console.log('Total de dados recebidos:', dados.length);
+      console.log('Filtro de mês:', mesFiltro);
+
+      // Verificar quantos registros têm 0034 na descrição ou no código
+      const com0034Descricao = dados.filter(item => (item.descricao || '').trim().includes('0034'));
+      const com0034Codigo = dados.filter(item => (item.codigo_medidas || '').trim() === '0034');
+      console.log('Registros com 0034 na descrição:', com0034Descricao.length);
+      console.log('Registros com codigo_medidas = 0034:', com0034Codigo.length);
+      
+      // Verificar status dos registros com 0034
+      const statusCount = {};
+      com0034Descricao.concat(com0034Codigo).forEach(item => {
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        statusCount[status] = (statusCount[status] || 0) + 1;
+      });
+      console.log('Status dos registros com 0034:', statusCount);
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxesDescricao = document.querySelectorAll('#containerCheckboxesDescricoesMedidas0034 input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxesDescricao.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add((checkbox.value || '').trim());
+        }
+      });
+      const todasDescricoesMarcadas = checkboxesDescricao.length > 0 && Array.from(checkboxesDescricao).every(checkbox => checkbox.checked);
+
+      // Filtrar apenas notas com descrição contendo '0034' OU codigo_medidas = '0034', status ABER/ANDM e descrição selecionada
+      const dadosFiltrados = dados.filter(item => {
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const fimPlanejado = (item.fim_planejado || '').trim();
+        
+        // Normalizar status para ABER/ANDM
+        const statusBase = typeof normalizarStatusBase === 'function'
+          ? normalizarStatusBase(status)
+          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+        
+        // Filtrar apenas descrição contendo 0034 OU código 0034 e status ABER ou ANDM
+        const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        if (!eh0034 || !statusBase || !descricaoOk) {
+          return false;
+        }
+
+        // Aplicar filtro de mês se fornecido
+        if (mesFiltro && mesFiltro !== 'todos') {
+          const partes = fimPlanejado.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            return mesAno === mesFiltro;
+          } else {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      console.log('Total de dados filtrados (0034 + ABER/ANDM):', dadosFiltrados.length);
+      console.log('Primeiros 3 registros filtrados:', dadosFiltrados.slice(0, 3).map(d => ({
+        nota: d.nota,
+        descricao: d.descricao,
+        status: d.status_usuario || d.status,
+        fim_planejado: d.fim_planejado
+      })));
+
+
+      // Agrupar dados por fim_planejado e status
+      const agrupamentoPorData = {};
+      const totaisPorStatus = {
+        'ABER': 0,
+        'ANDM': 0
+      };
+
+      dadosFiltrados.forEach(item => {
+        const fimPlanejado = item.fim_planejado || 'Sem data';
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        
+        const statusBase = typeof normalizarStatusBase === 'function'
+          ? normalizarStatusBase(status)
+          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+
+        if (!agrupamentoPorData[fimPlanejado]) {
+          agrupamentoPorData[fimPlanejado] = {
+            'ABER': 0,
+            'ANDM': 0
+          };
+        }
+
+        agrupamentoPorData[fimPlanejado][statusBase]++;
+        totaisPorStatus[statusBase]++;
+      });
+
+      // Atualizar contadores na interface
+      document.getElementById('totalMedidas0034').textContent = dadosFiltrados.length;
+      document.getElementById('totalANDMMedidas0034').textContent = totaisPorStatus['ANDM'];
+      document.getElementById('totalABERMedidas0034').textContent = totaisPorStatus['ABER'];
+
+      console.log('Totais por status - ANDM:', totaisPorStatus['ANDM'], 'ABER:', totaisPorStatus['ABER']);
+      console.log('Datas únicas encontradas:', Object.keys(agrupamentoPorData).length);
+      console.log('Agrupamento por data:', agrupamentoPorData);
+
+      // Converter para arrays e ordenar por data
+      const labels = Object.keys(agrupamentoPorData).sort((a, b) => {
+        if (a === 'Sem data') return 1;
+        if (b === 'Sem data') return -1;
+        return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+      });
+
+      console.log('Labels ordenadas (datas):', labels);
+      console.log('Total de labels:', labels.length);
+
+      // Preparar datasets para ABER e ANDM
+      const datasets = [
+        {
+          label: 'ANDM',
+          data: labels.map(label => agrupamentoPorData[label]['ANDM']),
+          backgroundColor: 'rgba(46, 125, 50, 0.7)',
+          borderColor: 'rgba(46, 125, 50, 1)',
+          borderWidth: 2,
+          borderRadius: 8,
+          datalabels: {
+            color: '#2e7d32',
+            anchor: 'end',
+            align: 'top',
+            offset: 4,
+            font: {
+              weight: 'bold',
+              size: 11,
+              family: 'Roboto'
+            },
+            formatter: function (value) {
+              return value > 0 ? value : '';
+            }
+          }
+        },
+        {
+          label: 'ABER',
+          data: labels.map(label => agrupamentoPorData[label]['ABER']),
+          backgroundColor: 'rgba(102, 187, 106, 0.7)',
+          borderColor: 'rgba(102, 187, 106, 1)',
+          borderWidth: 2,
+          borderRadius: 8,
+          datalabels: {
+            color: '#66bb6a',
+            anchor: 'end',
+            align: 'top',
+            offset: 4,
+            font: {
+              weight: 'bold',
+              size: 11,
+              family: 'Roboto'
+            },
+            formatter: function (value) {
+              return value > 0 ? value : '';
+            }
+          }
+        }
+      ];
+
+      // Destruir gráfico anterior se existir
+      if (chartMedidas0034Instance) {
+        chartMedidas0034Instance.destroy();
+      }
+
+      console.log('Criando gráfico com', labels.length, 'labels');
+      console.log('Dataset ANDM:', datasets[0].data);
+      console.log('Dataset ABER:', datasets[1].data);
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartMedidas0034').getContext('2d');
+      chartMedidas0034Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+              const statusLabel = datasetIndex === 0 ? 'ANDM' : 'ABER';
+
+              // Filtrar notas correspondentes à barra clicada
+              const notasFiltradas = dadosFiltrados.filter(item => {
+                const fimPlanejado = item.fim_planejado || 'Sem data';
+                const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+                const statusBase = status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : '');
+                return fimPlanejado === dataLabel && statusBase === statusLabel;
+              });
+
+              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 14,
+                  family: 'Roboto'
+                },
+                color: '#333'
+              }
+            },
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function (context) {
+                  return context.dataset.label + ': ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Fim Planejado',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade de Notas',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+
+      // Popular o filtro de meses
+      if (!mesFiltro) {
+        popularFiltroMesesMedidas0034(dados);
+      }
+    };
+
+    // Função para popular filtro de meses do gráfico Medidas 0034
+    function popularFiltroMesesMedidas0034(dados) {
+      const selectMes = document.getElementById('filtroMesMedidas0034');
+      if (!selectMes) return;
+
+      // Filtrar apenas dados com descrição contendo 0034 ou código 0034
+      const dadosFiltrados = dados.filter(item => {
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        return descricao.includes('0034') || codigoMedidas === '0034';
+      });
+
+      // Obter todos os meses únicos
+      const mesesSet = new Set();
+      dadosFiltrados.forEach(item => {
+        const fimPlanejado = (item.fim_planejado || '').trim();
+        if (fimPlanejado && fimPlanejado !== 'Sem data') {
+          const partes = fimPlanejado.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            mesesSet.add(mesAno);
+          }
+        }
+      });
+
+      // Ordenar meses
+      const mesesOrdenados = Array.from(mesesSet).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        return new Date(anoA, mesA - 1) - new Date(anoB, mesB - 1);
+      });
+
+      // Limpar e repopular select
+      selectMes.innerHTML = '<option value="todos">Todos os meses</option>';
+      mesesOrdenados.forEach(mesAno => {
+        const [mes, ano] = mesAno.split('.');
+        const option = document.createElement('option');
+        option.value = mesAno;
+        option.textContent = `${mes}/${ano}`;
+        selectMes.appendChild(option);
+      });
+      
+      console.log('Filtro de meses Medidas 0034 populado com', mesesOrdenados.length, 'meses');
+    }
+
+    // Função para gerar gráfico de Prazo Médio Medidas 0034
+    window.gerarGraficoPrazoMedio0034 = function (dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      // Obter ano selecionado no filtro
+      const selectAno = document.getElementById('filtroAnoPrazo0034');
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+
+      // Obter descrições selecionadas nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazo0034 input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      let todasDescricoesMarcadas = true;
+      
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        } else {
+          todasDescricoesMarcadas = false;
+        }
+      });
+
+      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) com código 0034
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = (item.concluida_em || '').trim();
+
+        // Verificar se é código 0034
+        const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+
+        // Aplicar filtro de descrição
+        const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+
+        // Aplicar filtro de ano
+        let anoOk = true;
+        if (anoSelecionado !== 'todos' && concluidaEm) {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            anoOk = partes[2] === anoSelecionado;
+          }
+        }
+
+        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
+          item.inicio_planejado &&
+          item.concluida_em;
+        
+        return eh0034 && descricaoOk && anoOk && statusOk && temAnexo;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasAnalisadas0034').textContent = '0';
+        document.getElementById('prazoMedioGeral0034').textContent = '0';
+        if (chartPrazoMedio0034Instance) {
+          chartPrazoMedio0034Instance.destroy();
+          chartPrazoMedio0034Instance = null;
+        }
+        return;
+      }
+
+      // Função para converter data DD.MM.YYYY para objeto Date
+      function parseData(dataStr) {
+        if (!dataStr) return null;
+        const partes = dataStr.split('.');
+        if (partes.length !== 3) return null;
+        return new Date(partes[2], partes[1] - 1, partes[0]);
+      }
+
+      // Calcular diferenças e agrupar por mês/ano
+      const prazosPorMes = {};
+      let somaTotalDias = 0;
+      let totalNotasValidas = 0;
+
+      notasConcluidas.forEach(item => {
+        const inicioPlanejado = parseData(item.inicio_planejado);
+        const concluida = parseData(item.concluida_em);
+
+        if (inicioPlanejado && concluida) {
+          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
+          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
+
+          if (!prazosPorMes[mesAno]) {
+            prazosPorMes[mesAno] = { soma: 0, count: 0 };
+          }
+
+          prazosPorMes[mesAno].soma += diferencaDias;
+          prazosPorMes[mesAno].count++;
+          somaTotalDias += diferencaDias;
+          totalNotasValidas++;
+        }
+      });
+
+      // Calcular média por mês e ordenar
+      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
+        const [mesA, anoA] = a.split('.');
+        const [mesB, anoB] = b.split('.');
+        return new Date(anoA, mesA - 1) - new Date(anoB, mesB - 1);
+      });
+
+      const labels = mesesOrdenados.map(mesAno => {
+        const [mes, ano] = mesAno.split('.');
+        return `${mes}/${ano}`;
+      });
+
+      const prazosMedios = mesesOrdenados.map(mesAno => {
+        const prazo = prazosPorMes[mesAno];
+        return Math.round(prazo.soma / prazo.count);
+      });
+
+      // Atualizar informações
+      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round(somaTotalDias / totalNotasValidas) : 0;
+      document.getElementById('totalNotasAnalisadas0034').textContent = totalNotasValidas;
+      document.getElementById('prazoMedioGeral0034').textContent = prazoMedioGeral;
+
+      // Destruir gráfico anterior se existir
+      if (chartPrazoMedio0034Instance) {
+        chartPrazoMedio0034Instance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartPrazoMedio0034').getContext('2d');
+      chartPrazoMedio0034Instance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Prazo Médio (dias)',
+            data: prazosMedios,
+            borderColor: 'rgba(46, 125, 50, 1)',
+            backgroundColor: 'rgba(46, 125, 50, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: 'rgba(46, 125, 50, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333',
+                padding: 15,
+                usePointStyle: true
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              titleFont: {
+                size: 14,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: function (context) {
+                  return `Prazo médio: ${context.parsed.y} dias`;
+                }
+              }
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              formatter: (value) => `${value}d`,
+              color: '#2e7d32',
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              offset: 4
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Mês/Ano',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 5,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                callback: function (value) {
+                  return value + ' dias';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Prazo Médio (dias)',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
     // Função para gerar gráfico de Notas Concluídas (CONC CTEC e CONC RTEC)
     window.gerarGraficoConcluidas = function (dados, mesFiltro = null) {
       if (!dados || dados.length === 0) {
@@ -3384,8 +4488,12 @@
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
         const descricao = item.descricao || '';
-        const codigoMedidas = item.codigo_medidas || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -3488,7 +4596,25 @@
             pointRadius: 6,
             pointHoverRadius: 8,
             tension: 0.3,
-            fill: false
+            fill: false,
+            datalabels: {
+              display: true,
+              align: 'top',
+              anchor: 'end',
+              offset: 6,
+              formatter: (value) => {
+                return value.toFixed(1) + ' dias';
+              },
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#ff9800',
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              borderRadius: 4,
+              padding: 4
+            }
           }]
         },
         options: {
@@ -3496,9 +4622,6 @@
           maintainAspectRatio: true,
           aspectRatio: 2.5,
           plugins: {
-            datalabels: {
-              display: false
-            },
             legend: {
               display: true,
               position: 'bottom',
@@ -3618,8 +4741,12 @@
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
         const descricao = item.descricao || '';
-        const codigoMedidas = item.codigo_medidas || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -3717,7 +4844,25 @@
             pointRadius: 6,
             pointHoverRadius: 8,
             tension: 0.3,
-            fill: false
+            fill: false,
+            datalabels: {
+              display: true,
+              align: 'top',
+              anchor: 'end',
+              offset: 6,
+              formatter: (value) => {
+                return value.toFixed(1) + ' dias';
+              },
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#4caf50',
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              borderRadius: 4,
+              padding: 4
+            }
           }]
         },
         options: {
@@ -3725,9 +4870,6 @@
           maintainAspectRatio: true,
           aspectRatio: 2.5,
           plugins: {
-            datalabels: {
-              display: false
-            },
             legend: {
               display: true,
               position: 'bottom',
@@ -3847,8 +4989,12 @@
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
         const descricao = item.descricao || '';
-        const codigoMedidas = item.codigo_medidas || '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -3946,7 +5092,25 @@
             pointRadius: 6,
             pointHoverRadius: 8,
             tension: 0.3,
-            fill: false
+            fill: false,
+            datalabels: {
+              display: true,
+              align: 'top',
+              anchor: 'end',
+              offset: 6,
+              formatter: (value) => {
+                return value.toFixed(1) + ' dias';
+              },
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#2196f3',
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              borderRadius: 4,
+              padding: 4
+            }
           }]
         },
         options: {
@@ -3954,9 +5118,6 @@
           maintainAspectRatio: true,
           aspectRatio: 2.5,
           plugins: {
-            datalabels: {
-              display: false
-            },
             legend: {
               display: true,
               position: 'bottom',
@@ -4064,11 +5225,16 @@
         }
       });
 
-      // Filtrar apenas registros com "Analisar Carga Acessante Mini Geração" na descrição e status ABER ou ANDM
+      // Filtrar apenas registros de Mini/Micro Geração e status ABER ou ANDM
       const dadosFiltrados = dados.filter(item => {
-        const temDescricao = item.descricao && item.descricao.toLowerCase().includes('analisar carga acessante mini geração');
-        const temStatus = item.status_usuario && (item.status_usuario.toUpperCase() === 'ABER' || item.status_usuario.toUpperCase() === 'ANDM');
-        const codigoMedidas = item.codigo_medidas || '';
+        const descricao = (item.descricao || '').toLowerCase();
+        const temDescricao = descricao.includes('mini geração') || descricao.includes('micro geração');
+        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const statusBase = typeof normalizarStatusBase === 'function'
+          ? normalizarStatusBase(statusRaw)
+          : (statusRaw.includes('ABER') ? 'ABER' : (statusRaw.includes('ANDM') ? 'ANDM' : ''));
+        const temStatus = statusBase === 'ABER' || statusBase === 'ANDM';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         return temDescricao && temStatus && codigoOk;
       });
@@ -4434,15 +5600,290 @@
       });
     };
 
+    // Função para calcular similaridade entre strings
+    function calcularSimilaridade(str1, str2) {
+      const s1 = str1.toLowerCase().trim();
+      const s2 = str2.toLowerCase().trim();
+      
+      // Se uma string está contida na outra
+      if (s1.includes(s2) || s2.includes(s1)) {
+        return 0.9;
+      }
+      
+      // Calcular distância de Levenshtein simplificada
+      const longer = s1.length > s2.length ? s1 : s2;
+      const shorter = s1.length > s2.length ? s2 : s1;
+      
+      if (longer.length === 0) return 1.0;
+      
+      const editDistance = getEditDistance(shorter, longer);
+      return (longer.length - editDistance) / longer.length;
+    }
+
+    // Função auxiliar para calcular distância de Levenshtein
+    function getEditDistance(s1, s2) {
+      const costs = [];
+      for (let i = 0; i <= s1.length; i++) {
+        let lastValue = i;
+        for (let j = 0; j <= s2.length; j++) {
+          if (i === 0) {
+            costs[j] = j;
+          } else if (j > 0) {
+            let newValue = costs[j - 1];
+            if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
+              newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+            }
+            costs[j - 1] = lastValue;
+            lastValue = newValue;
+          }
+        }
+        if (i > 0) costs[s2.length] = lastValue;
+      }
+      return costs[s2.length];
+    }
+
+    // Função para agrupar textos parecidos (com limiar de similaridade)
+    function agruparTextosParecidos(textos, limiarSimilaridade = 0.75) {
+      const grupos = [];
+      const processados = new Set();
+      
+      textos.forEach((texto1, idx1) => {
+        if (processados.has(idx1)) return;
+        
+        const grupo = {
+          principal: texto1,
+          similares: [texto1],
+          indices: [idx1]
+        };
+        
+        processados.add(idx1);
+        
+        textos.forEach((texto2, idx2) => {
+          if (idx1 === idx2 || processados.has(idx2)) return;
+          
+          const similaridade = calcularSimilaridade(texto1, texto2);
+          if (similaridade >= limiarSimilaridade) {
+            grupo.similares.push(texto2);
+            grupo.indices.push(idx2);
+            processados.add(idx2);
+          }
+        });
+        
+        grupos.push(grupo);
+      });
+      
+      return grupos;
+    }
+
+    // Função para gerar gráfico de Texto Medidas
+    window.gerarGraficoTextoMedidas = function (dados) {
+      // Obter códigos medidas selecionados nos checkboxes (mesmo filtro do gráfico OutrosTipos)
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasSemGeracoes input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
+      // Filtrar apenas status ANDM e ABER e códigos selecionados (incluindo vazios)
+      const dadosFiltrados = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const codigoMedidas = item.codigo_medidas || '';
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+        return (status === 'ANDM' || status === 'ABER') && codigoOk;
+      });
+
+      // Atualizar contador total
+      document.getElementById('totalTextoMedidas').textContent = dadosFiltrados.length;
+
+      if (dadosFiltrados.length === 0) {
+        if (chartTextoMedidasInstance) {
+          chartTextoMedidasInstance.destroy();
+          chartTextoMedidasInstance = null;
+        }
+        document.getElementById('categoriasUnicasTextoMedidas').textContent = '0';
+        return;
+      }
+
+      // Contar ocorrências de cada texto (mantendo cada um único)
+      const contagem = {};
+      dadosFiltrados.forEach(item => {
+        const textoMedidas = (item.texto_medidas || '').trim();
+        const texto = textoMedidas.length > 0 ? textoMedidas : '⬜ Sem Texto de Medidas';
+        contagem[texto] = (contagem[texto] || 0) + 1;
+      });
+
+      // Ordenar por quantidade (decrescente)
+      const ordenado = Object.entries(contagem).sort((a, b) => b[1] - a[1]);
+      const labels = ordenado.map(item => item[0].length > 50 ? item[0].substring(0, 50) + '...' : item[0]);
+      const valores = ordenado.map(item => item[1]);
+
+      // Total de categorias únicas
+      document.getElementById('categoriasUnicasTextoMedidas').textContent = Object.keys(contagem).length;
+
+      // Destruir gráfico anterior se existir
+      if (chartTextoMedidasInstance) {
+        chartTextoMedidasInstance.destroy();
+      }
+
+      // Criar novo gráfico
+      const ctx = document.getElementById('chartTextoMedidas').getContext('2d');
+      chartTextoMedidasInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Quantidade de Notas - Texto Medidas',
+            data: valores,
+            backgroundColor: 'rgba(102, 187, 106, 0.7)',
+            borderColor: 'rgba(102, 187, 106, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(129, 199, 132, 0.9)',
+            hoverBorderColor: 'rgba(129, 199, 132, 1)',
+            datalabels: {
+              display: true,
+              anchor: 'end',
+              align: 'top',
+              offset: 4,
+              font: {
+                size: 11,
+                family: 'Roboto',
+                weight: 'bold'
+              },
+              color: '#2e7d32'
+            }
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const textoLabel = labels[index];
+
+              // Filtrar notas correspondentes à barra clicada
+              let notasFiltradas = [];
+              
+              if (textoLabel === '⬜ Sem Texto de Medidas') {
+                // Filtrar notas com texto_medidas vazio
+                notasFiltradas = dadosFiltrados.filter(item => {
+                  const textoMedidas = (item.texto_medidas || '').trim();
+                  return textoMedidas.length === 0;
+                });
+              } else {
+                // Buscar o texto original se foi truncado
+                let textoOriginal = textoLabel;
+                if (textoLabel.endsWith('...')) {
+                  textoOriginal = textoLabel.substring(0, textoLabel.length - 3);
+                  // Filtrar notas que começam com o texto truncado
+                  notasFiltradas = dadosFiltrados.filter(item => {
+                    const textoMedidas = (item.texto_medidas || '').trim();
+                    return textoMedidas.startsWith(textoOriginal);
+                  });
+                } else {
+                  // Filtrar notas que correspondem exatamente ao texto
+                  notasFiltradas = dadosFiltrados.filter(item => {
+                    const textoMedidas = (item.texto_medidas || '').trim();
+                    return textoMedidas === textoLabel;
+                  });
+                }
+              }
+
+              abrirModalNotasSemEdicao(notasFiltradas, textoLabel);
+            }
+          },
+          plugins: {
+            title: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(102, 187, 106, 0.9)',
+              titleFont: {
+                size: 14,
+                family: 'Roboto'
+              },
+              bodyFont: {
+                size: 13,
+                family: 'Roboto'
+              },
+              padding: 12,
+              callbacks: {
+                label: function (context) {
+                  return 'Notas: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                font: {
+                  size: 12,
+                  family: 'Roboto'
+                },
+                color: '#666'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              title: {
+                display: true,
+                text: 'Quantidade',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            },
+            x: {
+              ticks: {
+                font: {
+                  size: 11,
+                  family: 'Roboto'
+                },
+                color: '#666',
+                maxRotation: 45,
+                minRotation: 45
+              },
+              grid: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Texto de Medidas',
+                font: {
+                  size: 13,
+                  family: 'Roboto',
+                  weight: 'bold'
+                },
+                color: '#333'
+              }
+            }
+          }
+        }
+      });
+    };
+
     // Função para gerar gráfico sem Mini e Micro Geração - Por Fim Planejado
     window.gerarGraficoSemGeracoes = function (dados) {
-      // Filtrar dados excluindo mini e micro geração E considerando apenas ANDM e ABER
+      // Filtrar dados excluindo mini e micro geração e considerando apenas ANDM e ABER
       const dadosFiltrados = dados.filter(item => {
         const descricao = (item.descricao || '').toLowerCase();
-        const status = item.status_usuario || '';
+        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const statusBase = typeof normalizarStatusBase === 'function'
+          ? normalizarStatusBase(statusRaw)
+          : (statusRaw.includes('ABER') ? 'ABER' : (statusRaw.includes('ANDM') ? 'ANDM' : ''));
         return !descricao.includes('mini geração') &&
           !descricao.includes('micro geração') &&
-          (status === 'ANDM' || status === 'ABER');
+          (statusBase === 'ANDM' || statusBase === 'ABER');
       });
 
       // Atualizar contador total
@@ -4900,6 +6341,855 @@
     };
 
     // Função para gerar gráfico de Notas Concluídas por Mês
+
+        // Funções de filtro para o gráfico de Aprovação/Reprovação por Usuário
+        window.popularFiltroDescricoesAprovacaoReprovacao = function (dados) {
+          const descricoes = new Set();
+          dados.forEach(item => {
+            const status = item.status_usuario || '';
+            const descricao = item.descricao || '';
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+            if ((status === 'CONC CTEC' || status === 'CONC RTEC') && descricao && temAnexo) {
+              descricoes.add(descricao);
+            }
+          });
+          const container = document.getElementById('containerCheckboxesDescricoesAprovacaoReprovacao');
+          container.innerHTML = '';
+          Array.from(descricoes).sort().forEach(descricao => {
+            const label = document.createElement('label');
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '6px';
+            label.style.cursor = 'pointer';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = descricao;
+            checkbox.checked = true;
+            checkbox.onchange = () => gerarGraficoAprovacaoReprovacaoPorUsuario(dadosGlobais);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(descricao));
+            container.appendChild(label);
+          });
+        };
+
+        window.toggleDropdownDescricoesAprovacaoReprovacao = function () {
+          const container = document.getElementById('containerCheckboxesDescricoesAprovacaoReprovacao');
+          container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        window.popularFiltroMesesAprovacaoReprovacao = function (dados) {
+          const meses = new Set();
+          dados.forEach(item => {
+            const status = item.status_usuario || '';
+            const concluidaEm = item.concluida_em || '';
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+            if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm && temAnexo) {
+              const partes = concluidaEm.split('.');
+              if (partes.length >= 3) {
+                const mesAno = partes[1] + '.' + partes[2];
+                meses.add(mesAno);
+              }
+            }
+          });
+          const select = document.getElementById('filtroMesAprovacaoReprovacao');
+          select.innerHTML = '<option value="todos">Todos os meses</option>';
+          const mesesArray = Array.from(meses).sort((a, b) => {
+            const [mesA, anoA] = a.split('.');
+            const [mesB, anoB] = b.split('.');
+            return anoA !== anoB ? anoB - anoA : mesB - mesA;
+          });
+
+          mesesArray.forEach(mesAno => {
+            const option = document.createElement('option');
+            option.value = mesAno;
+            option.textContent = mesAno;
+            select.appendChild(option);
+          });
+
+          // Selecionar mês atual ou anterior se houver dados
+          const dataAtual = new Date();
+          const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+          const anoAtual = dataAtual.getFullYear();
+          const mesAnoAtual = `${mesAtual}.${anoAtual}`;
+
+          if (mesesArray.includes(mesAnoAtual)) {
+            select.value = mesAnoAtual;
+          } else {
+            const dataAnterior = new Date(anoAtual, parseInt(mesAtual) - 2, 1);
+            const mesAnterior = String(dataAnterior.getMonth() + 1).padStart(2, '0');
+            const anoAnterior = dataAnterior.getFullYear();
+            const mesAnoAnterior = `${mesAnterior}.${anoAnterior}`;
+
+            if (mesesArray.includes(mesAnoAnterior)) {
+              select.value = mesAnoAnterior;
+            } else if (mesesArray.length > 0) {
+              select.value = mesesArray[mesesArray.length - 1];
+            }
+          }
+        };
+
+        window.aplicarFiltroMesAprovacaoReprovacao = function () {
+          gerarGraficoAprovacaoReprovacaoPorUsuario(dadosGlobais);
+        };
+
+        window.popularFiltroCodigoMedidasAprovacaoReprovacao = function (dados) {
+          const codigos = new Set();
+          dados.forEach(item => {
+            const status = item.status_usuario || '';
+            const codigoMedidas = item.codigo_medidas || '';
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+            if ((status === 'CONC CTEC' || status === 'CONC RTEC') && codigoMedidas && temAnexo) {
+              codigos.add(codigoMedidas);
+            }
+          });
+          const container = document.getElementById('containerCheckboxesCodigoMedidasAprovacaoReprovacao');
+          container.innerHTML = '';
+          Array.from(codigos).sort().forEach(codigo => {
+            const label = document.createElement('label');
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '6px';
+            label.style.cursor = 'pointer';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = codigo;
+            checkbox.checked = true;
+            checkbox.onchange = () => gerarGraficoAprovacaoReprovacaoPorUsuario(dadosGlobais);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(codigo));
+            container.appendChild(label);
+          });
+        };
+
+        window.toggleDropdownCodigoMedidasAprovacaoReprovacao = function () {
+          const container = document.getElementById('containerCheckboxesCodigoMedidasAprovacaoReprovacao');
+          container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        // Gráfico de Percentual de Aprovação/Reprovação por Usuário
+        window.gerarGraficoAprovacaoReprovacaoPorUsuario = async function (dados) {
+          if (!dados || dados.length === 0) {
+            document.getElementById('totalNotasAprovacaoReprovacao').textContent = '0';
+            if (chartAprovacaoReprovacaoPorUsuarioInstance) {
+              chartAprovacaoReprovacaoPorUsuarioInstance.destroy();
+              chartAprovacaoReprovacaoPorUsuarioInstance = null;
+            }
+            return;
+          }
+
+          // Obter descrições selecionadas nos checkboxes
+          const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesAprovacaoReprovacao input[type="checkbox"]');
+          const descricoesChecadas = new Set();
+          checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+              descricoesChecadas.add(checkbox.value);
+            }
+          });
+
+          // Obter mês selecionado (Concluída em)
+          const selectMes = document.getElementById('filtroMesAprovacaoReprovacao');
+          const mesSelecionado = selectMes ? selectMes.value : 'todos';
+
+          // Obter códigos de medidas selecionados
+          const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasAprovacaoReprovacao input[type="checkbox"]');
+          const codigosChecados = new Set();
+          checkboxesCodigo.forEach(checkbox => {
+            if (checkbox.checked) {
+              codigosChecados.add(checkbox.value);
+            }
+          });
+
+          // Filtrar apenas notas concluídas (status CONC CTEC ou CONC RTEC) com usuário preenchido e com anexo
+          const notasConcluidas = dados.filter(item => {
+            const status = item.status_usuario || '';
+            const usuario = (item.concluido_por || '').trim();
+            const descricao = item.descricao || '';
+            const codigoMedidas = item.codigo_medidas || '';
+            const concluidaEm = item.concluida_em || '';
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+            // Verificar se tem anexo
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+            const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+            const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+
+            let mesOk = true;
+            if (mesSelecionado !== 'todos') {
+              const partes = concluidaEm.split('.');
+              if (partes.length >= 3) {
+                const mesAno = partes[1] + '.' + partes[2];
+                mesOk = mesAno === mesSelecionado;
+              } else {
+                mesOk = false;
+              }
+            }
+
+            return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && descricaoOk && codigoOk && mesOk && temAnexo;
+          });
+
+          if (notasConcluidas.length === 0) {
+            document.getElementById('totalNotasAprovacaoReprovacao').textContent = '0';
+            if (chartAprovacaoReprovacaoPorUsuarioInstance) {
+              chartAprovacaoReprovacaoPorUsuarioInstance.destroy();
+              chartAprovacaoReprovacaoPorUsuarioInstance = null;
+            }
+            return;
+          }
+
+          // Atualizar total
+          document.getElementById('totalNotasAprovacaoReprovacao').textContent = notasConcluidas.length;
+
+          // Agrupar por usuário (concluido_por) e contar aprovações/reprovações
+          const agrupamentoUsuario = {};
+          const usuariosUnicos = new Set();
+      
+          notasConcluidas.forEach(item => {
+            const usuario = (item.concluido_por || 'Desconhecido').trim();
+            const status = item.status_usuario || '';
+            usuariosUnicos.add(usuario);
+        
+            if (!agrupamentoUsuario[usuario]) {
+              agrupamentoUsuario[usuario] = { aprovadas: 0, reprovadas: 0 };
+            }
+        
+            if (status === 'CONC CTEC') {
+              agrupamentoUsuario[usuario].aprovadas++;
+            } else if (status === 'CONC RTEC') {
+              agrupamentoUsuario[usuario].reprovadas++;
+            }
+          });
+
+          // Buscar dados de usuários da tabela user_login_nt
+          let mapaNomesUsuarios = {};
+          try {
+            const usuariosArray = Array.from(usuariosUnicos);
+        
+            if (usuariosArray.length > 0) {
+              const { data: usuariosData, error } = await supabaseClient
+                .from('user_login_nt')
+                .select('matricula, nome_usuario');
+
+              if (!error && usuariosData) {
+                usuariosData.forEach(user => {
+                  if (user.matricula && user.nome_usuario) {
+                    mapaNomesUsuarios[user.matricula.toLowerCase()] = user.nome_usuario;
+                  }
+                });
+              }
+            }
+          } catch (err) {
+            console.error('Erro ao buscar dados de usuários:', err);
+          }
+
+          // Ordenar usuários por total de notas (decrescente)
+          const usuariosOrdenados = Object.keys(agrupamentoUsuario).sort((a, b) => {
+            const totalA = agrupamentoUsuario[a].aprovadas + agrupamentoUsuario[a].reprovadas;
+            const totalB = agrupamentoUsuario[b].aprovadas + agrupamentoUsuario[b].reprovadas;
+            return totalB - totalA;
+          });
+
+          // Criar labels com nomes dos usuários
+          const labels = usuariosOrdenados.map(matricula => {
+            const nomeUsuario = mapaNomesUsuarios[matricula.toLowerCase()];
+            if (nomeUsuario) {
+              return `${nomeUsuario} (${matricula})`;
+            } else {
+              return `(${matricula})`;
+            }
+          });
+
+          // Calcular percentuais
+          const percentuaisAprovacao = usuariosOrdenados.map(usuario => {
+            const total = agrupamentoUsuario[usuario].aprovadas + agrupamentoUsuario[usuario].reprovadas;
+            return total > 0 ? (agrupamentoUsuario[usuario].aprovadas / total * 100).toFixed(1) : 0;
+          });
+
+          const percentuaisReprovacao = usuariosOrdenados.map(usuario => {
+            const total = agrupamentoUsuario[usuario].aprovadas + agrupamentoUsuario[usuario].reprovadas;
+            return total > 0 ? (agrupamentoUsuario[usuario].reprovadas / total * 100).toFixed(1) : 0;
+          });
+
+          // Valores absolutos para tooltip
+          const valoresAprovacao = usuariosOrdenados.map(usuario => agrupamentoUsuario[usuario].aprovadas);
+          const valoresReprovacao = usuariosOrdenados.map(usuario => agrupamentoUsuario[usuario].reprovadas);
+
+          // Criar gráfico
+          const ctx = document.getElementById('chartAprovacaoReprovacaoPorUsuario').getContext('2d');
+      
+          if (chartAprovacaoReprovacaoPorUsuarioInstance) {
+            chartAprovacaoReprovacaoPorUsuarioInstance.destroy();
+          }
+
+          chartAprovacaoReprovacaoPorUsuarioInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: '% Aprovação (CONC CTEC)',
+                  data: percentuaisAprovacao,
+                  backgroundColor: 'rgba(46, 125, 50, 0.7)',
+                  borderColor: 'rgba(46, 125, 50, 1)',
+                  borderWidth: 2,
+                  valoresAbsolutos: valoresAprovacao
+                },
+                {
+                  label: '% Reprovação (CONC RTEC)',
+                  data: percentuaisReprovacao,
+                  backgroundColor: 'rgba(211, 47, 47, 0.7)',
+                  borderColor: 'rgba(211, 47, 47, 1)',
+                  borderWidth: 2,
+                  valoresAbsolutos: valoresReprovacao
+                }
+              ]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: true,
+              aspectRatio: 1.5,
+              layout: {
+                padding: {
+                  right: 60
+                }
+              },
+              onClick: (event, elements) => {
+                if (elements.length > 0) {
+                  const index = elements[0].index;
+                  const usuarioLabel = labels[index];
+                  const datasetIndex = elements[0].datasetIndex;
+              
+                  // Extrair matrícula do label
+                  const matriculaMatch = usuarioLabel.match(/\(([^)]+)\)$/);
+                  const matricula = matriculaMatch ? matriculaMatch[1] : usuarioLabel;
+
+                  // Filtrar notas correspondentes ao usuário e status clicado
+                  const statusFiltro = datasetIndex === 0 ? 'CONC CTEC' : 'CONC RTEC';
+                  const notasFiltradas = notasConcluidas.filter(item => {
+                    const usuario = (item.concluido_por || '').trim();
+                    const status = item.status_usuario || '';
+                    return usuario.toLowerCase() === matricula.toLowerCase() && status === statusFiltro;
+                  });
+
+                  const tipoTexto = datasetIndex === 0 ? 'Aprovadas' : 'Reprovadas';
+                  abrirModalNotasSemEdicao(notasFiltradas, `Notas ${tipoTexto} de ${usuarioLabel}`);
+                }
+              },
+              plugins: {
+                legend: {
+                  display: true,
+                  position: 'top',
+                  labels: {
+                    font: {
+                      size: 13,
+                      family: 'Roboto'
+                    },
+                    color: '#333',
+                    padding: 15
+                  }
+                },
+                title: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  titleFont: {
+                    size: 14,
+                    family: 'Roboto'
+                  },
+                  bodyFont: {
+                    size: 13,
+                    family: 'Roboto'
+                  },
+                  padding: 12,
+                  callbacks: {
+                    label: function (context) {
+                      const valoresAbsolutos = context.dataset.valoresAbsolutos || [];
+                      const valorAbsoluto = valoresAbsolutos[context.dataIndex] || 0;
+                      const percentual = context.parsed.x;
+                      return `${context.dataset.label}: ${valorAbsoluto} notas (${percentual}%)`;
+                    }
+                  }
+                },
+                datalabels: {
+                  display: true,
+                  anchor: 'end',
+                  align: 'right',
+                  offset: 8,
+                  clip: false,
+                  clamp: false,
+                  formatter: (value) => {
+                    return value + '%';
+                  },
+                  font: {
+                    size: 11,
+                    family: 'Roboto',
+                    weight: 'bold'
+                  },
+                  color: '#333'
+                }
+              },
+              scales: {
+                x: {
+                  stacked: false,
+                  beginAtZero: true,
+                  max: 100,
+                  ticks: {
+                    callback: function(value) {
+                      return value + '%';
+                    },
+                    font: {
+                      size: 12,
+                      family: 'Roboto'
+                    },
+                    color: '#666'
+                  },
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Percentual (%)',
+                    font: {
+                      size: 13,
+                      family: 'Roboto',
+                      weight: 'bold'
+                    },
+                    color: '#333'
+                  }
+                },
+                y: {
+                  stacked: false,
+                  ticks: {
+                    font: {
+                      size: 11,
+                      family: 'Roboto'
+                    },
+                    color: '#666'
+                  },
+                  grid: {
+                    display: false
+                  },
+                  title: {
+                    display: true,
+                    text: 'Usuário',
+                    font: {
+                      size: 13,
+                      family: 'Roboto',
+                      weight: 'bold'
+                    },
+                    color: '#333'
+                  }
+                }
+              }
+            }
+          });
+        };
+
+        // Filtro de mês do gráfico de notas concluídas por dia por usuário
+        window.popularFiltroMesesNotasConcluidasPorDiaUsuario = function (dados) {
+          const meses = new Set();
+          dados.forEach(item => {
+            const status = item.status_usuario || '';
+            const concluidaEm = item.concluida_em || '';
+            const usuario = (item.concluido_por || '').trim();
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+            if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm && usuario && temAnexo) {
+              const partes = concluidaEm.split('.');
+              if (partes.length >= 3) {
+                const mesAno = partes[1] + '.' + partes[2];
+                meses.add(mesAno);
+              }
+            }
+          });
+
+          const select = document.getElementById('filtroMesNotasConcluidasPorDiaUsuario');
+          select.innerHTML = '<option value="todos">Todos os meses</option>';
+          const mesesArray = Array.from(meses).sort((a, b) => {
+            const [mesA, anoA] = a.split('.');
+            const [mesB, anoB] = b.split('.');
+            return anoA !== anoB ? anoB - anoA : mesB - mesA;
+          });
+
+          mesesArray.forEach(mesAno => {
+            const option = document.createElement('option');
+            option.value = mesAno;
+            option.textContent = mesAno;
+            select.appendChild(option);
+          });
+
+          // Selecionar mês atual ou anterior se houver dados
+          const dataAtual = new Date();
+          const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+          const anoAtual = dataAtual.getFullYear();
+          const mesAnoAtual = `${mesAtual}.${anoAtual}`;
+
+          if (mesesArray.includes(mesAnoAtual)) {
+            select.value = mesAnoAtual;
+          } else {
+            const dataAnterior = new Date(anoAtual, parseInt(mesAtual) - 2, 1);
+            const mesAnterior = String(dataAnterior.getMonth() + 1).padStart(2, '0');
+            const anoAnterior = dataAnterior.getFullYear();
+            const mesAnoAnterior = `${mesAnterior}.${anoAnterior}`;
+
+            if (mesesArray.includes(mesAnoAnterior)) {
+              select.value = mesAnoAnterior;
+            } else if (mesesArray.length > 0) {
+              select.value = mesesArray[mesesArray.length - 1];
+            }
+          }
+        };
+
+        window.aplicarFiltroMesNotasConcluidasPorDiaUsuario = function () {
+          gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
+        };
+
+    window.popularFiltroUsuariosNotasConcluidasPorDia = async function (dados) {
+      const usuarios = new Set();
+      dados.forEach(item => {
+        const status = item.status_usuario || '';
+        const usuario = (item.concluido_por || '').trim();
+        const concluidaEm = item.concluida_em || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        if ((status === 'CONC CTEC' || status === 'CONC RTEC') && usuario && concluidaEm && temAnexo) {
+          usuarios.add(usuario);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesUsuariosNotasConcluidasPorDia');
+      container.innerHTML = '';
+
+      // Buscar nomes dos usuários da tabela user_login_nt
+      let mapaNomesUsuarios = {};
+      try {
+        const usuariosArray = Array.from(usuarios);
+        if (usuariosArray.length > 0) {
+          const { data: usuariosData, error } = await supabaseClient
+            .from('user_login_nt')
+            .select('matricula, nome_usuario');
+
+          if (!error && usuariosData) {
+            usuariosData.forEach(user => {
+              if (user.matricula && user.nome_usuario) {
+                mapaNomesUsuarios[user.matricula.toLowerCase()] = user.nome_usuario;
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao buscar dados de usuários:', err);
+      }
+
+      const usuariosArray = Array.from(usuarios);
+      usuariosArray.sort();
+
+      usuariosArray.forEach((usuario, index) => {
+        const checkboxId = 'checkbox_usuario_dia_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '6px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '4px 0';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = usuario;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.onchange = () => gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
+
+        label.appendChild(checkbox);
+        
+        // Exibir nome do usuário se disponível, senão exibir matrícula
+        const nomeUsuario = mapaNomesUsuarios[usuario.toLowerCase()];
+        const textDisplay = nomeUsuario ? `${nomeUsuario} (${usuario})` : usuario;
+        label.appendChild(document.createTextNode(textDisplay));
+        container.appendChild(label);
+      });
+    };
+
+    window.toggleDropdownUsuariosNotasConcluidasPorDia = function () {
+      const container = document.getElementById('containerCheckboxesUsuariosNotasConcluidasPorDia');
+      container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+    };
+
+    // Gráfico de notas concluídas por dia por usuário
+    window.gerarGraficoNotasConcluidasPorDiaUsuario = async function (dados) {
+      if (!dados || dados.length === 0) {
+        document.getElementById('totalNotasConcluidasPorDiaUsuario').textContent = '0';
+        if (chartNotasConcluidasPorDiaUsuarioInstance) {
+          chartNotasConcluidasPorDiaUsuarioInstance.destroy();
+          chartNotasConcluidasPorDiaUsuarioInstance = null;
+        }
+        return;
+      }
+
+      const selectMes = document.getElementById('filtroMesNotasConcluidasPorDiaUsuario');
+      const mesSelecionado = selectMes ? selectMes.value : 'todos';
+
+      // Obter usuários selecionados nos checkboxes
+      const checkboxes = document.querySelectorAll('#containerCheckboxesUsuariosNotasConcluidasPorDia input[type="checkbox"]');
+      const usuariosChecados = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          usuariosChecados.add(checkbox.value);
+        }
+      });
+
+      const notasConcluidas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const usuario = (item.concluido_por || '').trim();
+        const concluidaEm = item.concluida_em || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const usuarioOk = usuariosChecados.size === 0 || usuariosChecados.has(usuario);
+
+        let mesOk = true;
+        if (mesSelecionado !== 'todos') {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            mesOk = mesAno === mesSelecionado;
+          } else {
+            mesOk = false;
+          }
+        }
+
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && concluidaEm && mesOk && temAnexo && usuarioOk;
+      });
+
+      if (notasConcluidas.length === 0) {
+        document.getElementById('totalNotasConcluidasPorDiaUsuario').textContent = '0';
+        if (chartNotasConcluidasPorDiaUsuarioInstance) {
+          chartNotasConcluidasPorDiaUsuarioInstance.destroy();
+          chartNotasConcluidasPorDiaUsuarioInstance = null;
+        }
+        return;
+      }
+
+      document.getElementById('totalNotasConcluidasPorDiaUsuario').textContent = notasConcluidas.length;
+
+          const agrupamentoUsuario = {};
+          const usuariosUnicos = new Set();
+          const datasUnicas = new Set();
+
+          notasConcluidas.forEach(item => {
+            const usuario = (item.concluido_por || 'Desconhecido').trim();
+            const concluidaEm = item.concluida_em || '';
+            const partes = concluidaEm.split('.');
+            if (partes.length < 3) return;
+
+            const dataLabel = concluidaEm;
+            datasUnicas.add(dataLabel);
+            usuariosUnicos.add(usuario);
+
+            if (!agrupamentoUsuario[usuario]) {
+              agrupamentoUsuario[usuario] = {};
+            }
+            agrupamentoUsuario[usuario][dataLabel] = (agrupamentoUsuario[usuario][dataLabel] || 0) + 1;
+          });
+
+          const labels = Array.from(datasUnicas).sort((a, b) => {
+            return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
+          });
+
+          // Buscar nomes dos usuários
+          let mapaNomesUsuarios = {};
+          try {
+            const usuariosArray = Array.from(usuariosUnicos);
+            if (usuariosArray.length > 0) {
+              const { data: usuariosData, error } = await supabaseClient
+                .from('user_login_nt')
+                .select('matricula, nome_usuario');
+
+              if (!error && usuariosData) {
+                usuariosData.forEach(user => {
+                  if (user.matricula && user.nome_usuario) {
+                    mapaNomesUsuarios[user.matricula.toLowerCase()] = user.nome_usuario;
+                  }
+                });
+              }
+            }
+          } catch (err) {
+            console.error('Erro ao buscar dados de usuários:', err);
+          }
+
+          const usuariosOrdenados = Array.from(usuariosUnicos).sort((a, b) => {
+            const totalA = labels.reduce((sum, data) => sum + (agrupamentoUsuario[a]?.[data] || 0), 0);
+            const totalB = labels.reduce((sum, data) => sum + (agrupamentoUsuario[b]?.[data] || 0), 0);
+            return totalB - totalA;
+          });
+
+          const cores = [
+            'rgba(144, 202, 249, 0.8)',  // Azul claro
+            'rgba(165, 214, 167, 0.8)',  // Verde claro
+            'rgba(255, 183, 77, 0.8)',   // Laranja claro
+            'rgba(239, 154, 154, 0.8)',  // Vermelho claro
+            'rgba(206, 167, 230, 0.8)',  // Roxo claro
+            'rgba(129, 212, 221, 0.8)',  // Ciano claro
+            'rgba(255, 213, 141, 0.8)',  // Âmbar claro
+            'rgba(179, 229, 252, 0.8)',  // Azul pálido
+            'rgba(197, 225, 165, 0.8)',  // Verde pálido
+            'rgba(255, 204, 188, 0.8)'   // Rosa claro
+          ];
+
+          const datasets = usuariosOrdenados.map((usuario, index) => {
+            const nomeUsuario = mapaNomesUsuarios[usuario.toLowerCase()];
+            const label = nomeUsuario ? `${nomeUsuario} (${usuario})` : `(${usuario})`;
+            const cor = cores[index % cores.length];
+            return {
+              label,
+              data: labels.map(dataLabel => agrupamentoUsuario[usuario]?.[dataLabel] || 0),
+              backgroundColor: cor,
+              borderColor: cor.replace('0.8', '1'),
+              borderWidth: 1
+            };
+          });
+
+          const ctx = document.getElementById('chartNotasConcluidasPorDiaUsuario').getContext('2d');
+          if (chartNotasConcluidasPorDiaUsuarioInstance) {
+            chartNotasConcluidasPorDiaUsuarioInstance.destroy();
+          }
+
+          chartNotasConcluidasPorDiaUsuarioInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels,
+              datasets
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              aspectRatio: 2.5,
+              plugins: {
+                datalabels: {
+                  display: true,
+                  anchor: 'end',
+                  align: 'top',
+                  offset: 4,
+                  formatter: (value) => {
+                    return value > 0 ? value : '';
+                  },
+                  font: {
+                    size: 11,
+                    family: 'Roboto',
+                    weight: 'bold'
+                  },
+                  color: '#333'
+                },
+                legend: {
+                  display: true,
+                  position: 'bottom',
+                  labels: {
+                    font: {
+                      size: 12,
+                      family: 'Roboto'
+                    },
+                    color: '#333'
+                  }
+                },
+                title: {
+                  display: false
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  titleFont: {
+                    size: 14,
+                    family: 'Roboto'
+                  },
+                  bodyFont: {
+                    size: 13,
+                    family: 'Roboto'
+                  },
+                  padding: 12,
+                  callbacks: {
+                    label: function (context) {
+                      return `${context.dataset.label}: ${context.parsed.y} notas`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    font: {
+                      size: 11,
+                      family: 'Roboto'
+                    },
+                    color: '#666'
+                  },
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Data (dd.mm.aaaa)',
+                    font: {
+                      size: 13,
+                      family: 'Roboto',
+                      weight: 'bold'
+                    },
+                    color: '#333'
+                  }
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1,
+                    font: {
+                      size: 12,
+                      family: 'Roboto'
+                    },
+                    color: '#666'
+                  },
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  },
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Notas',
+                    font: {
+                      size: 13,
+                      family: 'Roboto',
+                      weight: 'bold'
+                    },
+                    color: '#333'
+                  }
+                }
+              }
+            }
+          });
+        };
+
+        // Função para gerar gráfico de Notas Concluídas por Mês
     window.gerarGraficoNotasConcluidasPorMes = function (dados) {
       if (!dados || dados.length === 0) {
         document.getElementById('totalNotasConcluidasPorMes').textContent = '0';
@@ -5133,6 +7423,11 @@
         const status = item.status_usuario || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
         const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -5257,6 +7552,7 @@
               data: miniCTECPercentual,
               backgroundColor: 'rgba(56, 142, 60, 0.8)',
               stack: 'mini',
+              valoresAbsolutos: miniCTEC, // Armazenar valores absolutos
               datalabels: {
                 display: false
               }
@@ -5267,6 +7563,7 @@
               backgroundColor: 'rgba(129, 199, 132, 0.8)',
               stack: 'mini',
               hidden: true,
+              valoresAbsolutos: miniRTEC, // Armazenar valores absolutos
               datalabels: {
                 display: true,
                 formatter: (value, context) => {
@@ -5302,6 +7599,7 @@
               fill: false,
               tension: 0.4,
               yAxisID: 'y',
+              valoresAbsolutos: miniCTEC.map((ctec, i) => ctec + miniRTEC[i]), // Total absoluto
               datalabels: {
                 display: true,
                 formatter: (value, context) => {
@@ -5352,9 +7650,15 @@
               callbacks: {
                 label: function (context) {
                   const label = context.dataset.label || '';
-                  const value = context.parsed.y;
+                  const valorPercentual = context.parsed.y;
+                  const valoresAbsolutos = context.dataset.valoresAbsolutos;
                   
-                  return `${label}: ${value}`;
+                  if (valoresAbsolutos && valoresAbsolutos[context.dataIndex] !== undefined) {
+                    const valorAbsoluto = valoresAbsolutos[context.dataIndex];
+                    return `${label}: ${valorAbsoluto} notas (${valorPercentual.toFixed(1)}%)`;
+                  }
+                  
+                  return `${label}: ${valorPercentual.toFixed(1)}%`;
                 }
               }
             }
@@ -5429,6 +7733,11 @@
         const status = item.status_usuario || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
         const descricao = item.descricao ? item.descricao.toLowerCase() : '';
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+
+        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
+        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
+        if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -5544,6 +7853,7 @@
               data: demaisCTECPercentual,
               backgroundColor: 'rgba(46, 125, 50, 0.7)',
               stack: 'demais',
+              valoresAbsolutos: demaisCTEC, // Armazenar valores absolutos
               datalabels: {
                 display: false
               }
@@ -5554,6 +7864,7 @@
               backgroundColor: 'rgba(76, 175, 80, 0.7)',
               stack: 'demais',
               hidden: true,
+              valoresAbsolutos: demaisRTEC, // Armazenar valores absolutos
               datalabels: {
                 display: true,
                 formatter: (value, context) => {
@@ -5589,6 +7900,7 @@
               fill: false,
               tension: 0.4,
               yAxisID: 'y',
+              valoresAbsolutos: demaisCTEC.map((ctec, i) => ctec + demaisRTEC[i]), // Total absoluto
               datalabels: {
                 display: true,
                 formatter: (value, context) => {
@@ -5639,9 +7951,15 @@
               callbacks: {
                 label: function (context) {
                   const label = context.dataset.label || '';
-                  const value = context.parsed.y;
+                  const valorPercentual = context.parsed.y;
+                  const valoresAbsolutos = context.dataset.valoresAbsolutos;
                   
-                  return `${label}: ${value}`;
+                  if (valoresAbsolutos && valoresAbsolutos[context.dataIndex] !== undefined) {
+                    const valorAbsoluto = valoresAbsolutos[context.dataIndex];
+                    return `${label}: ${valorAbsoluto} notas (${valorPercentual.toFixed(1)}%)`;
+                  }
+                  
+                  return `${label}: ${valorPercentual.toFixed(1)}%`;
                 }
               }
             }
