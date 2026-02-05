@@ -1829,6 +1829,9 @@ async function reprovadorPesquisar() {
           <div class="reprovador-item-topico">${item.topico}</div>
           <div>${item.descricao}</div>
         </div>
+        <div class="reprovador-item-buttons">
+          <button class="reprovador-btn" onclick="reprovadorCopiar(\`${item.descricao.replace(/`/g, '\\`')}\`, this)" style="background: #2196F3;">Copiar</button>
+        </div>
       `;
             } else {
                 itemDiv.innerHTML = `
@@ -1837,6 +1840,7 @@ async function reprovadorPesquisar() {
           <div>${item.descricao}</div>
         </div>
         <div class="reprovador-item-buttons">
+          <button class="reprovador-btn" onclick="reprovadorCopiar(\`${item.descricao.replace(/`/g, '\\`')}\`, this)" style="background: #2196F3;">Copiar</button>
           <button class="reprovador-btn" onclick="reprovadorEditar('${item.id}', \`${item.descricao.replace(/`/g, '\\`')}\`)">Editar</button>
           <button class="reprovador-btn reprovador-btn-excluir" onclick="reprovadorExcluir('${item.id}')">Excluir</button>
         </div>
@@ -1847,6 +1851,33 @@ async function reprovadorPesquisar() {
     } else {
         resultados.innerHTML = '<p>Nenhum resultado encontrado.</p>';
     }
+}
+
+function reprovadorCopiar(texto, botao) {
+    // Remover tags HTML do texto
+    const textoSemHTML = texto.replace(/<[^>]*>/g, '');
+    
+    // Dividir o texto em linhas
+    const linhas = textoSemHTML.split('\n');
+    
+    // Remover a primeira linha e juntar o restante
+    const textoSemPrimeiraLinha = linhas.slice(1).join('\n').trim();
+    
+    // Copiar para área de transferência
+    navigator.clipboard.writeText(textoSemPrimeiraLinha).then(() => {
+        // Feedback visual
+        const textoOriginal = botao.textContent;
+        botao.textContent = '✓ Copiado!';
+        botao.style.background = '#4CAF50';
+        
+        setTimeout(() => {
+            botao.textContent = textoOriginal;
+            botao.style.background = '#2196F3';
+        }, 2000);
+    }).catch(err => {
+        console.error('Erro ao copiar:', err);
+        alert('Erro ao copiar para área de transferência: ' + err.message);
+    });
 }
 
 function reprovadorEditar(id, textoAtual) {
@@ -1893,19 +1924,28 @@ async function reprovadorExcluir(id) {
 //FIM LOGICA PARA ITENS DE REPROVAÇÃO
 
 window.addEventListener('DOMContentLoaded', () => {
-//codigo para exibir/ocultar painel de cadastro
-document.getElementById('toggle-cadastro-btn').addEventListener('click', () => {
-    const panel = document.getElementById('cadastro-panel');
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    if (panel.style.display === 'block') {
-        // foca o campo de descrição quando abrir
-        document.getElementById('reprovador-descricao').focus();
+    //codigo para exibir/ocultar painel de cadastro
+    const toggleBtn = document.getElementById('toggle-cadastro-btn');
+    const fecharBtn = document.getElementById('fechar-cadastro-btn');
+    const cadastroPanel = document.getElementById('cadastro-panel');
+    const reprovadorDescricao = document.getElementById('reprovador-descricao');
+
+    if (toggleBtn && cadastroPanel) {
+        toggleBtn.addEventListener('click', () => {
+            cadastroPanel.style.display = cadastroPanel.style.display === 'none' ? 'block' : 'none';
+            if (cadastroPanel.style.display === 'block' && reprovadorDescricao) {
+                // foca o campo de descrição quando abrir
+                reprovadorDescricao.focus();
+            }
+        });
     }
-});
-document.getElementById('fechar-cadastro-btn').addEventListener('click', () => {
-    document.getElementById('cadastro-panel').style.display = 'none';
-});
-// Fim do codigo para exibir/ocultar painel de cadastro
+
+    if (fecharBtn && cadastroPanel) {
+        fecharBtn.addEventListener('click', () => {
+            cadastroPanel.style.display = 'none';
+        });
+    }
+    // Fim do codigo para exibir/ocultar painel de cadastro
 });
 
 
