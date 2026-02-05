@@ -3,35 +3,81 @@ const supabaseClient = supabase.createClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
 );
 
+// Funções de controle da barra de carregamento circular
+window.showLoadingBar = function () {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        document.getElementById('loadingPercent').textContent = '0%';
+        document.getElementById('progressCircle').style.strokeDashoffset = '345.575';
+    }
+};
+
+window.updateLoadingProgress = function (current, total) {
+    if (total <= 0) return;
+    const percent = Math.round((current / total) * 100);
+    const circumference = 345.575; // 2 * π * raio(55)
+    const offset = circumference * (1 - (percent / 100));
+    
+    const percentElement = document.getElementById('loadingPercent');
+    const progressCircle = document.getElementById('progressCircle');
+    
+    if (percentElement) {
+        percentElement.textContent = percent + '%';
+    }
+    if (progressCircle) {
+        progressCircle.style.strokeDashoffset = offset;
+    }
+};
+
+window.hideLoadingBar = function () {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+};
+
 let users = [];
 
 async function loadUsersAndRenderList() {
-    const { data, error } = await supabaseClient.from('users').select('*');
-    if (error) {
+    showLoadingBar();
+    try {
+        const { data, error } = await supabaseClient.from('users').select('*');
+        if (error) {
+            console.error('Erro ao carregar usuários:', error);
+            hideLoadingBar();
+            return;
+        }
+        users = data;
+
+        const userSelect = document.getElementById('user');
+        userSelect.innerHTML = '';
+        users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.name;
+            userSelect.appendChild(option);
+        });
+
+        const userList = document.getElementById('user-list');
+        userList.innerHTML = '';
+        users.forEach(user => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+              <span style="color:${user.color}; font-weight:bold;">${user.name}</span>
+              <button class="btn-delete-user" data-id="${user.id}">Excluir</button>
+            `;
+            userList.appendChild(li);
+        });
+
+        // Simular progresso de carregamento
+        updateLoadingProgress(50, 100);
+        
+        hideLoadingBar();
+    } catch (error) {
         console.error('Erro ao carregar usuários:', error);
-        return;
+        hideLoadingBar();
     }
-    users = data;
-
-    const userSelect = document.getElementById('user');
-    userSelect.innerHTML = '';
-    users.forEach(user => {
-        const option = document.createElement('option');
-        option.value = user.id;
-        option.textContent = user.name;
-        userSelect.appendChild(option);
-    });
-
-    const userList = document.getElementById('user-list');
-    userList.innerHTML = '';
-    users.forEach(user => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span style="color:${user.color}; font-weight:bold;">${user.name}</span>
-          <button class="btn-delete-user" data-id="${user.id}">Excluir</button>
-        `;
-        userList.appendChild(li);
-    });
 }
 
 // Delegação de eventos para exclusão de usuários
@@ -101,6 +147,8 @@ document.getElementById('user-form').addEventListener('submit', async function (
 
 document.addEventListener('DOMContentLoaded', async function () {
     await loadUsersAndRenderList();
+
+    showLoadingBar();
 
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -193,8 +241,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             if (error) {
                 console.error('Erro ao buscar eventos:', error);
+                hideLoadingBar();
                 return failureCallback(error);
             }
+
+            updateLoadingProgress(75, 100);
 
             const events = data.map(ev => ({
                 id: ev.id,
@@ -209,7 +260,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             }));
 
+            updateLoadingProgress(100, 100);
             successCallback(events);
+            hideLoadingBar();
         }
     });
 
@@ -259,54 +312,67 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function renderFutureEventsReport() {
-        const today = new Date().toISOString().split('T')[0];
+        showLoadingBar();
+        try {
+            const today = new Date().toISOString().split('T')[0];
 
-        const { data, error } = await supabaseClient
-            .from('events')
-            .select('title,type,start_date,end_date,users(name,color)')
-            .gte('end_date', today);
+            const { data, error } = await supabaseClient
+                .from('events')
+                .select('title,type,start_date,end_date,users(name,color)')
+                .gte('end_date', today);
 
-        if (error) {
-            console.error('Erro ao buscar eventos futuros e vigentes:', error);
-            return;
+            if (error) {
+                console.error('Erro ao buscar eventos futuros e vigentes:', error);
+                hideLoadingBar();
+                return;
+            }
+
+            updateLoadingProgress(50, 100);
+
+            // Ordena os eventos pelo start_date (data de início)
+            data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+            const list = document.getElementById('future-events-list');
+            list.innerHTML = '';
+
+            if (data.length === 0) {
+                list.innerHTML = '<li>Nenhum evento futuro ou vigente encontrado.</li>';
+                hideLoadingBar();
+                return;
+            }
+
+            function formatDateOnly(dateStr) {
+                // Remove time if present and format as dd/mm/yyyy
+                const [year, month, day] = dateStr.split('T')[0].split('-');
+                return `${day}/${month}/${year}`;
+            }
+
+            function getAdjustedEndDate(dateStr) {
+                // Subtract one day from end_date for display
+                const date = new Date(dateStr);
+                date.setDate(date.getDate() - 1);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${day}/${month}/${year}`;
+            }
+
+            data.forEach(ev => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+            <strong style="color:${ev.users?.color || '#333'}">${ev.title}</strong>
+            (${ev.type}) - ${ev.users?.name || 'Usuário'}<br>
+            De ${formatDateOnly(ev.start_date)} até ${getAdjustedEndDate(ev.end_date)}
+        `;
+                list.appendChild(li);
+            });
+
+            updateLoadingProgress(100, 100);
+            hideLoadingBar();
+        } catch (error) {
+            console.error('Erro ao renderizar relatório:', error);
+            hideLoadingBar();
         }
-
-        // Ordena os eventos pelo start_date (data de início)
-        data.sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-
-        const list = document.getElementById('future-events-list');
-        list.innerHTML = '';
-
-        if (data.length === 0) {
-            list.innerHTML = '<li>Nenhum evento futuro ou vigente encontrado.</li>';
-            return;
-        }
-
-        function formatDateOnly(dateStr) {
-            // Remove time if present and format as dd/mm/yyyy
-            const [year, month, day] = dateStr.split('T')[0].split('-');
-            return `${day}/${month}/${year}`;
-        }
-
-        function getAdjustedEndDate(dateStr) {
-            // Subtract one day from end_date for display
-            const date = new Date(dateStr);
-            date.setDate(date.getDate() - 1);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${day}/${month}/${year}`;
-        }
-
-        data.forEach(ev => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-        <strong style="color:${ev.users?.color || '#333'}">${ev.title}</strong>
-        (${ev.type}) - ${ev.users?.name || 'Usuário'}<br>
-        De ${formatDateOnly(ev.start_date)} até ${getAdjustedEndDate(ev.end_date)}
-    `;
-            list.appendChild(li);
-        });
     }
 });
 

@@ -15,6 +15,21 @@
 
 <body>
 
+  <!-- Barra de Carregamento Circular -->
+  <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+    <div style="background: white; border-radius: 20px; padding: 40px; text-align: center; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);">
+      <svg width="120" height="120" viewBox="0 0 120 120" style="margin: 0 auto 20px;">
+        <!-- Círculo de fundo -->
+        <circle cx="60" cy="60" r="55" fill="none" stroke="#e0e0e0" stroke-width="6"></circle>
+        <!-- Círculo de progresso -->
+        <circle id="progressCircle" cx="60" cy="60" r="55" fill="none" stroke="#2e7d32" stroke-width="6" stroke-dasharray="345.575" stroke-dashoffset="345.575" stroke-linecap="round" transform="rotate(-90 60 60)" style="transition: stroke-dashoffset 0.3s ease;"></circle>
+        <!-- Percentual -->
+        <text id="loadingPercent" x="60" y="65" font-size="24" font-weight="bold" text-anchor="middle" fill="#2e7d32">0%</text>
+      </svg>
+      <p id="loadingText" style="margin-top: 16px; color: #666; font-size: 16px; font-weight: 500;">Carregando dados...</p>
+    </div>
+  </div>
+
   <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
     <h1 id="titulo"
       style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
@@ -850,6 +865,40 @@
       Chart.register(ChartDataLabels);
     }
 
+    // Funções de controle da barra de carregamento circular
+    window.showLoadingBar = function () {
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.display = 'flex';
+        document.getElementById('loadingPercent').textContent = '0%';
+        document.getElementById('progressCircle').style.strokeDashoffset = '345.575';
+      }
+    };
+
+    window.updateLoadingProgress = function (current, total) {
+      if (total <= 0) return;
+      const percent = Math.round((current / total) * 100);
+      const circumference = 345.575; // 2 * π * raio(55)
+      const offset = circumference * (1 - (percent / 100));
+      
+      const percentElement = document.getElementById('loadingPercent');
+      const progressCircle = document.getElementById('progressCircle');
+      
+      if (percentElement) {
+        percentElement.textContent = percent + '%';
+      }
+      if (progressCircle) {
+        progressCircle.style.strokeDashoffset = offset;
+      }
+    };
+
+    window.hideLoadingBar = function () {
+      const overlay = document.getElementById('loadingOverlay');
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    };
+
     // Controlar acesso à seção de upload para usuário comum
     document.addEventListener('DOMContentLoaded', function () {
       const categoria = sessionStorage.getItem('userCategoria');
@@ -1208,6 +1257,22 @@
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('graficoRPVD').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
+
+      // Popular filtros do gráfico FimPlanejado
+      const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+      if (typeof popularFiltroDescricoes === 'function') {
+        popularFiltroDescricoes(dadosBase);
+      }
+      if (typeof popularFiltroCodigoMedidasFimPlanejado === 'function') {
+        popularFiltroCodigoMedidasFimPlanejado(dadosBase);
+      }
+      if (typeof popularFiltroStatusFimPlanejado === 'function') {
+        popularFiltroStatusFimPlanejado(dadosBase);
+      }
+      // Gerar gráfico com dados atualizados
+      if (typeof gerarGrafico === 'function') {
+        gerarGrafico(dadosBase);
+      }
     };
 
     // Função para exibir gráficos de "Notas Concluídas"
@@ -1387,6 +1452,7 @@
       document.getElementById('graficoTextoMedidas').style.display = 'none';
       document.getElementById('graficoConcluidas').style.display = 'none';
       document.getElementById('graficoRPVD').style.display = 'none';
+      document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoPrazoMedioGeral').style.display = 'none';
       document.getElementById('graficoPrazoMedioCarga').style.display = 'none';
       document.getElementById('graficoPrazoMedioGD').style.display = 'none';
@@ -1417,6 +1483,7 @@
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Responsável</th>';
         html += '</tr></thead><tbody>';
 
@@ -1432,6 +1499,7 @@
           html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.concluida_em || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.responsavel || ''}</td>`;
           html += '</tr>';
         });
@@ -1461,6 +1529,9 @@
 
         console.log('Iniciando carregamento de dados com paginação...');
 
+        // Mostrar barra de carregamento
+        showLoadingBar();
+
         while (temMaisDados) {
           const { data, error } = await supabaseClient
             .from('indices')
@@ -1470,12 +1541,18 @@
 
           if (error) {
             console.error('Erro ao carregar dados:', error);
+            hideLoadingBar();
             return;
           }
 
           if (data && data.length > 0) {
             todosOsDados = todosOsDados.concat(data);
             console.log(`Página carregada: ${inicio} a ${inicio + data.length}, Total acumulado: ${todosOsDados.length}`);
+            
+            // Atualizar progresso da barra de carregamento
+            const totalEstimado = Math.max(todosOsDados.length * 1.2, inicio + tamanhoPagina * 2);
+            updateLoadingProgress(todosOsDados.length, totalEstimado);
+            
             inicio += tamanhoPagina;
             temMaisDados = data.length === tamanhoPagina;
           } else {
@@ -1554,8 +1631,12 @@
 
         popularFiltroAnoConcluidasPorTipoDemais(dadosCodigosPadrao);
         gerarGraficoConcluidasPorTipoDemais(dadosCodigosPadrao);
+
+        // Ocultar barra de carregamento quando tudo estiver carregado
+        hideLoadingBar();
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
+        hideLoadingBar();
       }
     };
 
@@ -1581,7 +1662,44 @@
         return;
       }
 
-      tbody.innerHTML = dados.map(item => `
+      // Ordenar dados: primeiro ABER e ANDM por fim_planejado, depois CONC
+      const dadosOrdenados = [...dados].sort((a, b) => {
+        const statusA = (a.status_usuario || '').toUpperCase();
+        const statusB = (b.status_usuario || '').toUpperCase();
+        
+        // Definir ordem de status: ABER e ANDM primeiro, depois CONC
+        const ordemStatus = {
+          'ABER': 1,
+          'ANDM': 1,
+          'CONC CTEC': 2,
+          'CONC RTEC': 2
+        };
+        
+        const ordemA = ordemStatus[statusA] || 3;
+        const ordemB = ordemStatus[statusB] || 3;
+        
+        // Se status diferente, ordenar por status
+        if (ordemA !== ordemB) {
+          return ordemA - ordemB;
+        }
+        
+        // Se mesmo status, ordenar por fim_planejado (da maior data para a menor data)
+        // Converter formato DD.MM.YYYY para YYYY-MM-DD para comparação correta
+        const converterData = (dataStr) => {
+          if (!dataStr || dataStr === '0000-00-00') return '0000-00-00';
+          const partes = dataStr.split('.');
+          if (partes.length === 3) {
+            return partes[2] + '-' + partes[1] + '-' + partes[0]; // DD.MM.YYYY -> YYYY-MM-DD
+          }
+          return dataStr;
+        };
+        
+        const fimA = converterData(a.fim_planejado || '0000-00-00');
+        const fimB = converterData(b.fim_planejado || '0000-00-00');
+        return fimB.localeCompare(fimA); // maior data (mais recente) primeiro
+      });
+
+      tbody.innerHTML = dadosOrdenados.map(item => `
         <tr id="row_${item.id}" style="border-bottom: 1px solid #eee;">
           <td style="padding: 12px;">${item.nota || ''}</td>
           <td style="padding: 12px;">${item.area_operacional || ''}</td>
@@ -2066,6 +2184,34 @@
       }
 
       container.innerHTML = ''; // Limpar conteúdo anterior
+
+      // Adicionar botões de selecionar/desmarcar todos
+      const botoesDiv = document.createElement('div');
+      botoesDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; width: 100%;';
+
+      const botaoSelecionarTodos = document.createElement('button');
+      botaoSelecionarTodos.textContent = 'Selecionar Todos';
+      botaoSelecionarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #1b5e20; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoSelecionarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = true;
+        });
+        aplicarFiltroDescricaoFimPlanejado();
+      };
+
+      const botaoDesmarcarTodos = document.createElement('button');
+      botaoDesmarcarTodos.textContent = 'Desmarcar Todos';
+      botaoDesmarcarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoDesmarcarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = false;
+        });
+        aplicarFiltroDescricaoFimPlanejado();
+      };
+
+      botoesDiv.appendChild(botaoSelecionarTodos);
+      botoesDiv.appendChild(botaoDesmarcarTodos);
+      container.appendChild(botoesDiv);
 
       // Adicionar checkboxes para cada descrição
       const descricoesArray = Array.from(descricoes).sort();
@@ -4110,6 +4256,11 @@
         const descricao = (item.descricao || '').trim();
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
+
+        // Excluir código medidas 0034 deste gráfico
+        if (codigoMedidas === '0034') {
+          return false;
+        }
 
         let mesOk = true;
         if (mesSelecionado && mesSelecionado !== 'todos') {

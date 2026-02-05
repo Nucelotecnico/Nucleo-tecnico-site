@@ -3,79 +3,415 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Portal Núcleo Técnico</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background-color: #008b458a;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        background: linear-gradient(135deg, #0a4d2e 0%, #1a7a4a 50%, #0d5c37 100%);
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 100vh;
         height: 100vh;
         margin: 0;
+        padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* Efeito de background animado */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 250, 0, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: moveBackground 20s linear infinite;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    @keyframes moveBackground {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .container {
-        background-color: rgb(4, 75, 16);
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        padding: 50px 45px;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                    0 0 100px rgba(212, 250, 0, 0.1);
         text-align: center;
+        max-width: 440px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        animation: slideUp 0.6s ease-out;
+        border: 1px solid rgba(212, 250, 0, 0.1);
+    }
+
+    .logo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 32px;
+        animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    .icon-wrapper {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #0a4d2e, #1a7a4a, #0d5c37);
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(10, 77, 46, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .icon-wrapper::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 30% 30%, rgba(212, 250, 0, 0.15), transparent 70%);
+        pointer-events: none;
+    }
+
+    .icon-wrapper:hover {
+        transform: scale(1.08) translateY(-2px);
+        box-shadow: 0 15px 40px rgba(10, 77, 46, 0.5),
+                    0 0 30px rgba(212, 250, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .transformer-icon {
+        width: 52px;
+        height: 52px;
+        filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+        animation: pulseGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+        0%, 100% {
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+        }
+        50% {
+            filter: drop-shadow(0 3px 8px rgba(212, 250, 0, 0.4)) drop-shadow(0 0 12px rgba(212, 250, 0, 0.3));
+        }
+    }
+
+    @keyframes electricPulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
     }
 
     h2 {
-        color: #d4fa00;
+        font-family: 'Inter', sans-serif;
+        font-size: 2em;
+        font-weight: 700;
+        background: linear-gradient(135deg, #0a4d2e, #1a7a4a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    .subtitle {
+        color: #666;
+        font-size: 0.95em;
+        font-weight: 500;
+        margin-bottom: 32px;
+        animation: fadeIn 0.8s ease-out 0.4s both;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+        text-align: left;
+        animation: fadeIn 0.8s ease-out 0.6s both;
     }
 
     label {
         display: block;
-        margin-top: 15px;
-        font-weight: bold;
-       color: #d4fa00;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2d3748;
+        font-size: 0.9em;
+        letter-spacing: 0.3px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: #718096;
+        pointer-events: none;
+        transition: color 0.3s ease;
     }
 
     input {
         width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
+        padding: 14px 16px 14px 48px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        font-size: 15px;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        background: #f7fafc;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #1a7a4a;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(26, 122, 74, 0.1);
+    }
+
+    input:focus + .input-icon {
+        color: #1a7a4a;
     }
 
     button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #045819;
+        margin-top: 8px;
+        width: 100%;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #0a4d2e 0%, #1a7a4a 100%);
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 12px;
         cursor: pointer;
-        font-weight: bold;
+        font-weight: 600;
+        font-size: 16px;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(10, 77, 46, 0.3);
+        letter-spacing: 0.5px;
+        animation: fadeIn 0.8s ease-out 0.8s both;
     }
 
     button:hover {
-        background-color: #0d3b02;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(10, 77, 46, 0.4);
+        background: linear-gradient(135deg, #0d5c37 0%, #1f9359 100%);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    #mensagem-erro {
+        color: #e53e3e;
+        background: linear-gradient(135deg, rgba(229, 62, 62, 0.1), rgba(229, 62, 62, 0.05));
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: none;
+        font-size: 0.9em;
+        font-weight: 500;
+        border-left: 4px solid #e53e3e;
+        animation: slideUp 0.4s ease-out;
+    }
+
+    /* Loading animation */
+    .loading {
+        pointer-events: none;
+        position: relative;
+        color: transparent;
+    }
+
+    .loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+        .container {
+            padding: 40px 30px;
+        }
+
+        h2 {
+            font-size: 1.6em;
+        }
+
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+        }
+
+        .icon-wrapper::before {
+            font-size: 35px;
+        }
+    }
+
+    /* Acessibilidade - Modo escuro do sistema */
+    @media (prefers-color-scheme: dark) {
+        .container {
+            background: rgba(30, 30, 30, 0.98);
+        }
+
+        h2 {
+            background: linear-gradient(135deg, #d4fa00, #a8cc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #a0aec0;
+        }
+
+        label {
+            color: #e2e8f0;
+        }
+
+        input {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: white;
+        }
+
+        input:focus {
+            background: #374151;
+            border-color: #d4fa00;
+        }
     }
 </style>
 
 <body>
     <div class="container">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-            <div id="icon-corner" style="width: 60px; height: 40px; margin-bottom: 10px;"></div>
-
-
-
+        <div class="logo-container">
+            <div class="icon-wrapper">
+                <svg class="transformer-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Engrenagem externa -->
+                    <g id="gear">
+                        <!-- Dentes da engrenagem -->
+                        <path d="M 32 8 L 34 12 L 36 8 L 38 12 L 40 8 L 42 12 L 44 10 L 46 16 L 48 14 L 50 20 L 51 19 L 52 24 L 52 26 L 51 31 L 50 30 L 48 36 L 46 34 L 44 40 L 42 38 L 40 42 L 38 38 L 36 42 L 34 38 L 32 42 L 30 38 L 28 42 L 26 38 L 24 40 L 22 34 L 20 36 L 18 30 L 16 31 L 14 26 L 14 24 L 16 19 L 18 20 L 20 14 L 22 16 L 24 10 L 26 12 L 28 8 L 30 12 Z" 
+                              fill="#d4fa00" stroke="#a8cc00" stroke-width="1"/>
+                        
+                        <!-- Círculo interno da engrenagem -->
+                        <circle cx="32" cy="25" r="12" fill="#0a4d2e" stroke="#d4fa00" stroke-width="2"/>
+                        <circle cx="32" cy="25" r="9" fill="#1a7a4a"/>
+                    </g>
+                    
+                    <!-- Raio elétrico central -->
+                    <g id="lightning">
+                        <path d="M 35 16 L 28 26 L 32 26 L 29 36 L 38 24 L 34 24 Z" 
+                              fill="#d4fa00" stroke="#fff" stroke-width="0.5" opacity="0.95">
+                            <animate attributeName="opacity" values="0.95;1;0.95" dur="2s" repeatCount="indefinite"/>
+                        </path>
+                        <!-- Brilho interno do raio -->
+                        <path d="M 34 18 L 30 25 L 32 25 L 30 32 L 36 25 L 34 25 Z" 
+                              fill="#fff" opacity="0.6">
+                            <animate attributeName="opacity" values="0.6;0.9;0.6" dur="2s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                    
+                    <!-- Partículas de energia ao redor -->
+                    <circle cx="18" cy="18" r="1.5" fill="#d4fa00" opacity="0.7">
+                        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="0s"/>
+                    </circle>
+                    <circle cx="46" cy="18" r="1.5" fill="#d4fa00" opacity="0.7">
+                        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+                    </circle>
+                    <circle cx="16" cy="32" r="1.5" fill="#d4fa00" opacity="0.7">
+                        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+                    </circle>
+                    <circle cx="48" cy="32" r="1.5" fill="#d4fa00" opacity="0.7">
+                        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+                    </circle>
+                    
+                    <!-- Detalhe central -->
+                    <circle cx="32" cy="25" r="3" fill="#d4fa00" opacity="0.8"/>
+                    <circle cx="32" cy="25" r="1.5" fill="#fff" opacity="0.9">
+                        <animate attributeName="r" values="1.5;2;1.5" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            </div>
+            <h2>PORTAL<br>NÚCLEO TÉCNICO</h2>
         </div>
-        <h2 style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 2em; color: #d4fa00; font-weight: 600; letter-spacing: 1px; margin-bottom: 20px;">PORTAL<br>NÚCLEO TÉCNICO</h2>
-        <div id="mensagem-erro" style="color: #ff6b6b; background-color: rgba(255,107,107,0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; display: none;"></div>
+        <p class="subtitle">Faça login para acessar o sistema</p>
+        <div id="mensagem-erro"></div>
         <form id="formLogin">
-            <label>Email:</label>
-            <input type="email" id="usuario" required>
-            <label>Senha:</label>
-            <input type="password" id="senha" required>
-            <button type="submit">Entrar</button>
+            <div class="form-group">
+                <label for="usuario">Email</label>
+                <div class="input-wrapper">
+                    <input type="email" id="usuario" required placeholder="seu.email@exemplo.com" autocomplete="email">
+                    <span class="input-icon">📧</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <div class="input-wrapper">
+                    <input type="password" id="senha" required placeholder="••••••••" autocomplete="current-password">
+                    <span class="input-icon">🔒</span>
+                </div>
+            </div>
+            <button type="submit" id="btnLogin">Entrar</button>
         </form>
     </div>
 
@@ -87,7 +423,7 @@
 
         function mostrarErro(mensagem) {
             const divErro = document.getElementById('mensagem-erro');
-            divErro.textContent = mensagem;
+            divErro.textContent = '⚠️ ' + mensagem;
             divErro.style.display = 'block';
             setTimeout(() => {
                 divErro.style.display = 'none';
@@ -99,6 +435,11 @@
 
             const email = document.getElementById('usuario').value.trim().toLowerCase();
             const senha = document.getElementById('senha').value;
+            const btnLogin = document.getElementById('btnLogin');
+
+            // Adicionar estado de loading no botão
+            btnLogin.classList.add('loading');
+            btnLogin.disabled = true;
 
             try {
                 // Buscar usuário no banco de dados
@@ -111,6 +452,8 @@
 
                 if (error || !data) {
                     mostrarErro('Email ou senha incorretos.');
+                    btnLogin.classList.remove('loading');
+                    btnLogin.disabled = false;
                     return;
                 }
 
@@ -120,12 +463,20 @@
                 sessionStorage.setItem('userId', data.id);
                 sessionStorage.setItem('isLoggedIn', 'true');
 
-                // Redirecionar para calendario
-                window.location.href = 'calendario.html';
+                // Feedback visual de sucesso
+                btnLogin.textContent = '✓ Login realizado!';
+                btnLogin.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+
+                // Pequeno delay para feedback visual antes de redirecionar
+                setTimeout(() => {
+                    window.location.href = 'calendario.html';
+                }, 800);
 
             } catch (error) {
                 console.error('Erro ao fazer login:', error);
                 mostrarErro('Erro ao conectar ao servidor. Tente novamente.');
+                btnLogin.classList.remove('loading');
+                btnLogin.disabled = false;
             }
         });
 
@@ -133,6 +484,26 @@
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
             window.location.href = 'calendario.html';
         }
+
+        // Adicionar efeito de shake no container quando houver erro
+        function shakeContainer() {
+            const container = document.querySelector('.container');
+            container.style.animation = 'none';
+            setTimeout(() => {
+                container.style.animation = 'shake 0.5s ease-in-out';
+            }, 10);
+        }
+
+        // Keyframe para shake
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 
 
