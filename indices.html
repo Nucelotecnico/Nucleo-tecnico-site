@@ -3509,6 +3509,7 @@
       const notasFiltradas = dados.filter(item => {
         const status = item.status_usuario || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const codigoMedidas = item.codigo_medidas || '';
 
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
           textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
@@ -3516,8 +3517,9 @@
 
         const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
         const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+        const naoEhCodigo0034 = codigoMedidas !== '0034';
 
-        return eNotaConcluida && temAnexo && statusValido;
+        return eNotaConcluida && temAnexo && statusValido && naoEhCodigo0034;
       });
 
       const notasFiltradasPorAno = anoSelecionado === 'todos'
@@ -8858,6 +8860,8 @@
       const notasFiltradas = dados.filter(item => {
         const status = item.status_usuario || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
+        const concluidaEm = item.concluida_em || '';
+        const codigoMedidas = item.codigo_medidas || '';
 
         // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
@@ -8870,7 +8874,13 @@
         // Desconsiderar ANDM, ABER ou CANC (status não concluídos)
         const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
 
-        return eNotaConcluida && temAnexo && statusValido;
+        // Verificar se tem data válida (formato dd.mm.yyyy)
+        const temDataValida = concluidaEm && concluidaEm.split('.').length === 3;
+
+        // Excluir notas com código 0034
+        const naoEhCodigo0034 = codigoMedidas !== '0034';
+
+        return eNotaConcluida && temAnexo && statusValido && temDataValida && naoEhCodigo0034;
       });
 
       // Obter ano selecionado
