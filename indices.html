@@ -109,6 +109,76 @@
       </button>
     </div>
 
+    <!-- Gráfico de Análise Geral -->
+    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoFimPlanejado"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês:</label>
+            <select id="filtroMesFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoes"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Código Medidas</span>
+            </button>
+            <div id="containerCheckboxesCodigoMedidas"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleStatusFimPlanejado" onclick="toggleDropdownStatusFimPlanejado()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por Status</span>
+            </button>
+            <div id="containerCheckboxesStatusFimPlanejado"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button onclick="exportarNotasFimPlanejadoExcel()"
+              style="padding: 10px 16px; background: #1565c0; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+              <span>📥</span>
+              <span>Exportar Excel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartFimPlanejado"></canvas>
+      </div>
+      <div id="infoGeralNotas"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
+      </div>
+    </div>
+    </div>
+
     <!-- Gráfico de Todos os Tipos de Descrição -->
     <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoOutrosTipos"
@@ -220,69 +290,6 @@
     </div>
     </div>
 
-    <!-- Gráfico de Análise Geral -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-    <div id="graficoFimPlanejado"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-              mês:</label>
-            <select id="filtroMesFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
-              <option value="todos">Todos os meses</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por descrição</span>
-            </button>
-            <div id="containerCheckboxesDescricoes"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidas"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleStatusFimPlanejado" onclick="toggleDropdownStatusFimPlanejado()"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Status</span>
-            </button>
-            <div id="containerCheckboxesStatusFimPlanejado"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartFimPlanejado"></canvas>
-      </div>
-      <div id="infoGeralNotas"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
-        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
-        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
-      </div>
-    </div>
-    </div>
-
     <!-- Modal para exibir notas detalhadas -->
     <div id="modalNotas"
       style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
@@ -363,12 +370,28 @@
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
         <h2 style="color: #2e7d32; margin: 0;">📅 Notas Concluídas por Mês</h2>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
           <select id="filtroAnoNotasConcluidasPorMes" onchange="aplicarFiltroAnoNotasConcluidasPorMes()"
             style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
             <option value="todos">Todos</option>
           </select>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleMesesNotasConcluidasPorMes" onclick="toggleDropdownMesesNotasConcluidasPorMes()"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por mês</span>
+            </button>
+            <div id="containerCheckboxesMesesNotasConcluidasPorMes"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <button onclick="exportarNotasConcluidasPorMesExcel()"
+            style="padding: 8px 16px; background: #1565c0; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+            <span>📥</span>
+            <span>Exportar Excel</span>
+          </button>
         </div>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
@@ -770,8 +793,14 @@
         <h2 style="color: #1976d2; margin: 0;">📅 Notas Concluídas por Dia por Usuário</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroMesNotasConcluidasPorDiaUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-              mês (Concluída em):</label>
+            <label for="filtroDiaNotasConcluidasPorDiaUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por dia:</label>
+            <select id="filtroDiaNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroDiaNotasConcluidasPorDiaUsuario()"
+              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+              <option value="todos">Todos os dias</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label for="filtroMesNotasConcluidasPorDiaUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês (Concluída em):</label>
             <select id="filtroMesNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroMesNotasConcluidasPorDiaUsuario()"
               style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
               <option value="todos">Todos os meses</option>
@@ -1025,15 +1054,14 @@
         let html = '<table style="width: 100%; border-collapse: collapse;">';
         html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
-        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Regional</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
-        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Responsável</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Ações</th>';
         html += '</tr></thead><tbody>';
 
@@ -1041,15 +1069,14 @@
           const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
           html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
           html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.regional || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
           html += `<td style="padding: 10px;"><input type="text" id="modal_concluido_${nota.id}" value="${nota.concluido_por || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
           html += `<td style="padding: 10px;"><input type="text" id="modal_concluida_em_${nota.id}" value="${nota.concluida_em || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
-          html += `<td style="padding: 10px;">${nota.responsavel || ''}</td>`;
           html += `<td style="padding: 10px;">`;
           html += `<select id="status_${index}" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">`;
           html += `<option value="${nota.status_usuario || ''}" selected>${nota.status_usuario || 'Selecione'}</option>`;
@@ -1431,6 +1458,7 @@
       document.getElementById('graficoPrazoMedioGD').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('graficoRPVD').style.display = 'none';
+      document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
     };
 
@@ -1475,8 +1503,8 @@
         let html = '<table style="width: 100%; border-collapse: collapse;">';
         html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
-        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Regional</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
@@ -1484,15 +1512,134 @@
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
         html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
-        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Responsável</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Ações</th>';
         html += '</tr></thead><tbody>';
 
         notas.forEach((nota, index) => {
           const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
           html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
           html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.regional || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluido_${nota.id}" value="${nota.concluido_por || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluida_em_${nota.id}" value="${nota.concluida_em || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
+          html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
+          html += `<td style="padding: 10px;">`;
+          html += `<select id="status_${index}" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">`;
+          html += `<option value="${nota.status_usuario || ''}" selected>${nota.status_usuario || 'Selecione'}</option>`;
+          html += `<option value="ANDM">ANDM</option>`;
+          html += `<option value="ABER">ABER</option>`;
+          html += `<option value="CONC CTEC">CONC CTEC</option>`;
+          html += `<option value="CONC RTEC">CONC RTEC</option>`;
+          html += `<option value="CANC">CANC</option>`;
+          html += `</select>`;
+          html += `<button onclick="atualizarStatusNota('${nota.id}', ${index})" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
+          html += `</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteudo.innerHTML = html;
+      }
+
+      modal.style.display = 'block';
+    };
+
+    // Modal para gráficos Carga e GD (sem coluna Responsável)
+    window.abrirModalNotasCargaGD = function (notas, titulo) {
+      const modal = document.getElementById('modalNotas');
+      const tituloEl = document.getElementById('modalTitulo');
+      const conteudo = document.getElementById('modalConteudo');
+
+      tituloEl.textContent = `${titulo} (${notas.length} notas)`;
+
+      if (notas.length === 0) {
+        conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
+      } else {
+        let html = '<table style="width: 100%; border-collapse: collapse;">';
+        html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Ações</th>';
+        html += '</tr></thead><tbody>';
+
+        notas.forEach((nota, index) => {
+          const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
+          html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
+          html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluido_${nota.id}" value="${nota.concluido_por || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
+          html += `<td style="padding: 10px;"><input type="text" id="modal_concluida_em_${nota.id}" value="${nota.concluida_em || ''}" style="padding:6px; width:160px; border:1px solid #ccc; border-radius:4px;" /></td>`;
+          html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
+          html += `<td style="padding: 10px;">`;
+          html += `<select id="status_${index}" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px;">`;
+          html += `<option value="${nota.status_usuario || ''}" selected>${nota.status_usuario || 'Selecione'}</option>`;
+          html += `<option value="ANDM">ANDM</option>`;
+          html += `<option value="ABER">ABER</option>`;
+          html += `<option value="CONC CTEC">CONC CTEC</option>`;
+          html += `<option value="CONC RTEC">CONC RTEC</option>`;
+          html += `<option value="CANC">CANC</option>`;
+          html += `</select>`;
+          html += `<button onclick="atualizarStatusNota('${nota.id}', ${index})" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
+          html += `</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteudo.innerHTML = html;
+      }
+
+      modal.style.display = 'block';
+    };
+
+    // Modal para gráfico Carga (sem coluna Responsável)
+    window.abrirModalNotasCarga = function (notas, titulo) {
+      const modal = document.getElementById('modalNotas');
+      const tituloEl = document.getElementById('modalTitulo');
+      const conteudo = document.getElementById('modalConteudo');
+
+      tituloEl.textContent = `${titulo} (${notas.length} notas)`;
+
+      if (notas.length === 0) {
+        conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
+      } else {
+        let html = '<table style="width: 100%; border-collapse: collapse;">';
+        html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
+        html += '</tr></thead><tbody>';
+
+        notas.forEach((nota, index) => {
+          const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
+          html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
+          html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
@@ -1500,7 +1647,102 @@
           html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.concluida_em || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.responsavel || ''}</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteudo.innerHTML = html;
+      }
+
+      modal.style.display = 'block';
+    };
+
+    // Modal para gráfico Mini/Micro Geração (sem coluna Responsável)
+    window.abrirModalNotasMiniMicro = function (notas, titulo) {
+      const modal = document.getElementById('modalNotas');
+      const tituloEl = document.getElementById('modalTitulo');
+      const conteudo = document.getElementById('modalConteudo');
+
+      tituloEl.textContent = `${titulo} (${notas.length} notas)`;
+
+      if (notas.length === 0) {
+        conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
+      } else {
+        let html = '<table style="width: 100%; border-collapse: collapse;">';
+        html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
+        html += '</tr></thead><tbody>';
+
+        notas.forEach((nota, index) => {
+          const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
+          html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
+          html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluida_em || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteudo.innerHTML = html;
+      }
+
+      modal.style.display = 'block';
+    };
+
+    // Modal para gráfico Notas Concluídas por Data de Conclusão (sem coluna Responsável, com Fim Planejado)
+    window.abrirModalNotasConclusao = function (notas, titulo) {
+      const modal = document.getElementById('modalNotas');
+      const tituloEl = document.getElementById('modalTitulo');
+      const conteudo = document.getElementById('modalConteudo');
+
+      tituloEl.textContent = `${titulo} (${notas.length} notas)`;
+
+      if (notas.length === 0) {
+        conteudo.innerHTML = '<p style="text-align: center; color: #666;">Nenhuma nota encontrada.</p>';
+      } else {
+        let html = '<table style="width: 100%; border-collapse: collapse;">';
+        html += '<thead><tr style="background: #f5f5f5; border-bottom: 2px solid #ddd;">';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Nota</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Cidade</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Área Operacional</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Código Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Texto Medidas</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Descrição</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Status Usuário</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluído Por</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Concluída Em</th>';
+        html += '<th style="padding: 12px; text-align: left; font-weight: 600;">Fim Planejado</th>';
+        html += '</tr></thead><tbody>';
+
+        notas.forEach((nota, index) => {
+          const bgColor = index % 2 === 0 ? '#fff' : '#f9f9f9';
+          html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #eee;">`;
+          html += `<td style="padding: 10px;">${nota.nota || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.concluida_em || ''}</td>`;
+          html += `<td style="padding: 10px;">${nota.fim_planejado || ''}</td>`;
           html += '</tr>';
         });
 
@@ -1620,10 +1862,12 @@
         await gerarGraficoAprovacaoReprovacaoPorUsuario(dadosCodigosPadrao);
 
         popularFiltroMesesNotasConcluidasPorDiaUsuario(dadosCodigosPadrao);
+        popularFiltroDiaNotasConcluidasPorDiaUsuario(dadosCodigosPadrao);
         popularFiltroUsuariosNotasConcluidasPorDia(dadosCodigosPadrao);
         await gerarGraficoNotasConcluidasPorDiaUsuario(dadosCodigosPadrao);
 
         popularFiltroAnoNotasConcluidasPorMes(todosOsDados);
+        popularFiltroMesesNotasConcluidasPorMes();
         gerarGraficoNotasConcluidasPorMes(dadosCodigosPadrao);
 
         popularFiltroAnoConcluidasPorTipoSolicitacao(dadosCodigosPadrao);
@@ -3161,6 +3405,189 @@
       gerarGraficoNotasConcluidasPorMes(dadosGlobais);
     };
 
+    window.popularFiltroMesesNotasConcluidasPorMes = function () {
+      const mesesDisponiveis = [
+        { value: '01', label: 'Janeiro' },
+        { value: '02', label: 'Fevereiro' },
+        { value: '03', label: 'Março' },
+        { value: '04', label: 'Abril' },
+        { value: '05', label: 'Maio' },
+        { value: '06', label: 'Junho' },
+        { value: '07', label: 'Julho' },
+        { value: '08', label: 'Agosto' },
+        { value: '09', label: 'Setembro' },
+        { value: '10', label: 'Outubro' },
+        { value: '11', label: 'Novembro' },
+        { value: '12', label: 'Dezembro' }
+      ];
+
+      const container = document.getElementById('containerCheckboxesMesesNotasConcluidasPorMes');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      // Adicionar botões de Marcar/Desmarcar todos
+      const botoesContainer = document.createElement('div');
+      botoesContainer.style.display = 'flex';
+      botoesContainer.style.gap = '8px';
+      botoesContainer.style.marginBottom = '12px';
+      botoesContainer.style.paddingBottom = '8px';
+      botoesContainer.style.borderBottom = '1px solid #ddd';
+
+      const btnMarcarTodos = document.createElement('button');
+      btnMarcarTodos.textContent = 'Marcar todos';
+      btnMarcarTodos.style.padding = '6px 12px';
+      btnMarcarTodos.style.background = '#4caf50';
+      btnMarcarTodos.style.color = 'white';
+      btnMarcarTodos.style.border = 'none';
+      btnMarcarTodos.style.borderRadius = '4px';
+      btnMarcarTodos.style.cursor = 'pointer';
+      btnMarcarTodos.style.fontSize = '12px';
+      btnMarcarTodos.style.fontWeight = '600';
+      btnMarcarTodos.onclick = () => {
+        document.querySelectorAll('.filtro-mes-checkbox').forEach(cb => cb.checked = true);
+        gerarGraficoNotasConcluidasPorMes(dadosGlobais);
+      };
+
+      const btnDesmarcarTodos = document.createElement('button');
+      btnDesmarcarTodos.textContent = 'Desmarcar todos';
+      btnDesmarcarTodos.style.padding = '6px 12px';
+      btnDesmarcarTodos.style.background = '#f44336';
+      btnDesmarcarTodos.style.color = 'white';
+      btnDesmarcarTodos.style.border = 'none';
+      btnDesmarcarTodos.style.borderRadius = '4px';
+      btnDesmarcarTodos.style.cursor = 'pointer';
+      btnDesmarcarTodos.style.fontSize = '12px';
+      btnDesmarcarTodos.style.fontWeight = '600';
+      btnDesmarcarTodos.onclick = () => {
+        document.querySelectorAll('.filtro-mes-checkbox').forEach(cb => cb.checked = false);
+        gerarGraficoNotasConcluidasPorMes(dadosGlobais);
+      };
+
+      botoesContainer.appendChild(btnMarcarTodos);
+      botoesContainer.appendChild(btnDesmarcarTodos);
+      container.appendChild(botoesContainer);
+
+      mesesDisponiveis.forEach(mes => {
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '6px';
+        label.style.cursor = 'pointer';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = mes.value;
+        checkbox.checked = true;
+        checkbox.className = 'filtro-mes-checkbox';
+        checkbox.onchange = () => gerarGraficoNotasConcluidasPorMes(dadosGlobais);
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(mes.label));
+        container.appendChild(label);
+      });
+    };
+
+    window.toggleDropdownMesesNotasConcluidasPorMes = function () {
+      const container = document.getElementById('containerCheckboxesMesesNotasConcluidasPorMes');
+      if (container) {
+        container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+      }
+    };
+
+    window.aplicarFiltroMesNotasConcluidasPorMes = function () {
+      gerarGraficoNotasConcluidasPorMes(dadosGlobais);
+    };
+
+    window.exportarNotasConcluidasPorMesExcel = function () {
+      const anoSelecionado = document.getElementById('filtroAnoNotasConcluidasPorMes')?.value || 'todos';
+      const checkboxesMeses = document.querySelectorAll('.filtro-mes-checkbox:checked');
+      const mesesSelecionados = Array.from(checkboxesMeses).map(cb => cb.value);
+      const dados = dadosGlobais || [];
+
+      // Aplicar os mesmos filtros que o gráfico
+      const notasFiltradas = dados.filter(item => {
+        const status = item.status_usuario || '';
+        const textoMedidas = (item.texto_medidas || '').toUpperCase();
+
+        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+        const eNotaConcluida = status === 'CONC CTEC' || status === 'CONC RTEC';
+        const statusValido = status !== 'ANDM' && status !== 'ABER' && status !== 'CANC';
+
+        return eNotaConcluida && temAnexo && statusValido;
+      });
+
+      const notasFiltradasPorAno = anoSelecionado === 'todos'
+        ? notasFiltradas
+        : notasFiltradas.filter(item => {
+            const concluidaEm = item.concluida_em || '';
+            if (!concluidaEm) return false;
+            const partes = concluidaEm.split('.');
+            if (partes.length >= 3) {
+              return partes[2] === anoSelecionado;
+            }
+            return false;
+          });
+
+      const notasFiltradasPorAnoMes = mesesSelecionados.length === 0
+        ? notasFiltradasPorAno
+        : notasFiltradasPorAno.filter(item => {
+            const concluidaEm = item.concluida_em || '';
+            if (!concluidaEm) return false;
+            const partes = concluidaEm.split('.');
+            if (partes.length >= 2) {
+              return mesesSelecionados.includes(partes[1]);
+            }
+            return false;
+          });
+
+      if (notasFiltradasPorAnoMes.length === 0) {
+        alert('Não há dados para exportar com os filtros selecionados.');
+        return;
+      }
+
+      // Preparar dados para o Excel
+      const dadosExcel = notasFiltradasPorAnoMes.map(item => ({
+        'Nota': item.nota || '',
+        'Regional': item.regional || '',
+        'Cidade': item.cidade || '',
+        'Código Medidas': item.codigo_medidas || '',
+        'Descrição': item.descricao || '',
+        'Texto Medidas': item.texto_medidas || '',
+        'Status': item.status_usuario || '',
+        'Concluído Por': item.concluido_por || '',
+        'Concluída Em': item.concluida_em || '',
+        'Fim Planejado': item.fim_planejado || ''
+      }));
+
+      // Criar workbook e worksheet
+      const ws = XLSX.utils.json_to_sheet(dadosExcel);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Notas Concluídas por Mês');
+
+      // Ajustar largura das colunas
+      const columnWidths = [
+        { wch: 12 }, // Nota
+        { wch: 15 }, // Regional
+        { wch: 15 }, // Cidade
+        { wch: 15 }, // Código Medidas
+        { wch: 25 }, // Descrição
+        { wch: 30 }, // Texto Medidas
+        { wch: 15 }, // Status
+        { wch: 15 }, // Concluído Por
+        { wch: 15 }, // Concluída Em
+        { wch: 15 }  // Fim Planejado
+      ];
+      ws['!cols'] = columnWidths;
+
+      // Baixar arquivo
+      const nomeArquivo = `notas_concluidas_por_mes_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, nomeArquivo);
+    };
+
     // Função para popular o filtro de ano do gráfico Concluídas por Tipo de Solicitação
     window.popularFiltroAnoConcluidasPorTipoSolicitacao = function (dados) {
       const anosSet = new Set();
@@ -4123,6 +4550,127 @@
       gerarGrafico(dadosBase, mesSelecionado);
     };
 
+    window.exportarNotasFimPlanejadoExcel = function () {
+      const mesSelecionado = document.getElementById('filtroMesFimPlanejado')?.value || 'todos';
+      const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+      
+      // Obter descrições selecionadas
+      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoes input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add((checkbox.value || '').trim());
+        }
+      });
+      const todasDescricoesMarcadas = checkboxes.length > 0 && Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+      // Obter códigos medidas selecionados
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidas input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add((checkbox.value || '').trim());
+        }
+      });
+      const todosCodigosMarcados = checkboxesCodigo.length > 0 && Array.from(checkboxesCodigo).every(checkbox => checkbox.checked);
+
+      // Obter status selecionados
+      const checkboxesStatus = document.querySelectorAll('#containerCheckboxesStatusFimPlanejado input[type="checkbox"]');
+      const statusChecados = new Set();
+      checkboxesStatus.forEach(checkbox => {
+        if (checkbox.checked) {
+          statusChecados.add((checkbox.value || '').trim().toUpperCase());
+        }
+      });
+      const todosStatusMarcados = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => checkbox.checked);
+      const nenhumStatusMarcado = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => !checkbox.checked);
+
+      const normalizarStatusBase = function (status) {
+        const statusNormalizado = (status || '').trim().toUpperCase();
+        if (statusNormalizado.includes('ABER')) return 'ABER';
+        if (statusNormalizado.includes('ANDM')) return 'ANDM';
+        return statusNormalizado;
+      };
+
+      // Aplicar os mesmos filtros que o gráfico
+      const dadosFiltrados = dadosBase.filter(item => {
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const statusBase = normalizarStatusBase(status);
+        const descricao = (item.descricao || '').trim();
+        const codigoMedidas = (item.codigo_medidas || '').trim();
+        const fimPlanejado = (item.fim_planejado || '').trim();
+
+        // Excluir código medidas 0034
+        if (codigoMedidas === '0034') {
+          return false;
+        }
+
+        let mesOk = true;
+        if (mesSelecionado && mesSelecionado !== 'todos') {
+          const partes = fimPlanejado.split('.');
+          if (partes.length >= 3) {
+            const mesAno = partes[1] + '.' + partes[2];
+            mesOk = mesAno === mesSelecionado;
+          } else {
+            mesOk = false;
+          }
+        }
+
+        const statusOk = nenhumStatusMarcado
+          ? (statusBase === 'ABER' || statusBase === 'ANDM')
+          : (todosStatusMarcados || statusChecados.size === 0)
+            ? !!statusBase
+            : statusChecados.has(statusBase);
+        const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = todosCodigosMarcados || codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+
+        return statusOk && descricaoOk && codigoOk && mesOk;
+      });
+
+      if (dadosFiltrados.length === 0) {
+        alert('Não há dados para exportar com os filtros selecionados.');
+        return;
+      }
+
+      // Preparar dados para o Excel
+      const dadosExcel = dadosFiltrados.map(item => ({
+        'Nota': item.nota || '',
+        'Regional': item.regional || '',
+        'Cidade': item.cidade || '',
+        'Código Medidas': item.codigo_medidas || '',
+        'Descrição': item.descricao || '',
+        'Texto Medidas': item.texto_medidas || '',
+        'Status': item.status_usuario || item.status || item.Status || item.status_atual || '',
+        'Concluído Por': item.concluido_por || '',
+        'Fim Planejado': item.fim_planejado || '',
+        'Concluída Em': item.concluida_em || ''
+      }));
+
+      // Criar workbook e worksheet
+      const ws = XLSX.utils.json_to_sheet(dadosExcel);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Notas ABER E ANDM');
+
+      // Ajustar largura das colunas
+      const columnWidths = [
+        { wch: 12 }, // Nota
+        { wch: 15 }, // Regional
+        { wch: 15 }, // Cidade
+        { wch: 15 }, // Código Medidas
+        { wch: 25 }, // Descrição
+        { wch: 30 }, // Texto Medidas
+        { wch: 15 }, // Status
+        { wch: 15 }, // Concluído Por
+        { wch: 15 }, // Fim Planejado
+        { wch: 15 }  // Concluída Em
+      ];
+      ws['!cols'] = columnWidths;
+
+      // Baixar arquivo
+      const nomeArquivo = `notas_aber_andm_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, nomeArquivo);
+    };
+
     // Função para filtrar gráfico Medidas 0034 por mês
     window.filtrarGraficoMedidas0034PorMes = function () {
       const mesSelecionado = document.getElementById('filtroMesMedidas0034')?.value || 'todos';
@@ -4414,7 +4962,7 @@
                 return fimPlanejado === dataLabel && statusBase === statusLabel;
               });
 
-              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+              abrirModalNotasCargaGD(notasFiltradas, `${statusLabel} - ${dataLabel}`);
             }
           },
           plugins: {
@@ -5002,6 +5550,25 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+
+              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+                const concluidaEm = item.concluida_em || '';
+                if (!concluidaEm && dataLabel === 'Sem data') return true;
+                const partes = concluidaEm.split('.');
+                if (partes.length >= 3) {
+                  const mesAno = partes[1] + '.' + partes[2];
+                  return mesAno === dataLabel;
+                }
+                return false;
+              });
+
+              abrirModalNotasConclusao(notasFiltradas, `Concluídas - ${dataLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -5546,6 +6113,25 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+
+              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+                const concluidaEm = item.concluida_em || '';
+                if (!concluidaEm && dataLabel === 'Sem data') return true;
+                const partes = concluidaEm.split('.');
+                if (partes.length >= 3) {
+                  const mesAno = partes[1] + '.' + partes[2];
+                  return mesAno === dataLabel;
+                }
+                return false;
+              });
+
+              abrirModalNotasConclusao(notasFiltradas, `Concluídas - ${dataLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -5808,6 +6394,25 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+
+              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+                const concluidaEm = item.concluida_em || '';
+                if (!concluidaEm && dataLabel === 'Sem data') return true;
+                const partes = concluidaEm.split('.');
+                if (partes.length >= 3) {
+                  const mesAno = partes[1] + '.' + partes[2];
+                  return mesAno === dataLabel;
+                }
+                return false;
+              });
+
+              abrirModalNotasConclusao(notasFiltradas, `Concluídas - ${dataLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -6070,6 +6675,25 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+
+              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+                const concluidaEm = item.concluida_em || '';
+                if (!concluidaEm && dataLabel === 'Sem data') return true;
+                const partes = concluidaEm.split('.');
+                if (partes.length >= 3) {
+                  const mesAno = partes[1] + '.' + partes[2];
+                  return mesAno === dataLabel;
+                }
+                return false;
+              });
+
+              abrirModalNotasConclusao(notasFiltradas, `Concluídas - ${dataLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -6273,7 +6897,7 @@
                 return fimPlanejado === dataLabel;
               });
 
-              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+              abrirModalNotasCargaGD(notasFiltradas, `${statusLabel} - ${dataLabel}`);
             }
           },
           plugins: {
@@ -6920,7 +7544,7 @@
                 return fimPlanejado === dataLabel;
               });
 
-              abrirModalNotas(notasFiltradas, dataLabel, statusLabel);
+              abrirModalNotasCargaGD(notasFiltradas, `${statusLabel} - ${dataLabel}`);
             }
           },
           plugins: {
@@ -7813,6 +8437,52 @@
           gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
         };
 
+        window.aplicarFiltroDiaNotasConcluidasPorDiaUsuario = function () {
+          gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
+        };
+
+        window.popularFiltroDiaNotasConcluidasPorDiaUsuario = function (dados) {
+          const selectDia = document.getElementById('filtroDiaNotasConcluidasPorDiaUsuario');
+          if (!selectDia) return;
+
+          const diasUnicos = new Set();
+          
+          dados.forEach(item => {
+            const status = item.status_usuario || '';
+            const concluidaEm = item.concluida_em || '';
+            const textoMedidas = (item.texto_medidas || '').toUpperCase();
+            const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
+              textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
+              textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
+
+            if ((status === 'CONC CTEC' || status === 'CONC RTEC') && concluidaEm && temAnexo) {
+              const partes = concluidaEm.split('.');
+              if (partes.length >= 1) {
+                diasUnicos.add(parseInt(partes[0]));
+              }
+            }
+          });
+
+          const diasOrdenados = Array.from(diasUnicos).sort((a, b) => a - b);
+          
+          // Remover as opções antigas exceto "Todos os dias"
+          const opcoes = selectDia.querySelectorAll('option');
+          opcoes.forEach((opcao, index) => {
+            if (index > 0) opcao.remove();
+          });
+
+          // Adicionar novos dias
+          diasOrdenados.forEach(dia => {
+            const option = document.createElement('option');
+            option.value = dia;
+            option.textContent = dia;
+            selectDia.appendChild(option);
+          });
+
+          // Manter "Todos os dias" como selecionado na inicialização
+          selectDia.value = 'todos';
+        };
+
     window.popularFiltroUsuariosNotasConcluidasPorDia = async function (dados) {
       const usuarios = new Set();
       dados.forEach(item => {
@@ -7904,6 +8574,9 @@
       const selectMes = document.getElementById('filtroMesNotasConcluidasPorDiaUsuario');
       const mesSelecionado = selectMes ? selectMes.value : 'todos';
 
+      const selectDia = document.getElementById('filtroDiaNotasConcluidasPorDiaUsuario');
+      const diaSelecionado = selectDia ? selectDia.value : 'todos';
+
       // Obter usuários selecionados nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesUsuariosNotasConcluidasPorDia input[type="checkbox"]');
       const usuariosChecados = new Set();
@@ -7936,7 +8609,18 @@
           }
         }
 
-        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && concluidaEm && mesOk && temAnexo && usuarioOk;
+        let diaOk = true;
+        if (diaSelecionado !== 'todos') {
+          const partes = concluidaEm.split('.');
+          if (partes.length >= 1) {
+            const diaAtual = parseInt(partes[0]);
+            diaOk = diaAtual === parseInt(diaSelecionado);
+          } else {
+            diaOk = false;
+          }
+        }
+
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && concluidaEm && mesOk && diaOk && temAnexo && usuarioOk;
       });
 
       if (notasConcluidas.length === 0) {
@@ -8042,6 +8726,23 @@
               responsive: true,
               maintainAspectRatio: true,
               aspectRatio: 2.5,
+              onClick: (event, activeElements) => {
+                if (activeElements.length > 0) {
+                  const index = activeElements[0].index;
+                  const datasetIndex = activeElements[0].datasetIndex;
+                  const dataLabel = labels[index];
+                  const usuarioLabel = usuariosOrdenados[datasetIndex];
+
+                  // Filtrar notas correspondentes à barra clicada
+                  const notasFiltradas = notasConcluidas.filter(item => {
+                    const concluidaEm = item.concluida_em || '';
+                    const usuario = (item.concluido_por || '').trim();
+                    return concluidaEm === dataLabel && usuario === usuarioLabel;
+                  });
+
+                  abrirModalNotasConclusao(notasFiltradas, `${usuarioLabel} - ${dataLabel}`);
+                }
+              },
               plugins: {
                 datalabels: {
                   display: true,
@@ -8176,6 +8877,10 @@
       const selectAno = document.getElementById('filtroAnoNotasConcluidasPorMes');
       const anoSelecionado = selectAno ? selectAno.value : 'todos';
 
+      // Obter meses selecionados através dos checkboxes
+      const checkboxesMeses = document.querySelectorAll('.filtro-mes-checkbox:checked');
+      const mesesSelecionados = Array.from(checkboxesMeses).map(cb => cb.value);
+
       const notasFiltradasPorAno = anoSelecionado === 'todos'
         ? notasFiltradas
         : notasFiltradas.filter(item => {
@@ -8188,7 +8893,19 @@
             return false;
           });
 
-      if (notasFiltradasPorAno.length === 0) {
+      const notasFiltradasPorAnoMes = mesesSelecionados.length === 0
+        ? notasFiltradasPorAno
+        : notasFiltradasPorAno.filter(item => {
+            const concluidaEm = item.concluida_em || '';
+            if (!concluidaEm) return false;
+            const partes = concluidaEm.split('.');
+            if (partes.length >= 2) {
+              return mesesSelecionados.includes(partes[1]);
+            }
+            return false;
+          });
+
+      if (notasFiltradasPorAnoMes.length === 0) {
         document.getElementById('totalNotasConcluidasPorMes').textContent = '0';
         if (chartNotasConcluidasPorMesInstance) {
           chartNotasConcluidasPorMesInstance.destroy();
@@ -8198,11 +8915,11 @@
       }
 
       // Atualizar total
-      document.getElementById('totalNotasConcluidasPorMes').textContent = notasFiltradasPorAno.length;
+      document.getElementById('totalNotasConcluidasPorMes').textContent = notasFiltradasPorAnoMes.length;
 
       // Agrupar por mês (MM.AAAA) usando concluida_em
       const agrupamentoMes = {};
-      notasFiltradasPorAno.forEach(item => {
+      notasFiltradasPorAnoMes.forEach(item => {
         const concluidaEm = item.concluida_em || '';
         let mesAno = 'Sem data';
 
@@ -8258,6 +8975,25 @@
           responsive: true,
           maintainAspectRatio: true,
           aspectRatio: 2.5,
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const dataLabel = labels[index];
+
+              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+                const concluidaEm = item.concluida_em || '';
+                if (!concluidaEm && dataLabel === 'Sem data') return true;
+                const partes = concluidaEm.split('.');
+                if (partes.length >= 3) {
+                  const mesAno = partes[1] + '.' + partes[2];
+                  return mesAno === dataLabel;
+                }
+                return false;
+              });
+
+              abrirModalNotasConclusao(notasFiltradas, `Concluídas - ${dataLabel}`);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -8583,6 +9319,41 @@
               top: 60
             }
           },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const datasetIndex = activeElements[0].datasetIndex;
+              const mesAno = meses[index];
+              
+              // Filtrar notas do mês clicado
+              const notasDoMes = notasConcluidas.filter(item => {
+                const concluida_em = item.concluida_em || '';
+                if (!concluida_em) return false;
+                const partes = concluida_em.split('.');
+                if (partes.length !== 3) return false;
+                const mes = partes[1];
+                const ano = partes[2];
+                const mesAnoItem = `${mes}.${ano}`;
+                return mesAnoItem === mesAno;
+              });
+
+              // Se clicou na barra CTEC (dataset 0), mostrar apenas CTEC
+              // Se clicou na barra RTEC (dataset 1), mostrar apenas RTEC
+              // Se clicou na linha (dataset 2), mostrar todas
+              let notasFiltradas = notasDoMes;
+              let titulo = `Mini/Micro Geração - ${mesAno}`;
+              
+              if (datasetIndex === 0) {
+                notasFiltradas = notasDoMes.filter(item => item.status_usuario === 'CONC CTEC');
+                titulo = `Mini/Micro - CONC CTEC - ${mesAno}`;
+              } else if (datasetIndex === 1) {
+                notasFiltradas = notasDoMes.filter(item => item.status_usuario === 'CONC RTEC');
+                titulo = `Mini/Micro - CONC RTEC - ${mesAno}`;
+              }
+
+              abrirModalNotasMiniMicro(notasFiltradas, titulo);
+            }
+          },
           plugins: {
             legend: {
               display: true,
@@ -8882,6 +9653,41 @@
           layout: {
             padding: {
               top: 60
+            }
+          },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              const index = activeElements[0].index;
+              const datasetIndex = activeElements[0].datasetIndex;
+              const mesAno = meses[index];
+              
+              // Filtrar notas do mês clicado
+              const notasDoMes = notasConcluidas.filter(item => {
+                const concluida_em = item.concluida_em || '';
+                if (!concluida_em) return false;
+                const partes = concluida_em.split('.');
+                if (partes.length !== 3) return false;
+                const mes = partes[1];
+                const ano = partes[2];
+                const mesAnoItem = `${mes}.${ano}`;
+                return mesAnoItem === mesAno;
+              });
+
+              // Se clicou na barra CTEC (dataset 0), mostrar apenas CTEC
+              // Se clicou na barra RTEC (dataset 1), mostrar apenas RTEC
+              // Se clicou na linha (dataset 2), mostrar todas
+              let notasFiltradas = notasDoMes;
+              let titulo = `Carga - ${mesAno}`;
+              
+              if (datasetIndex === 0) {
+                notasFiltradas = notasDoMes.filter(item => item.status_usuario === 'CONC CTEC');
+                titulo = `Carga - CONC CTEC - ${mesAno}`;
+              } else if (datasetIndex === 1) {
+                notasFiltradas = notasDoMes.filter(item => item.status_usuario === 'CONC RTEC');
+                titulo = `Carga - CONC RTEC - ${mesAno}`;
+              }
+
+              abrirModalNotasCarga(notasFiltradas, titulo);
             }
           },
           plugins: {
