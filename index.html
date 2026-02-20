@@ -458,10 +458,32 @@
                 }
 
                 // Login bem-sucedido - salvar dados na sessão
+                const nomeUsuario = data.nome_usuario || data.email.split('@')[0] || 'Usuário';
                 sessionStorage.setItem('userEmail', data.email);
+                sessionStorage.setItem('userName', nomeUsuario);
+                localStorage.setItem('userName', nomeUsuario);
                 sessionStorage.setItem('userCategoria', data.categoria);
                 sessionStorage.setItem('userId', data.id);
                 sessionStorage.setItem('isLoggedIn', 'true');
+
+                // Registra o log de acesso no banco de dados
+                console.log('Registrando log de acesso...');
+                try {
+                    const { error: logError } = await supabaseClient.from("login_logs_nt").insert([{
+                        nome_usuario: nomeUsuario,
+                        email: data.email,
+                        categoria: data.categoria,
+                        login_timestamp: new Date().toISOString()
+                    }]);
+                    
+                    if (logError) {
+                        console.error('Erro ao inserir log:', logError);
+                    } else {
+                        console.log('Log de acesso registrado com sucesso!');
+                    }
+                } catch (logException) {
+                    console.error('Exceção ao registrar log:', logException);
+                }
 
                 // Feedback visual de sucesso
                 btnLogin.textContent = '✓ Login realizado!';

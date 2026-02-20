@@ -5,27 +5,100 @@ const supabase = createClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
 );
 
+const bucketCandidates = [
+    'Projetos_modulos_blindados',
+    'PROJETOS_MODULOS_BLINDADOS',
+    'projetos_modulos_blindados'
+];
+
+const pathCandidates = [
+    '',
+    'projetos',
+    'projetos/projetos'
+];
+
+let resolvedBucket = bucketCandidates[0];
+let resolvedBasePath = pathCandidates[0];
+
 async function listarProjetos(filtro = '*') {
     const resultado = document.getElementById('resultado');
     resultado.innerHTML = '';
 
-    const { data, error } = await supabase.storage
-        .from('Projetos_modulos_blindados')
-        .list('projetos', { limit: 100 });
+    try {
 
-    if (error) {
-        resultado.innerHTML = `<p>Erro ao buscar arquivos.</p>`;
-        console.error(error);
-        return;
-    }
+        let data = [];
+        let error = null;
+
+        resolvedBucket = bucketCandidates[0];
+        resolvedBasePath = pathCandidates[0];
+
+        for (const bucket of bucketCandidates) {
+            for (const path of pathCandidates) {
+                const { data: listData, error: listError } = await supabase.storage
+                    .from(bucket)
+                    .list(path, {
+                        limit: 1000,
+                        sortBy: { column: 'name', order: 'asc' }
+                    });
+
+                if (listError) {
+                    continue;
+                }
+
+                if (listData && listData.length > 0) {
+                    data = listData;
+                    error = null;
+                    resolvedBucket = bucket;
+                    resolvedBasePath = path;
+                    break;
+                }
+            }
+
+            if (data.length > 0) {
+                break;
+            }
+        }
+
+        if (error) {
+            resultado.innerHTML = `<p>Erro ao buscar arquivos: ${error.message}</p>`;
+            console.error('Erro:', error);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            resultado.innerHTML = `<p>Nenhum arquivo encontrado. Verifique as permissões RLS no Supabase.</p>`;
+            return;
+        }
+
+        // Se a listagem retornou apenas a pasta "projetos", entrar nela
+        if (data.length === 1 && data[0]?.name === 'projetos') {
+            const nestedPath = resolvedBasePath ? `${resolvedBasePath}/projetos` : 'projetos';
+            const { data: nestedData, error: nestedError } = await supabase.storage
+                .from(resolvedBucket)
+                .list(nestedPath, {
+                    limit: 1000,
+                    sortBy: { column: 'name', order: 'asc' }
+                });
+
+            if (!nestedError && nestedData && nestedData.length > 0) {
+                data = nestedData;
+                resolvedBasePath = nestedPath;
+            }
+        }
+
+        // Filtrar apenas arquivos (não pastas)
+        const arquivos = data.filter(item => {
+            const isFile = item.name && !item.id?.endsWith('/');
+            return isFile;
+        });
 
     const userCategoria = sessionStorage.getItem('userCategoria');
     const isUsuario = userCategoria === 'usuario';
 
     // Busca case-insensitive
     const projetos = filtro === '*' 
-        ? data 
-        : data.filter(item => item.name.toLowerCase().includes(filtro.toLowerCase()));
+        ? arquivos 
+        : arquivos.filter(item => item.name.toLowerCase().includes(filtro.toLowerCase()));
 
     // função que remove sufixo numérico (timestamp) e extensao para ordenar pelo nome "limpo"
     const cleanName = (name) =>
@@ -40,13 +113,8 @@ async function listarProjetos(filtro = '*') {
 
     projetos.sort((a, b) => collator.compare(cleanName(a.name), cleanName(b.name)));
     
-// ...existing code...
-
-
-
-
     if (!projetos || projetos.length === 0) {
-        resultado.innerHTML = `<p>Nenhum projeto encontrado.</p>`;
+        resultado.innerHTML = `<p>Nenhum projeto encontrado. (Arquivos: ${arquivos.length})</p>`;
         return;
     }
 
@@ -70,10 +138,11 @@ async function listarProjetos(filtro = '*') {
     const corpoTabela = document.getElementById('tabelaProjetos');
 
 for (const item of projetos) {
-    const caminho = `projetos/${item.name}`;
+    const prefixo = resolvedBasePath ? `${resolvedBasePath}/` : '';
+    const caminhoCompleto = `${prefixo}${item.name}`;
     const { data: urlData } = supabase.storage
-        .from('Projetos_modulos_blindados')
-        .getPublicUrl(caminho);
+        .from(resolvedBucket)
+        .getPublicUrl(caminhoCompleto);
 
     // remove sufixo _123456... antes da extensão e melhora leitura substituindo _ por espaço
     const displayName = item.name
@@ -92,22 +161,24 @@ for (const item of projetos) {
         linha.innerHTML = `
           <td>${displayName}</td>
           <td><a href="${urlData.publicUrl}" target="_blank">Visualizar PDF</a></td>
-          <td><button class="excluir" onclick="excluirProjeto('${caminho}')">Excluir</button></td>
+          <td><button class="excluir" onclick="excluirProjeto('${caminhoCompleto}')">Excluir</button></td>
         `;
     }
     corpoTabela.appendChild(linha);
 }
 
+    } catch (error) {
+        resultado.innerHTML = `<p>Erro ao processar: ${error.message}</p>`;
+        console.error('Erro:', error);
+    }
 }
 
 window.excluirProjeto = async function (caminho) {
-    console.log('Tentando excluir:', caminho); // 👈 log útil
-
     const confirmar = confirm('Tem certeza que deseja excluir este projeto?');
     if (!confirmar) return;
 
     const { error } = await supabase.storage
-        .from('Projetos_modulos_blindados')
+        .from(resolvedBucket)
         .remove([caminho]);
 
     if (error) {
@@ -141,18 +212,12 @@ const nomeSanitizado = nomeRaw
     .replace(/^_+|_+$/g, '');
 
     const filename = `${nomeSanitizado}.pdf`;
-    const caminho = `projetos/${filename}`;
-
-    // DEBUG: logar nomes e objeto file
-    console.log('nomeRaw:', nomeRaw);
-    console.log('nomeSanitizado:', nomeSanitizado);
-    console.log('filename pretendido:', filename);
-    console.log('caminho pretendido:', caminho);
-    console.log('arquivo.name (nome do arquivo no disco):', arquivo.name);
+    const uploadBasePath = resolvedBasePath || 'projetos';
+    const caminho = uploadBasePath ? `${uploadBasePath}/${filename}` : filename;
 
     // upload com upsert para forçar substituição
     const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('Projetos_modulos_blindados')
+        .from(resolvedBucket)
         .upload(caminho, arquivo, { upsert: true });
 
     if (uploadError) {
@@ -160,9 +225,6 @@ const nomeSanitizado = nomeRaw
         console.error('uploadError', uploadError);
         return;
     }
-
-    // DEBUG: ver retorno do Supabase
-    console.log('uploadData:', uploadData);
 
     alert('Projeto cadastrado com sucesso!');
     document.getElementById('formProjeto').reset();
@@ -192,4 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formCadastro.style.display = 'none';
         }
     }
+    
+    // Carregar e exibir todos os módulos ao iniciar a página
+    listarProjetos('*');
 });
