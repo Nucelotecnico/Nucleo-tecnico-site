@@ -37,7 +37,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@4.3.2/dist/chartjs-chart-geo.min.js"></script>
-    // ...existing code...
+    
     </script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="indices.css">
@@ -350,6 +350,14 @@
     <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoMedidas0034"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+        <strong>Regras para geração deste gráfico:</strong><br>
+        - Considera apenas notas com <b>código de medidas 0034</b>.<br>
+        - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
+        - Notas filtradas por mês e por descrição, conforme seleção dos filtros acima.<br>
+        - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
+        - Outras regras específicas podem ser aplicadas conforme a lógica do sistema.<br>
+      </div>
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
         <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
@@ -825,7 +833,7 @@
         <h2 style="color: #2e7d32; margin: 0;">🧾 Notas com medida 0555 concluídas</h2>
         <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
           <button onclick="exportarNotasSemContratoExcel()"
-            style="padding: 10px 16px; background: Quantidade de Notas ABER E ANDM Carga e GD; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;"
+            style="padding: 10px 16px; background: Quantidade de Notas ABER E ANDM Carga e GD; background: #4caf50;color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;"
             onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'">
             <span>📊</span>
             <span>Exportar Excel</span>
@@ -2883,6 +2891,7 @@
       // Ocultar outros gráficos
       document.getElementById('graficoMedidas0034').style.display = 'none';
       document.getElementById('graficoPrazoMedio0034').style.display = 'none';
+      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
       document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
@@ -2977,6 +2986,7 @@
       // Ocultar outros gráficos
       document.getElementById('graficoMedidas0034').style.display = 'none';
       document.getElementById('graficoPrazoMedio0034').style.display = 'none';
+      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
       document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
       document.getElementById('graficoSemGeracoes').style.display = 'none';
@@ -3026,6 +3036,7 @@
       // Ocultar outros gráficos
       document.getElementById('graficoMedidas0034').style.display = 'none';
       document.getElementById('graficoPrazoMedio0034').style.display = 'none';
+      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorMes').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoSolicitacao').style.display = 'none';
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
@@ -3044,6 +3055,7 @@
       document.getElementById('graficoConcluidasPorTipoDemais').style.display = 'none';
       document.getElementById('graficoRPVD').style.display = 'none';
       document.getElementById('graficoOutrosTipos').style.display = 'none';
+      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
     };
 
@@ -3053,6 +3065,7 @@
       // Ocultar todos os gráficos
       document.getElementById('graficoMedidas0034').style.display = 'none';
       document.getElementById('graficoPrazoMedio0034').style.display = 'none';
+      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
       document.getElementById('graficoNotasPorUsuario').style.display = 'none';
       document.getElementById('graficoAprovacaoReprovacaoPorUsuario').style.display = 'none';
       document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
@@ -6349,6 +6362,7 @@
         '<thead>' +
         '<tr style="background: #2e7d32; color: white; position: sticky; top: 0;">' +
         '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">ID</th>' +
+        '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Nota</th>' +
         '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Código Medidas</th>' +
         '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Descrição</th>' +
         '<th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Texto Medidas</th>' +
@@ -6359,8 +6373,23 @@
         '<tbody>';
 
       notas.forEach((nota, index) => {
+        // Tenta pegar o número da nota em diferentes variações de chave
+        let numeroNota = '-';
+        if (typeof nota === 'object') {
+          numeroNota = nota.Nota || nota.nota || nota.NUMERO_NOTA || nota.numero_nota || '-';
+          // Busca por chave ignorando case se necessário
+          if (numeroNota === '-') {
+            for (const key in nota) {
+              if (key.toLowerCase() === 'nota' || key.toLowerCase() === 'número da nota' || key.toLowerCase() === 'numero_nota') {
+                numeroNota = nota[key];
+                break;
+              }
+            }
+          }
+        }
         tabelaHTML += '<tr style="background: ' + (index % 2 === 0 ? '#f5f5f5' : '#fff') + '; border-bottom: 1px solid #ddd;">' +
           '<td style="padding: 12px; border: 1px solid #ddd;">' + (index + 1) + '</td>' +
+          '<td style="padding: 12px; border: 1px solid #ddd;">' + (numeroNota || '-') + '</td>' +
           '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.codigo_medidas || '-') + '</td>' +
           '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.descricao || '-') + '</td>' +
           '<td style="padding: 12px; border: 1px solid #ddd;">' + (nota.texto_medidas || '-') + '</td>' +
