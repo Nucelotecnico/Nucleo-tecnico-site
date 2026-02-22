@@ -37,6 +37,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@4.3.2/dist/chartjs-chart-geo.min.js"></script>
+    // ...existing code...
     </script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="indices.css">
@@ -422,24 +423,32 @@
     </div>
       <!-- Novo gráfico: Intervalo Notas 0034 Concluídas - Analisar Carga Acessante Mini Geração -->
       <div id="graficoIntervaloNotas0034MiniGeracao"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+              style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="filtroAnoIntervaloNotas0034MiniGeracao" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+                <select id="filtroAnoIntervaloNotas0034MiniGeracao" onchange="aplicarFiltroAnoIntervaloNotas0034MiniGeracao()"
+                  style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+                  <option value="todos">Todos</option>
+                </select>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao" onclick="toggleDropdownMesesIntervaloNotas0034MiniGeracao()"
+                  style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                  <span>▼</span>
+                  <span>Filtrar por mês</span>
+                </button>
+                <div id="containerCheckboxesMesesIntervaloNotas0034MiniGeracao"
+                  style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+                  <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+                </div>
+              </div>
+            </div>
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
           <h2 style="color: #2e7d32; margin: 0;">📊 Notas 0034 Concluídas - Intervalo (Início Planejado x Conclusão)<br><span style="font-size:14px;color:#666">Analisar Carga Acessante Mini Geração</span></h2>
         </div>
         <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e0e0e0;">
           <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 13px; color: #666;">Ano:</label>
-              <select id="filtroAnoIntervaloNotas0034MiniGeracao" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-                <option value="todos">Todos</option>
-              </select>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 13px; color: #666;">Mês:</label>
-              <select id="filtroMesIntervaloNotas0034MiniGeracao" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-                <option value="todos">Todos</option>
-              </select>
-            </div>
             <div style="display: flex; align-items: center; gap: 8px;">
               <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
               <input type="number" id="intervalo1MaxNotas0034MiniGeracao" value="15" min="1" max="999" style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -460,6 +469,173 @@
               📊 Gerar Gráfico
             </button>
           </div>
+        </div>
+          <script>
+                  // Exibe o gráfico apenas ao clicar no botão MEDIDAS 0034
+                  function exibirGraficoIntervaloNotas0034MiniGeracao() {
+                    document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'block';
+                    popularFiltroAnoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                    popularFiltroMesIntervaloNotas0034MiniGeracao(dadosGlobais);
+                    gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                  }
+
+                  // Popular filtro de ano (select)
+                  function popularFiltroAnoIntervaloNotas0034MiniGeracao(dados) {
+                    const anosSet = new Set();
+                    dados.forEach(item => {
+                      if (item.codigo_medidas === '0034' && item.inicio_planejado) {
+                        const partes = item.inicio_planejado.split('.');
+                        if (partes.length === 3) anosSet.add(partes[2]);
+                      }
+                    });
+                    const selectAno = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
+                    if (!selectAno) return;
+                    selectAno.innerHTML = '<option value="todos">Todos</option>';
+                    const anoVigente = new Date().getFullYear().toString();
+                    Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10)).forEach(ano => {
+                      const option = document.createElement('option');
+                      option.value = ano;
+                      option.textContent = ano;
+                      if (ano === anoVigente) option.selected = true;
+                      selectAno.appendChild(option);
+                    });
+                  }
+
+                  // Popular filtro de mês (dropdown checkboxes)
+                  function popularFiltroMesIntervaloNotas0034MiniGeracao(dados) {
+                    const mesesDisponiveis = [
+                      { value: '01', label: 'Janeiro' },
+                      { value: '02', label: 'Fevereiro' },
+                      { value: '03', label: 'Março' },
+                      { value: '04', label: 'Abril' },
+                      { value: '05', label: 'Maio' },
+                      { value: '06', label: 'Junho' },
+                      { value: '07', label: 'Julho' },
+                      { value: '08', label: 'Agosto' },
+                      { value: '09', label: 'Setembro' },
+                      { value: '10', label: 'Outubro' },
+                      { value: '11', label: 'Novembro' },
+                      { value: '12', label: 'Dezembro' }
+                    ];
+                    const mesesSet = new Set();
+                    dados.forEach(item => {
+                      if (item.codigo_medidas === '0034' && item.inicio_planejado) {
+                        const partes = item.inicio_planejado.split('.');
+                        if (partes.length >= 2) mesesSet.add(partes[1]);
+                      }
+                    });
+                    const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
+                    if (!container) return;
+                    container.innerHTML = '';
+                    // Botões Marcar/Desmarcar todos
+                    const botoesContainer = document.createElement('div');
+                    botoesContainer.style.display = 'flex';
+                    botoesContainer.style.gap = '8px';
+                    botoesContainer.style.marginBottom = '12px';
+                    botoesContainer.style.paddingBottom = '8px';
+                    botoesContainer.style.borderBottom = '1px solid #ddd';
+                    const btnMarcarTodos = document.createElement('button');
+                    btnMarcarTodos.textContent = 'Marcar todos';
+                    btnMarcarTodos.style.padding = '6px 12px';
+                    btnMarcarTodos.style.background = '#4caf50';
+                    btnMarcarTodos.style.color = 'white';
+                    btnMarcarTodos.style.border = 'none';
+                    btnMarcarTodos.style.borderRadius = '4px';
+                    btnMarcarTodos.style.cursor = 'pointer';
+                    btnMarcarTodos.style.fontSize = '12px';
+                    btnMarcarTodos.style.fontWeight = '600';
+                    btnMarcarTodos.onclick = () => {
+                      document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = true);
+                      gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                    };
+                    const btnDesmarcarTodos = document.createElement('button');
+                    btnDesmarcarTodos.textContent = 'Desmarcar todos';
+                    btnDesmarcarTodos.style.padding = '6px 12px';
+                    btnDesmarcarTodos.style.background = '#f44336';
+                    btnDesmarcarTodos.style.color = 'white';
+                    btnDesmarcarTodos.style.border = 'none';
+                    btnDesmarcarTodos.style.borderRadius = '4px';
+                    btnDesmarcarTodos.style.cursor = 'pointer';
+                    btnDesmarcarTodos.style.fontSize = '12px';
+                    btnDesmarcarTodos.style.fontWeight = '600';
+                    btnDesmarcarTodos.onclick = () => {
+                      document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = false);
+                      gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                    };
+                    botoesContainer.appendChild(btnMarcarTodos);
+                    botoesContainer.appendChild(btnDesmarcarTodos);
+                    container.appendChild(botoesContainer);
+                    mesesDisponiveis.forEach(mes => {
+                      if (!mesesSet.has(mes.value)) return;
+                      const label = document.createElement('label');
+                      label.style.display = 'flex';
+                      label.style.alignItems = 'center';
+                      label.style.gap = '6px';
+                      label.style.cursor = 'pointer';
+                      const checkbox = document.createElement('input');
+                      checkbox.type = 'checkbox';
+                      checkbox.value = mes.value;
+                      checkbox.checked = true;
+                      checkbox.className = 'filtro-mes-intervalo-notas0034-checkbox';
+                      checkbox.onchange = () => gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                      label.appendChild(checkbox);
+                      label.appendChild(document.createTextNode(mes.label));
+                      container.appendChild(label);
+                    });
+                  }
+
+                  // Dropdown meses
+                  function toggleDropdownMesesIntervaloNotas0034MiniGeracao() {
+                    const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
+                    if (container) {
+                      container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+                    }
+                  }
+
+                  // Filtro ano
+                  function aplicarFiltroAnoIntervaloNotas0034MiniGeracao() {
+                    gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+                  }
+
+                  // Vincula ao botão MEDIDAS 0034
+                  document.addEventListener('DOMContentLoaded', function() {
+                    var btnMedidas = document.getElementById('btnMedidas0034');
+                    if (btnMedidas) {
+                      btnMedidas.addEventListener('click', exibirGraficoIntervaloNotas0034MiniGeracao);
+                    }
+                    // Oculta o gráfico ao clicar em outros botões principais
+                    var outrosBotoes = [
+                      'btnPrazoMedio0034',
+                      'btnTextoMedidas',
+                      'btnSemGeracoes',
+                      'btnMiniGeracao',
+                      'btnOutrosTipos',
+                      'btnFimPlanejado',
+                      'btnNotasConcluidasPorMes',
+                      'btnNotasSemContrato'
+                    ];
+                    outrosBotoes.forEach(function(id) {
+                      var btn = document.getElementById(id);
+                      if (btn) {
+                        btn.addEventListener('click', function() {
+                          document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
+                        });
+                      }
+                    });
+                  });
+          </script>
+        <div style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+          <strong>Regras para geração do gráfico:</strong><br>
+          <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+            <li>Notas consideradas apenas com <b>código de medidas 0034</b>.</li>
+            <li>Descrição deve conter <b>"analisar carga acessante mini geração"</b>.</li>
+            <li>Status do usuário pode ser <b>CONC CTEC</b>, <b>CONC RTEC</b>, (concluídas).</li>
+              <li>Notas com status <b>ANDM</b> e <b>ABER</b> são <b>excluídas</b> deste gráfico.</li>
+            <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.<br></li>
+            <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+            <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+            <li>Intervalos são agrupados conforme os valores definidos nos campos acima.</li>
+          </ul>
         </div>
         <div style="max-width: 1000px; margin: 0 auto;">
           <canvas id="chartIntervaloNotas0034MiniGeracao"></canvas>
@@ -938,6 +1114,17 @@
           </button>
         </div>
       </div>
+      <div style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+        <strong>Regras para geração do gráfico:</strong><br>
+        <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+          <li>Notas consideradas apenas com <b>status concluído</b> (CONC CTEC ou CONC RTEC).</li>
+          <li>Notas com status <b>ABER</b> ou <b>ANDM</b> são <b>excluídas</b> do gráfico.</li>
+          <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.</li>
+          <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+          <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+          <li>Intervalos são agrupados conforme os valores definidos nos campos acima.</li>
+        </ul>
+      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoIntervalos"></canvas>
       </div>
@@ -984,6 +1171,17 @@
             </div>
           </div>
         </div>
+      </div>
+      <div style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+        <strong>Regras para geração do gráfico:</strong><br>
+        <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+          <li>Considera todas as notas com datas válidas de início planejado e conclusão.</li>
+          <li>Notas de GD e Carga são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
+          <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
+          <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+          <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
+          <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
+        </ul>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
         <canvas id="chartPrazoMedio"></canvas>
@@ -1679,7 +1877,6 @@
       // Mostrar apenas os gráficos de Medidas 0034
       document.getElementById('graficoMedidas0034').style.display = 'block';
       document.getElementById('graficoPrazoMedio0034').style.display = 'block';
-      document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'block';
       // Ocultar todos os outros gráficos
       document.getElementById('graficoOutrosTipos').style.display = 'none';
       document.getElementById('graficoFimPlanejado').style.display = 'none';
@@ -1715,25 +1912,6 @@
         gerarGraficoPrazoMedio0034(dados);
       }
     };
-
-    // Esconder o gráfico Intervalo Notas 0034 Mini Geração ao clicar em outros botões principais
-    const botoesPrincipais = [
-      'btnNotasSemContrato',
-      'btnNotasAndamento',
-      'btnNotasConcluidas',
-      'btnPrazosAnalise',
-      'btnProdutividade',
-      'btnExibirTabelaNotas'
-    ];
-    botoesPrincipais.forEach(function(id) {
-      const btn = document.getElementById(id);
-      if (btn) {
-        btn.addEventListener('click', function() {
-          var el = document.getElementById('graficoIntervaloNotas0034MiniGeracao');
-          if (el) el.style.display = 'none';
-        });
-      }
-    });
 
     // ===== FUNÇÕES PARA NOTAS SEM CONTRATO =====
         
@@ -1856,31 +2034,26 @@
       const anosSelected = Array.from(document.getElementById('containerCheckboxesAnoNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const mesesSelected = Array.from(document.getElementById('containerCheckboxesMesNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       
-      const anos = new Set();
-      window.popularFiltroAnoIntervaloNotas0034MiniGeracao = function(dados) {
-        const anos = new Set();
-        const meses = new Set();
-        dados.forEach(item => {
-          if (item.codigo_medidas !== '0034') return;
-          if (!item.descricao || !item.descricao.trim().toLowerCase().includes('analisar carga acessante mini geração')) return;
-          const concluidaEm = (item.concluida_em || '').trim();
-          const partes = concluidaEm.split('.');
-          if (partes.length === 3) {
-            anos.add(partes[2]);
-            meses.add(partes[1]);
+      const diasSet = new Set();
+      dados.forEach(item => {
+        if(item.codigo_medidas === '0555') {
+          const concluida_em = item.concluida_em;
+          if(concluida_em) {
+            const [dia, mes, ano] = concluida_em.split('.');
+            // Se nenhum filtro estiver selecionado, considerar todos; caso contrário, filtrar
+            const anoOk = anosSelected.length === 0 || anosSelected.includes(ano);
+            const mesOk = mesesSelected.length === 0 || mesesSelected.includes(mes);
+            
+            if(anoOk && mesOk) {
+              diasSet.add(dia);
+            }
           }
-        });
-        const anoSelect = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
-        const mesSelect = document.getElementById('filtroMesIntervaloNotas0034MiniGeracao');
-        if (anoSelect) {
-          anoSelect.innerHTML = '<option value="todos">Todos</option>' + Array.from(anos).sort().map(ano => `<option value="${ano}">${ano}</option>`).join('');
         }
-        if (mesSelect) {
-          mesSelect.innerHTML = '<option value="todos">Todos</option>' + Array.from(meses).sort().map(mes => `<option value="${mes}">${mes}</option>`).join('');
-        }
-      };
-      // Chamar ao carregar dados globais
-      window.popularFiltroAnoIntervaloNotas0034MiniGeracao(dados);
+      });
+      
+      const diasArray = Array.from(diasSet).sort((a, b) => a - b);
+      const container = document.getElementById('containerCheckboxesDiasNotasSemContrato');
+      container.innerHTML = '';
       
       const btnSelectAll = document.createElement('button');
       btnSelectAll.className = 'btn-select-all';
@@ -8349,6 +8522,9 @@
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         if (!codigosPermitidos.includes(codigoMedidas)) return;
 
+        // Excluir notas com status ABER ou ANDM
+        if (status === 'ABER' || status === 'ANDM') return;
+
         let anoOk = true;
         if (anoSelecionadoIntervalos !== 'todos' && concluidaEm) {
           const partes = concluidaEm.split('.');
@@ -8611,44 +8787,52 @@
     };
   // Função para gerar gráfico de Intervalo Notas 0034 Concluídas - Analisar Carga Acessante Mini Geração
   window.gerarGraficoIntervaloNotas0034MiniGeracao = function (dados) {
-    if (!dados || dados.length === 0) return;
-    const intervalo1Max = parseInt(document.getElementById('intervalo1MaxNotas0034MiniGeracao')?.value) || 15;
-    const intervalo2Max = parseInt(document.getElementById('intervalo2MaxNotas0034MiniGeracao')?.value) || 20;
-    const intervalo3Max = parseInt(document.getElementById('intervalo3MaxNotas0034MiniGeracao')?.value) || 35;
-    const anoSelecionado = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao')?.value || 'todos';
-    const mesSelecionado = document.getElementById('filtroMesIntervaloNotas0034MiniGeracao')?.value || 'todos';
-    function parseData(dataStr) {
-      if (!dataStr) return null;
-      const partes = dataStr.split('.');
-      if (partes.length !== 3) return null;
-      return new Date(partes[2], partes[1] - 1, partes[0]);
-    }
-    let contagens = [0, 0, 0];
-    let totalConsideradas = 0;
-    dados.forEach(item => {
-      if (item.codigo_medidas !== '0034') return;
-      if (!item.descricao || !item.descricao.trim().toLowerCase().includes('analisar carga acessante mini geração')) return;
-      const status = item.status_usuario || '';
-      const concluidaEm = (item.concluida_em || '').trim();
-      const inicioPlanejado = (item.inicio_planejado || '').trim();
-      if (!(status === 'CONC CTEC' || status === 'CONC RTEC') || !inicioPlanejado || !concluidaEm) return;
-      const partes = concluidaEm.split('.');
-      if (anoSelecionado !== 'todos' && (partes.length !== 3 || partes[2] !== anoSelecionado)) return;
-      if (mesSelecionado !== 'todos' && (partes.length !== 3 || partes[1] !== mesSelecionado)) return;
-      const dataFim = parseData(inicioPlanejado);
-      const dataConcluida = parseData(concluidaEm);
-      if (!dataFim || !dataConcluida) return;
-      const diferencaDias = Math.round((dataConcluida - dataFim) / (1000 * 60 * 60 * 24));
-      if (diferencaDias < 0) return;
-      totalConsideradas++;
-      if (diferencaDias <= intervalo1Max) {
-        contagens[0]++;
-      } else if (diferencaDias <= intervalo2Max) {
-        contagens[1]++;
-      } else if (diferencaDias <= intervalo3Max) {
-        contagens[2]++;
+      if (!dados || dados.length === 0) return;
+      const intervalo1Max = parseInt(document.getElementById('intervalo1MaxNotas0034MiniGeracao')?.value) || 15;
+      const intervalo2Max = parseInt(document.getElementById('intervalo2MaxNotas0034MiniGeracao')?.value) || 20;
+      const intervalo3Max = parseInt(document.getElementById('intervalo3MaxNotas0034MiniGeracao')?.value) || 35;
+      function parseData(dataStr) {
+        if (!dataStr) return null;
+        const partes = dataStr.split('.');
+        if (partes.length !== 3) return null;
+        return new Date(partes[2], partes[1] - 1, partes[0]);
       }
-    });
+      // Obter ano selecionado
+      const selectAno = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+      // Obter meses selecionados
+      const mesesSelecionados = Array.from(document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox:checked')).map(cb => ('0' + cb.value).slice(-2));
+      let contagens = [0, 0, 0];
+      let totalConsideradas = 0;
+      dados.forEach(item => {
+        if (item.codigo_medidas !== '0034') return;
+        if (!item.descricao || !item.descricao.trim().toLowerCase().includes('analisar carga acessante mini geração')) return;
+        const status = item.status_usuario || '';
+        const concluidaEm = (item.concluida_em || '').trim();
+        const inicioPlanejado = (item.inicio_planejado || '').trim();
+        if (!(status === 'CONC CTEC' || status === 'CONC RTEC' || status === 'ABER' || status === 'ANDM')) return;
+        let dataConcluida = parseData(concluidaEm);
+        if ((status === 'ABER' || status === 'ANDM') && !dataConcluida) {
+          dataConcluida = new Date();
+        }
+        const dataFim = parseData(inicioPlanejado);
+        if (!dataFim || !dataConcluida) return;
+        // Filtrar por ano e mês
+        const ano = dataFim.getFullYear().toString();
+        const mes = ('0' + (dataFim.getMonth() + 1)).slice(-2);
+        if (anoSelecionado !== 'todos' && ano !== anoSelecionado) return;
+        if (mesesSelecionados.length && !mesesSelecionados.includes(mes)) return;
+        const diferencaDias = Math.round((dataConcluida - dataFim) / (1000 * 60 * 60 * 24));
+        if (diferencaDias < 0 || diferencaDias === 1) return;
+        totalConsideradas++;
+        if (diferencaDias <= intervalo1Max) {
+          contagens[0]++;
+        } else if (diferencaDias <= intervalo2Max) {
+          contagens[1]++;
+        } else if (diferencaDias <= intervalo3Max) {
+          contagens[2]++;
+        }
+      });
     document.getElementById('totalNotasIntervaloNotas0034MiniGeracao').textContent = totalConsideradas;
     if (contagens.every(valor => valor === 0)) {
       if (window.chartIntervaloNotas0034MiniGeracaoInstance) {
@@ -12877,17 +13061,6 @@
       carregarDados();
       // Exibir gráficos de "Notas em Andamento" por padrão
       exibirNotasAndamento();
-      // Popular filtros de ano e mês para o gráfico Notas 0034 Mini Geração
-      window.popularFiltrosIntervaloNotas0034MiniGeracao(window.dadosGlobais);
-      document.getElementById('btnGerarGraficoIntervaloNotas0034MiniGeracao')?.addEventListener('click', function () {
-        window.gerarGraficoIntervaloNotas0034MiniGeracao(window.dadosGlobais);
-      });
-      document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao')?.addEventListener('change', function () {
-        window.gerarGraficoIntervaloNotas0034MiniGeracao(window.dadosGlobais);
-      });
-      document.getElementById('filtroMesIntervaloNotas0034MiniGeracao')?.addEventListener('change', function () {
-        window.gerarGraficoIntervaloNotas0034MiniGeracao(window.dadosGlobais);
-      });
     });
   </script>
 
