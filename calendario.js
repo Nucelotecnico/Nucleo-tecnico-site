@@ -146,6 +146,57 @@ document.getElementById('user-form').addEventListener('submit', async function (
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
+        // Função para exibir alerta de aniversário
+        async function exibirAlertaAniversario() {
+            // Buscar todos os eventos
+            const { data: eventos, error } = await supabaseClient
+                .from('events')
+                .select('id,title,type,start_date,end_date,users(name,color)');
+            if (error) return;
+
+            // Data atual (timezone local)
+            const hoje = new Date();
+            const mesDiaHoje = ('0' + (hoje.getMonth() + 1)).slice(-2) + '-' + ('0' + hoje.getDate()).slice(-2);
+
+            // Função para remover acentos
+            const removeAccents = str => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+
+            // Log para depuração
+            console.log('Eventos retornados:', eventos);
+            console.log('Data hoje:', mesDiaHoje);
+
+            // Filtrar aniversários para hoje (comparando apenas mês e dia, ignorando caixa e acento)
+            const aniversariosHoje = eventos.filter(ev => {
+                if (!ev.type || !ev.start_date) return false;
+                const tipo = removeAccents(ev.type).toLowerCase();
+                if (tipo !== 'aniversario') return false;
+                const [ano, mes, diaFull] = ev.start_date.split('-');
+                const dia = diaFull.split('T')[0];
+                return `${mes}-${dia}` === mesDiaHoje;
+            });
+            console.log('Aniversários hoje:', aniversariosHoje);
+            if (aniversariosHoje.length === 0) {
+                document.getElementById('alerta-aniversario').style.display = 'none';
+                return;
+            }
+
+            // Montar mensagem personalizada para aniversários de hoje
+            let msg = '';
+            aniversariosHoje.forEach((aniv, idx) => {
+                msg += `🎉 <b>${aniv.users?.name || 'Usuário'}</b> faz aniversário hoje!`;
+                if (idx < aniversariosHoje.length - 1) msg += '<br>';
+            });
+            const alerta = document.getElementById('alerta-aniversario');
+            alerta.innerHTML = msg;
+            alerta.style.display = 'block';
+            // Esconde o alerta após 5 segundos
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 5000);
+        }
+
+        // Chamar ao carregar e sempre que eventos mudarem
+        await exibirAlertaAniversario();
     await loadUsersAndRenderList();
 
     showLoadingBar();
@@ -271,8 +322,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     supabaseClient
         .channel('events')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, payload => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async payload => {
             calendar.refetchEvents();
+            await exibirAlertaAniversario();
         })
         .subscribe();
 
@@ -295,13 +347,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 user_id,
                 start_date: start,
                 end_date: adjustedEnd.toISOString().split('T')[0]
-       
-
             }]);
             form.reset();
             calendar.refetchEvents();
             await renderFutureEventsReport();
-
+            await exibirAlertaAniversario();
         }
     });
 

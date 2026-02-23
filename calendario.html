@@ -63,6 +63,51 @@
 
   </div>
 
+    <!-- Alerta de aniversário: aparece abaixo dos botões do header -->
+    <style>
+        @keyframes slideInOutAlert {
+            0% {
+                opacity: 0;
+                transform: translateX(-100vw);
+            }
+            15% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            85% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(100vw);
+            }
+        }
+        #alerta-aniversario {
+            display: none;
+            background: linear-gradient(90deg, #a8ff78 0%, #78ffd6 100%);
+            color: #14532d;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px 0 20px 0;
+            font-size: 1.3em;
+            margin: 20px auto 20px auto;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(20, 83, 45, 0.18);
+            border: 2.5px solid #2ecc40;
+            max-width: 650px;
+            letter-spacing: 0.7px;
+            transition: box-shadow 0.3s;
+            z-index: 1000;
+            position: relative;
+        }
+        #alerta-aniversario.animar-alerta {
+            display: block !important;
+            animation: slideInOutAlert 5s cubic-bezier(.77,0,.18,1) forwards;
+        }
+    </style>
+    <div id="alerta-aniversario"></div>
+
   <script src="auth.js"></script>
   <script src="menu.js"></script>
 
