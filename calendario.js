@@ -157,6 +157,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             // Data atual (timezone local)
             const hoje = new Date();
             const mesDiaHoje = ('0' + (hoje.getMonth() + 1)).slice(-2) + '-' + ('0' + hoje.getDate()).slice(-2);
+                const form = document.getElementById('event-form');
+// ...existing code...
 
             // Função para remover acentos
             const removeAccents = str => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
@@ -279,6 +281,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         },
 
         eventClick: async function (info) {
+            const categoria = sessionStorage.getItem('userCategoria');
+            if (categoria === 'usuario') {
+                alert('Usuários não têm permissão para excluir eventos.');
+                return;
+            }
             if (confirm('Deseja excluir este evento?')) {
                 await supabaseClient.from('events').delete().eq('id', info.event.id);
                 calendar.refetchEvents();
@@ -329,32 +336,77 @@ document.addEventListener('DOMContentLoaded', async function () {
         .subscribe();
 
     const form = document.getElementById('event-form');
+    // form.addEventListener('submit', async function (e) {
+    //     e.preventDefault();
+    //     const title = document.getElementById('title').value;
+    //     const type = document.getElementById('type').value;
+    //     const user_id = document.getElementById('user').value;
+    //     const start = document.getElementById('start').value;
+    //     const end = document.getElementById('end').value;
+
+    //     if (title && type && user_id && start && end) {
+    //         const adjustedEnd = new Date(end);
+    //         adjustedEnd.setDate(adjustedEnd.getDate() + 1);
+
+    //         await supabaseClient.from('events').insert([{
+    //             title,
+    //             type,
+    //             user_id,
+    //             start_date: start,
+    //             end_date: adjustedEnd.toISOString().split('T')[0]
+    //         }]);
+    //         form.reset();
+    //         calendar.refetchEvents();
+    //         await renderFutureEventsReport();
+    //         await exibirAlertaAniversario();
+    //     }
+    // });
+
     form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const title = document.getElementById('title').value;
-        const type = document.getElementById('type').value;
-        const user_id = document.getElementById('user').value;
-        const start = document.getElementById('start').value;
-        const end = document.getElementById('end').value;
+    e.preventDefault(); // Impede envio padrão sempre
 
-        if (title && type && user_id && start && end) {
-            const adjustedEnd = new Date(end);
-            adjustedEnd.setDate(adjustedEnd.getDate() + 1);
+    const title = document.getElementById('title').value;
+    const type = document.getElementById('type').value;
+    const user_id = document.getElementById('user').value;
+    const start = document.getElementById('start').value;
+    const end = document.getElementById('end').value;
 
-            await supabaseClient.from('events').insert([{
-                title,
-                type,
-                user_id,
-                start_date: start,
-                end_date: adjustedEnd.toISOString().split('T')[0]
-            }]);
-            form.reset();
-            calendar.refetchEvents();
-            await renderFutureEventsReport();
-            await exibirAlertaAniversario();
+    // Extrai o ano dos campos de data
+    const startYear = start ? start.split('-')[0] : '';
+    const endYear = end ? end.split('-')[0] : '';
+
+    // Validação: só permite 4 dígitos
+    if (!/^\d{4}$/.test(startYear) || !/^\d{4}$/.test(endYear)) {
+        alert("O campo de ano deve conter exatamente 4 dígitos.");
+        return;
+    }
+
+    // Validação: data de início não pode ser superior à data de fim
+    if (start && end) {
+        const startDateObj = new Date(start);
+        const endDateObj = new Date(end);
+        if (startDateObj > endDateObj) {
+            alert("A data de início não pode ser superior à data de fim.");
+            return;
         }
-    });
+    }
 
+    // Só executa o cadastro se todas as validações forem aprovadas
+    if (title && type && user_id && start && end) {
+        const adjustedEnd = new Date(end);
+        adjustedEnd.setDate(adjustedEnd.getDate() + 1);
+
+        await supabaseClient.from('events').insert([{
+            title,
+            type,
+            user_id,
+            start_date: start,
+            end_date: adjustedEnd.toISOString().split('T')[0]
+        }]);
+        form.reset();
+        calendar.refetchEvents();
+    }
+});
 
     function formatDateBR(dateStr) {
         const [year, month, day] = dateStr.split('-');

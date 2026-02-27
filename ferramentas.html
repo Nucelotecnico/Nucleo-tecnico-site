@@ -6,10 +6,41 @@
   <title>Conversor de Coordenadas e Distância</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="conversor.css">
+  <link rel="stylesheet" href="ferramentas.css">
 
 </head>
+<style>
 
+              @keyframes titleShine {
+            0% {
+                left: -100%;
+            }
+            50%, 100% {
+                left: 100%;
+            }
+        }
+        
+        #titulo {
+          position: relative;
+          overflow: hidden;
+          display: inline-block;
+        }
+        #titulo::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
+          animation: titleShine 3s infinite;
+          z-index: 1;
+          pointer-events: none;
+        }
+        #titulo {
+          z-index: 2;
+        }
+</style>
 <body>
   <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
     <h1 id="titulo"
@@ -275,6 +306,35 @@
           <button class="reprovador-btn" onclick="reprovadorPesquisar()">Pesquisar</button>
         </div>
 
+        <label for="reprovador-pesquisa-topico" style="margin-top:10px;">Pesquisar por Tópico:</label>
+        <select id="reprovador-pesquisa-topico" onchange="reprovadorPesquisarPorTopico()">
+          <option value="">Todos os tópicos</option>
+          <option value="ART de Projeto">ART de Projeto</option>
+          <option value="Aterramento Elétrico">Aterramento Elétrico</option>
+          <option value="Diagrama Multifilar">Diagrama Multifilar</option>
+          <option value="Diagrama Unifilar">Diagrama Unifilar</option>
+          <option value="Estudo de proteção">Estudo de proteção</option>
+          <option value="Folha de Selo">Folha de Selo</option>
+          <option value="Fluxo de solicitação">Fluxo de solicitação</option>
+          <option value="Gerador a Diesel">Gerador a Diesel</option>
+          <option value="Layout do Projeto">Layout do Projeto</option>
+          <option value="Lista de materiais da Subestação">Lista de materiais da Subestação</option>
+          <option value="Modulo não Homologado">Modulo não Homologado</option>
+          <option value="Notas obrigatórias">Notas obrigatórias</option>
+          <option value="Planta Localização">Planta Localização</option>
+          <option value="Proteções Elétricas">Proteções Elétricas</option>
+          <option value="Ramal de Entrada">Ramal de Entrada</option>
+          <option value="Relação de cargas">Relação de cargas</option>
+          <option value="Relé da Subestação">Relé da Subestação</option>
+          <option value="Segurança da Subestação">Segurança da Subestação</option>
+          <option value="Sem anexos">Sem anexos</option>
+          <option value="TC de Proteção">TC de Proteção</option>
+          <option value="TP de Proteção">TP de Proteção</option>
+          <option value="Transformador de Potência">Transformador de Potência</option>
+          <option value="Vistas da Subestação">Vistas da Subestação</option>
+          <option value="Outros">Outros</option>
+        </select>
+
         <div id="reprovador-resultados"></div>
       </div>
 
@@ -295,7 +355,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="conversor.js"></script>
+  <script src="ferramentas.js"></script>
 
   <script>
     // Ocultar botão de cadastro e painel de cadastro para usuários categoria "usuario"
