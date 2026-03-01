@@ -1,31 +1,3 @@
-<script>
-  // Buscar e exibir a última atualização do relatório
-  async function exibirUltimaAtualizacaoRelatorio() {
-    try {
-      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      const { data, error } = await supabaseClient
-        .from('update_reports_logs_nt')
-        .select('*')
-        .order('update_timestamp', { ascending: false })
-        .limit(1);
-      if (error) {
-        document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Erro ao buscar atualização.';
-        return;
-      }
-      if (data && data.length > 0) {
-        const log = data[0];
-        const dt = new Date(log.update_timestamp);
-        const dataFormatada = dt.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
-        document.getElementById('ultimaAtualizacaoRelatorio').textContent = `Última atualização: ${dataFormatada} por ${log.nome_usuario}`;
-      } else {
-        document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Nenhuma atualização registrada.';
-      }
-    } catch (e) {
-      document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Erro ao buscar atualização.';
-    }
-  }
-  document.addEventListener('DOMContentLoaded', exibirUltimaAtualizacaoRelatorio);
-</script>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -38,7 +10,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@4.3.2/dist/chartjs-chart-geo.min.js"></script>
 
-  </script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="indices.css">
   <style>
@@ -74,6 +45,40 @@
     }
   </style>
   <script>
+    // Buscar e exibir a última atualização do relatório
+    async function exibirUltimaAtualizacaoRelatorio() {
+      try {
+        const supabaseClient = typeof window.getSupabaseClient === 'function'
+          ? window.getSupabaseClient()
+          : window.__supabaseClientSingleton;
+
+        if (!supabaseClient) {
+          document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Erro ao buscar atualização.';
+          return;
+        }
+
+        const { data, error } = await supabaseClient
+          .from('update_reports_logs_nt')
+          .select('*')
+          .order('update_timestamp', { ascending: false })
+          .limit(1);
+        if (error) {
+          document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Erro ao buscar atualização.';
+          return;
+        }
+        if (data && data.length > 0) {
+          const log = data[0];
+          const dt = new Date(log.update_timestamp);
+          const dataFormatada = dt.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+          document.getElementById('ultimaAtualizacaoRelatorio').textContent = `Última atualização: ${dataFormatada} por ${log.nome_usuario}`;
+        } else {
+          document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Nenhuma atualização registrada.';
+        }
+      } catch (e) {
+        document.getElementById('ultimaAtualizacaoRelatorio').textContent = 'Erro ao buscar atualização.';
+      }
+    }
+
     // Função para popular filtro de Código Medidas do gráfico FimPlanejado
     window.popularFiltroCodigoMedidasFimPlanejado = function (dados) {
       const codigos = new Set();
@@ -126,25 +131,7 @@
       });
     };
   </script>
-  <!DOCTYPE html>
-  <html lang="pt-br">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Núcleo-Técnico - Índices</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="indices.css">
-    <style>
-      .active-button {
-        background-color: #ff9800 !important;
-      }
-    </style>
-
-  </head>
+</head>
 
 <body>
 
@@ -178,20 +165,19 @@
   <br>
 
   <div class="menu-container">
-    <button id="btn-relatorios" class="menu-btn"
-      onclick="location.href='relatorios-tecnicos.html'">Relatórios<br>Técnicos</button>
-    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
-    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
-    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
-    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
-    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
-    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+    <button id="btn-relatorios" class="menu-btn">Relatórios<br>Técnicos</button>
+    <button id="btn-checklist" class="menu-btn">Checklist</button>
+    <button id="btn-indices" class="menu-btn">Índices</button>
+    <button id="btn-fluxos" class="menu-btn">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn">Calendário</button>
+    <button id="btn-links" class="menu-btn">Links</button>
+    <button id="btn-modulos" class="menu-btn">Módulos
       <br>Homologados</button>
-    <button id="btn-ferramentas" class="menu-btn" onclick="location.href='ferramentas.html'">Ferramentas</button>
-    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
-    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
-    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
-    <button class="menu-btn" onclick="logout()"
+    <button id="btn-ferramentas" class="menu-btn">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn">Configurações</button>
+    <button id="btnLogoutMenu" class="menu-btn"
       style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
 
   </div>
@@ -218,6 +204,325 @@
       // Adiciona a classe active ao botão clicado
       button.classList.add('active-button');
     }
+
+    function bindMainActionButtons() {
+      const buttonActionMap = [
+        { id: 'btnMedidas0034', action: 'exibirMedidas0034' },
+        { id: 'btnNotasSemContrato', action: 'exibirNotasSemContrato' },
+        { id: 'btnNotasAndamento', action: 'exibirNotasAndamento' },
+        { id: 'btnNotasConcluidas', action: 'exibirNotasConcluidas' },
+        { id: 'btnPrazosAnalise', action: 'exibirPrazosAnalise' },
+        { id: 'btnProdutividade', action: 'exibirProdutividade' },
+        { id: 'btnExibirTabelaNotas', action: 'exibirTabelaNotas' }
+      ];
+
+      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+      const executeWithLoading = async (action) => {
+        const actionFn = window[action];
+        if (typeof actionFn !== 'function') return;
+
+        const loadingStart = Date.now();
+
+        try {
+          if (typeof window.showLoadingBar === 'function') {
+            window.showLoadingBar();
+          }
+
+          await delay(0);
+          await Promise.resolve(actionFn());
+        } catch (error) {
+          console.error(`Erro ao executar ação ${action}:`, error);
+        } finally {
+          const minLoadingMs = 250;
+          const elapsed = Date.now() - loadingStart;
+          const remaining = Math.max(0, minLoadingMs - elapsed);
+          await delay(remaining);
+
+          if (typeof window.hideLoadingBar === 'function') {
+            window.hideLoadingBar();
+          }
+        }
+      };
+
+      buttonActionMap.forEach(({ id, action }) => {
+        const button = document.getElementById(id);
+        if (!button) return;
+
+        button.addEventListener('click', async function () {
+          setActiveButton(button);
+          await executeWithLoading(action);
+        });
+
+        button.addEventListener('mouseover', function () {
+          if (!button.classList.contains('active-button')) {
+            button.style.background = '#ff9800';
+          }
+        });
+
+        button.addEventListener('mouseout', function () {
+          if (!button.classList.contains('active-button')) {
+            button.style.background = '#2e7d32';
+          }
+        });
+      });
+    }
+
+    function bindMenuActionButtons() {
+      const menuRouteMap = [
+        { id: 'btn-relatorios', href: 'relatorios-tecnicos.html' },
+        { id: 'btn-checklist', href: 'checklist.html' },
+        { id: 'btn-indices', href: 'indices.html' },
+        { id: 'btn-fluxos', href: 'fluxos.html' },
+        { id: 'btn-calendario', href: 'calendario.html' },
+        { id: 'btn-links', href: 'links.html' },
+        { id: 'btn-modulos', href: 'modulos.html' },
+        { id: 'btn-ferramentas', href: 'ferramentas.html' },
+        { id: 'btn-controlens', href: 'controlens.html' },
+        { id: 'btn-engenharia', href: 'engenharia.html' },
+        { id: 'btn-configuracoes', href: 'configuracoes.html' }
+      ];
+
+      menuRouteMap.forEach(function ({ id, href }) {
+        const button = document.getElementById(id);
+        if (!button) return;
+
+        button.addEventListener('click', function () {
+          window.location.href = href;
+        });
+      });
+
+      const btnLogoutMenu = document.getElementById('btnLogoutMenu');
+      if (btnLogoutMenu) {
+        btnLogoutMenu.addEventListener('click', function () {
+          if (typeof window.logout === 'function') {
+            window.logout();
+          }
+        });
+      }
+    }
+
+    function bindUploadActionButtons() {
+      const btnImportar = document.getElementById('btnImportarDados');
+      if (btnImportar) {
+        btnImportar.addEventListener('click', function () {
+          if (typeof window.processarExcel === 'function') {
+            window.processarExcel();
+          }
+        });
+      }
+
+      const btnLimpar = document.getElementById('btnLimparTabela');
+      if (btnLimpar) {
+        btnLimpar.addEventListener('click', function () {
+          if (typeof window.limparTabela === 'function') {
+            window.limparTabela();
+          }
+        });
+      }
+    }
+
+    function bindExportActionButtons() {
+      const btnExportarFimPlanejado = document.getElementById('btnExportarFimPlanejado');
+      if (btnExportarFimPlanejado) {
+        btnExportarFimPlanejado.addEventListener('click', function () {
+          if (typeof window.exportarNotasFimPlanejadoExcel === 'function') {
+            window.exportarNotasFimPlanejadoExcel();
+          }
+        });
+      }
+
+      const btnExportarConcluidasMes = document.getElementById('btnExportarNotasConcluidasPorMes');
+      if (btnExportarConcluidasMes) {
+        btnExportarConcluidasMes.addEventListener('click', function () {
+          if (typeof window.exportarNotasConcluidasPorMesExcel === 'function') {
+            window.exportarNotasConcluidasPorMesExcel();
+          }
+        });
+      }
+
+      const btnExportarTabela = document.getElementById('botaoExportarTabela');
+      if (btnExportarTabela) {
+        btnExportarTabela.addEventListener('click', function () {
+          if (typeof window.exportarTabelaParaExcel === 'function') {
+            window.exportarTabelaParaExcel();
+          }
+        });
+      }
+
+      const btnExportarNotasSemContrato = document.getElementById('btnExportarNotasSemContrato');
+      if (btnExportarNotasSemContrato) {
+        btnExportarNotasSemContrato.addEventListener('click', function () {
+          if (typeof window.exportarNotasSemContratoExcel === 'function') {
+            window.exportarNotasSemContratoExcel();
+          }
+        });
+
+        btnExportarNotasSemContrato.addEventListener('mouseover', function () {
+          btnExportarNotasSemContrato.style.background = '#388e3c';
+        });
+
+        btnExportarNotasSemContrato.addEventListener('mouseout', function () {
+          btnExportarNotasSemContrato.style.background = '#4caf50';
+        });
+      }
+
+      const btnExportarNotasSemDataSemContrato = document.getElementById('btnExportarNotasSemDataSemContrato');
+      if (btnExportarNotasSemDataSemContrato) {
+        btnExportarNotasSemDataSemContrato.addEventListener('click', function () {
+          if (typeof window.exportarNotasSemDataNotasSemContratoExcel === 'function') {
+            window.exportarNotasSemDataNotasSemContratoExcel();
+          }
+        });
+
+        btnExportarNotasSemDataSemContrato.addEventListener('mouseover', function () {
+          btnExportarNotasSemDataSemContrato.style.background = '#388e3c';
+        });
+
+        btnExportarNotasSemDataSemContrato.addEventListener('mouseout', function () {
+          btnExportarNotasSemDataSemContrato.style.background = '#4caf50';
+        });
+      }
+    }
+
+    function bindModalActionButtons() {
+      const btnFecharModalNotas = document.getElementById('btnFecharModalNotas');
+      if (btnFecharModalNotas) {
+        btnFecharModalNotas.addEventListener('click', function () {
+          if (typeof window.fecharModalNotas === 'function') {
+            window.fecharModalNotas();
+          }
+        });
+      }
+    }
+
+    function bindDropdownActionButtons() {
+      const dropdownButtonMap = [
+        { id: 'botaoToggleDescricoes', action: 'toggleDropdownDescricoes' },
+        { id: 'botaoToggleCodigoMedidas', action: 'toggleDropdownCodigoMedidas' },
+        { id: 'botaoToggleStatusFimPlanejado', action: 'toggleDropdownStatusFimPlanejado' },
+        { id: 'botaoToggleDescricoesMedidas0034', action: 'toggleDropdownDescricoesMedidas0034' },
+        { id: 'botaoToggleDescricoesMedidas0034Clone', action: 'toggleDropdownDescricoesMedidas0034Clone' },
+        { id: 'botaoToggleDescricoesPrazo0034', action: 'toggleDropdownDescricoesPrazo0034' },
+        { id: 'botaoToggleMesesIntervaloNotas0034MiniGeracao', action: 'toggleDropdownMesesIntervaloNotas0034MiniGeracao' },
+        { id: 'botaoToggleCodigoMedidasSemGeracoes', action: 'toggleDropdownCodigoMedidasSemGeracoes' },
+        { id: 'botaoToggleCodigoMedidasMiniGeracao', action: 'toggleDropdownCodigoMedidasMiniGeracao' },
+        { id: 'botaoToggleMesesNotasConcluidasPorMes', action: 'toggleDropdownMesesNotasConcluidasPorMes' },
+        { id: 'botaoToggleMesesPrazoIntervalos', action: 'toggleDropdownMesesPrazoIntervalos' },
+        { id: 'botaoToggleDescricoesPrazoIntervalos', action: 'toggleDropdownDescricoesPrazoIntervalos' },
+        { id: 'botaoToggleDescricoesPrazo', action: 'toggleDropdownDescricoesPrazo' },
+        { id: 'botaoToggleCodigoMedidasPrazo', action: 'toggleDropdownCodigoMedidasPrazo' },
+        { id: 'botaoToggleDescricoesPrazoExceto', action: 'toggleDropdownDescricoesPrazoExceto' },
+        { id: 'botaoToggleCodigoMedidasPrazoExceto', action: 'toggleDropdownCodigoMedidasPrazoExceto' },
+        { id: 'botaoToggleDescricoesPrazoMiniMicro', action: 'toggleDropdownDescricoesPrazoMiniMicro' },
+        { id: 'botaoToggleCodigoMedidasPrazoMiniMicro', action: 'toggleDropdownCodigoMedidasPrazoMiniMicro' },
+        { id: 'botaoToggleDiasConcluidas', action: 'toggleDropdownDiasConcluidas' },
+        { id: 'botaoToggleCodigoMedidasConcluidas', action: 'toggleDropdownCodigoMedidasConcluidas' },
+        { id: 'botaoToggleDiasNotasPorUsuario', action: 'toggleDropdownDiasNotasPorUsuario' },
+        { id: 'botaoToggleDescricoesNotasPorUsuario', action: 'toggleDropdownDescricoesNotasPorUsuario' },
+        { id: 'botaoToggleCodigoMedidasNotasPorUsuario', action: 'toggleDropdownCodigoMedidasNotasPorUsuario' },
+        { id: 'botaoToggleDescricoesAprovacaoReprovacao', action: 'toggleDropdownDescricoesAprovacaoReprovacao' },
+        { id: 'botaoToggleCodigoMedidasAprovacaoReprovacao', action: 'toggleDropdownCodigoMedidasAprovacaoReprovacao' },
+        { id: 'botaoToggleUsuariosNotasConcluidasPorDia', action: 'toggleDropdownUsuariosNotasConcluidasPorDia' },
+        { id: 'botaoToggleAnoNotasSemContrato', action: 'toggleDropdownAnoNotasSemContrato' },
+        { id: 'botaoToggleMesNotasSemContrato', action: 'toggleDropdownMesNotasSemContrato' },
+        { id: 'botaoToggleDiasNotasSemContrato', action: 'toggleDropdownDiasNotasSemContrato' },
+        { id: 'botaoToggleStatusNotasSemContrato', action: 'toggleDropdownStatusNotasSemContrato' },
+        { id: 'botaoToggleStatusNotasSemDataNotasSemContrato', action: 'toggleDropdownStatusNotasSemDataNotasSemContrato' },
+        { id: 'botaoToggleDescricoesRPVD', action: 'toggleDropdownDescricoesRPVD' }
+      ];
+
+      dropdownButtonMap.forEach(({ id, action }) => {
+        const button = document.getElementById(id);
+        if (!button) return;
+
+        button.addEventListener('click', function () {
+          if (typeof window[action] === 'function') {
+            window[action]();
+          }
+        });
+      });
+    }
+
+    function bindPrazoIntervalosActionButtons() {
+      const filtroAnoPrazoIntervalos = document.getElementById('filtroAnoPrazoIntervalos');
+      if (filtroAnoPrazoIntervalos) {
+        filtroAnoPrazoIntervalos.addEventListener('change', function () {
+          if (typeof window.aplicarFiltroAnoPrazoIntervalos === 'function') {
+            window.aplicarFiltroAnoPrazoIntervalos();
+          }
+        });
+      }
+
+      ['intervalo1Max', 'intervalo2Max', 'intervalo3Max'].forEach(function (inputId) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
+        input.addEventListener('change', function () {
+          if (typeof window.atualizarGraficoIntervalos === 'function') {
+            window.atualizarGraficoIntervalos();
+          }
+        });
+      });
+
+      const btnResetarIntervalos = document.getElementById('btnResetarIntervalos');
+      if (btnResetarIntervalos) {
+        btnResetarIntervalos.addEventListener('click', function () {
+          if (typeof window.resetarIntervalos === 'function') {
+            window.resetarIntervalos();
+          }
+        });
+      }
+
+      const btnGerarGraficoPrazoIntervalos = document.getElementById('btnGerarGraficoPrazoIntervalos');
+      if (btnGerarGraficoPrazoIntervalos) {
+        btnGerarGraficoPrazoIntervalos.addEventListener('click', function () {
+          if (typeof window.gerarGraficoPrazoIntervalos === 'function') {
+            window.gerarGraficoPrazoIntervalos(window.dadosGlobais);
+          }
+        });
+      }
+    }
+
+    function bindFilterActionButtons() {
+      const selectActionMap = [
+        { id: 'filtroAnoNotasConcluidasPorMes', action: 'aplicarFiltroAnoNotasConcluidasPorMes' },
+        { id: 'filtroMesConcluidas', action: 'filtrarGraficoConcluidasPorMes' },
+        { id: 'filtroAnoConcluidasPorTipoDemais', action: 'aplicarFiltroAnoConcluidasPorTipoDemais' },
+        { id: 'filtroAnoConcluidasPorTipoSolicitacao', action: 'aplicarFiltroAnoConcluidasPorTipoSolicitacao' },
+        { id: 'filtroMesRPVD', action: 'aplicarFiltroMesRPVD' },
+        { id: 'filtroAnoRPVD', action: 'aplicarFiltroAnoRPVD' }
+      ];
+
+      selectActionMap.forEach(function ({ id, action }) {
+        const element = document.getElementById(id);
+        if (!element) return;
+
+        element.addEventListener('change', function () {
+          if (typeof window[action] === 'function') {
+            window[action]();
+          }
+        });
+      });
+
+      const ocultarBarrasDemais = document.getElementById('ocultarBarrasDemais');
+      if (ocultarBarrasDemais) {
+        ocultarBarrasDemais.addEventListener('change', function () {
+          if (typeof window.toggleBarrasDemais === 'function') {
+            window.toggleBarrasDemais();
+          }
+        });
+      }
+
+      const ocultarBarrasMini = document.getElementById('ocultarBarrasMini');
+      if (ocultarBarrasMini) {
+        ocultarBarrasMini.addEventListener('change', function () {
+          if (typeof window.toggleBarrasMini === 'function') {
+            window.toggleBarrasMini();
+          }
+        });
+      }
+    }
   </script>
 
   <h2 style="text-align: center; color: #2e7d32; margin: 24px 0; font-weight: 600; font-size: 2.2em;">GERENCIADOR DE
@@ -232,11 +537,11 @@
       <div style="display: flex; gap: 12px; align-items: center;">
         <input type="file" id="fileInput" accept=".xlsx, .xls"
           style="padding: 10px; border: 2px solid #e8f5e9; border-radius: 8px; flex: 1;">
-        <button onclick="processarExcel()"
+        <button id="btnImportarDados"
           style="background: linear-gradient(145deg, #2e7d32, #43a047); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
           Importar Dados
         </button>
-        <button onclick="limparTabela()"
+        <button id="btnLimparTabela"
           style="background: linear-gradient(145deg, #d32f2f, #f44336); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
           Limpar Tabela
         </button>
@@ -257,46 +562,39 @@
 
     <!-- Botões do Gráfico de Quantidade notas ABER e ANDM por tipo -->
     <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
-      <button id="btnMedidas0034" onclick="setActiveButton(this); exibirMedidas0034()"
+      <button id="btnMedidas0034"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         MEDIDAS 0034
       </button>
-      <button id="btnNotasSemContrato" onclick="setActiveButton(this); exibirNotasSemContrato()"
+      <button id="btnNotasSemContrato"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         NOTAS SEM CONTRATO
       </button>
-      <button id="btnNotasAndamento" onclick="setActiveButton(this); exibirNotasAndamento()"
+      <button id="btnNotasAndamento"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         NOTAS EM ANDAMENTO
       </button>
-      <button id="btnNotasConcluidas" onclick="setActiveButton(this); exibirNotasConcluidas()"
+      <button id="btnNotasConcluidas"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         NOTAS CONCLUÍDAS
       </button>
-      <button id="btnPrazosAnalise" onclick="setActiveButton(this); exibirPrazosAnalise()"
+      <button id="btnPrazosAnalise"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         PRAZOS DE ANÁLISE
       </button>
-      <button id="btnProdutividade" onclick="setActiveButton(this); exibirProdutividade()"
+      <button id="btnProdutividade"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         PRODUTIVIDADE
       </button>
-      <button id="btnExibirTabelaNotas" onclick="setActiveButton(this); exibirTabelaNotas()"
+      <button id="btnExibirTabelaNotas"
         style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;"
-        onmouseover="if(!this.classList.contains('active-button')) this.style.background='#ff9800'"
-        onmouseout="if(!this.classList.contains('active-button')) this.style.background='#2e7d32'">
+        >
         EXIBIR TABELA DE NOTAS
       </button>
     </div>
@@ -318,7 +616,7 @@
               </select>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoes" onclick="toggleDropdownDescricoes()"
+              <button id="botaoToggleDescricoes"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por descrição</span>
@@ -329,7 +627,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleCodigoMedidas" onclick="toggleDropdownCodigoMedidas()"
+              <button id="botaoToggleCodigoMedidas"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por Código Medidas</span>
@@ -340,7 +638,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleStatusFimPlanejado" onclick="toggleDropdownStatusFimPlanejado()"
+              <button id="botaoToggleStatusFimPlanejado"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por Status</span>
@@ -351,7 +649,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button onclick="exportarNotasFimPlanejadoExcel()"
+              <button id="btnExportarFimPlanejado"
                 style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
                 <span>📥</span>
                 <span>Exportar Excel</span>
@@ -431,7 +729,7 @@
               </select>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesMedidas0034" onclick="toggleDropdownDescricoesMedidas0034()"
+              <button id="botaoToggleDescricoesMedidas0034"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por descrição</span>
@@ -460,7 +758,7 @@
     <!-- Gráfico Medidas 0034 (Cópia) -->
     <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
       <div id="graficoMedidas0034Clone"
-        style="display: block; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
         <div
           style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
           <strong>Regras para geração deste gráfico:</strong><br>
@@ -482,7 +780,7 @@
               </select>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesMedidas0034Clone" onclick="toggleDropdownDescricoesMedidas0034Clone()"
+              <button id="botaoToggleDescricoesMedidas0034Clone"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por descrição</span>
@@ -536,7 +834,7 @@
               </select>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesPrazo0034" onclick="toggleDropdownDescricoesPrazo0034()"
+              <button id="botaoToggleDescricoesPrazo0034"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por descrição</span>
@@ -572,7 +870,6 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao"
-              onclick="toggleDropdownMesesIntervaloNotas0034MiniGeracao()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por mês</span>
@@ -609,7 +906,7 @@
                 style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
               <span style="font-size: 13px; color: #666;">dias</span>
             </div>
-            <button onclick="gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais)"
+            <button id="btnGerarGraficoIntervaloNotas0034MiniGeracao"
               style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
               📊 Gerar Gráfico
             </button>
@@ -742,8 +1039,7 @@
             gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
           }
 
-          // Vincula ao botão MEDIDAS 0034
-          document.addEventListener('DOMContentLoaded', function () {
+          function bindIntervaloNotas0034MiniGeracaoButtons() {
             var btnMedidas = document.getElementById('btnMedidas0034');
             if (btnMedidas) {
               btnMedidas.addEventListener('click', exibirGraficoIntervaloNotas0034MiniGeracao);
@@ -763,11 +1059,26 @@
               var btn = document.getElementById(id);
               if (btn) {
                 btn.addEventListener('click', function () {
-                  document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'none';
+                  var graficoIntervalo = document.getElementById('graficoIntervaloNotas0034MiniGeracao');
+                  if (graficoIntervalo) {
+                    graficoIntervalo.style.display = 'none';
+                  }
                 });
               }
             });
-          });
+
+            var botaoToggleMeses = document.getElementById('botaoToggleMesesIntervaloNotas0034MiniGeracao');
+            if (botaoToggleMeses) {
+              botaoToggleMeses.addEventListener('click', toggleDropdownMesesIntervaloNotas0034MiniGeracao);
+            }
+
+            var btnGerarGrafico = document.getElementById('btnGerarGraficoIntervaloNotas0034MiniGeracao');
+            if (btnGerarGrafico) {
+              btnGerarGrafico.addEventListener('click', function () {
+                gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+              });
+            }
+          }
         </script>
         <div
           style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
@@ -801,7 +1112,7 @@
         <div
           style="background: #2e7d32; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
           <h3 style="margin: 0;" id="modalTitulo">Notas Detalhadas</h3>
-          <button onclick="fecharModalNotas()"
+          <button id="btnFecharModalNotas"
             style="background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
         </div>
         <div style="padding: 20px 20px 40px 20px; max-height: calc(85vh - 80px); overflow-y: auto;">
@@ -818,7 +1129,7 @@
           style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
           <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasSemGeracoes" onclick="toggleDropdownCodigoMedidasSemGeracoes()"
+            <button id="botaoToggleCodigoMedidasSemGeracoes"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -847,7 +1158,7 @@
           style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
           <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasMiniGeracao" onclick="toggleDropdownCodigoMedidasMiniGeracao()"
+            <button id="botaoToggleCodigoMedidasMiniGeracao"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -879,12 +1190,12 @@
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
             por ano:</label>
-          <select id="filtroAnoNotasConcluidasPorMes" onchange="aplicarFiltroAnoNotasConcluidasPorMes()"
+          <select id="filtroAnoNotasConcluidasPorMes"
             style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
             <option value="todos">Todos</option>
           </select>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleMesesNotasConcluidasPorMes" onclick="toggleDropdownMesesNotasConcluidasPorMes()"
+            <button id="botaoToggleMesesNotasConcluidasPorMes"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por mês</span>
@@ -894,7 +1205,7 @@
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-          <button onclick="exportarNotasConcluidasPorMesExcel()"
+          <button id="btnExportarNotasConcluidasPorMes"
             style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
             <span>📥</span>
             <span>Exportar Excel</span>
@@ -921,13 +1232,13 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
               mês:</label>
-            <select id="filtroMesConcluidas" onchange="filtrarGraficoConcluidasPorMes()"
+            <select id="filtroMesConcluidas"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDiasConcluidas" onclick="toggleDropdownDiasConcluidas()"
+            <button id="botaoToggleDiasConcluidas"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por dia</span>
@@ -938,7 +1249,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasConcluidas" onclick="toggleDropdownCodigoMedidasConcluidas()"
+            <button id="botaoToggleCodigoMedidasConcluidas"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -972,14 +1283,14 @@
           style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
           <h2 style="color: #2e7d32; margin: 0;">🧾 Notas com medida 0555 concluídas</h2>
           <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
-            <button onclick="exportarNotasSemContratoExcel()"
+            <button id="btnExportarNotasSemContrato"
               style="padding: 10px 16px; background: Quantidade de Notas ABER E ANDM Carga e GD; background: #4caf50;color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;"
-              onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'">
+              >
               <span>📊</span>
               <span>Exportar Excel</span>
             </button>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleAnoNotasSemContrato" onclick="toggleDropdownAnoNotasSemContrato()"
+              <button id="botaoToggleAnoNotasSemContrato"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por ano</span>
@@ -990,7 +1301,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleMesNotasSemContrato" onclick="toggleDropdownMesNotasSemContrato()"
+              <button id="botaoToggleMesNotasSemContrato"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por mês</span>
@@ -1001,7 +1312,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDiasNotasSemContrato" onclick="toggleDropdownDiasNotasSemContrato()"
+              <button id="botaoToggleDiasNotasSemContrato"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por dia</span>
@@ -1012,7 +1323,7 @@
               </div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleStatusNotasSemContrato" onclick="toggleDropdownStatusNotasSemContrato()"
+              <button id="botaoToggleStatusNotasSemContrato"
                 style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por status</span>
@@ -1039,15 +1350,14 @@
           style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
           <h2 style="color: #d32f2f; margin: 0;">⏳ Notas com medida 0555 ABER ou ANDM sem data de conclusão</h2>
           <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
-            <button onclick="exportarNotasSemDataNotasSemContratoExcel()"
+            <button id="btnExportarNotasSemDataSemContrato"
               style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;"
-              onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#4caf50'">
+              >
               <span>📊</span>
               <span>Exportar Excel</span>
             </button>
             <div style="display: flex; flex-direction: column; gap: 8px;">
               <button id="botaoToggleStatusNotasSemDataNotasSemContrato"
-                onclick="toggleDropdownStatusNotasSemDataNotasSemContrato()"
                 style="padding: 10px 16px; background: #d32f2f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
                 <span>▼</span>
                 <span>Filtrar por status</span>
@@ -1105,12 +1415,12 @@
         <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Carga</h2>
         <div style="display: flex; align-items: center; gap: 16px;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
-            <input type="checkbox" id="ocultarBarrasDemais" onchange="toggleBarrasDemais()" style="cursor: pointer;">
+            <input type="checkbox" id="ocultarBarrasDemais" style="cursor: pointer;">
             <span>Ocultar barras</span>
           </label>
           <label for="filtroAnoConcluidasPorTipoDemais" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
             por ano:</label>
-          <select id="filtroAnoConcluidasPorTipoDemais" onchange="aplicarFiltroAnoConcluidasPorTipoDemais()"
+          <select id="filtroAnoConcluidasPorTipoDemais"
             style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
             <option value="todos">Todos</option>
           </select>
@@ -1122,7 +1432,7 @@
       <div id="infoConcluidasPorTipoDemais"
         style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
         <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoDemais">0</span> |
-        <strong></strong>Critério:</strong> Demais Tipos de Solicitação (CONC CTEC e CONC RTEC)
+        <strong>Critério:</strong> Demais Tipos de Solicitação (CONC CTEC e CONC RTEC)
       </div>
     </div>
 
@@ -1134,12 +1444,12 @@
         <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Mini/Micro Geração</h2>
         <div style="display: flex; align-items: center; gap: 16px;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
-            <input type="checkbox" id="ocultarBarrasMini" onchange="toggleBarrasMini()" style="cursor: pointer;">
+            <input type="checkbox" id="ocultarBarrasMini" style="cursor: pointer;">
             <span>Ocultar barras</span>
           </label>
           <label for="filtroAnoConcluidasPorTipoSolicitacao"
             style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
-          <select id="filtroAnoConcluidasPorTipoSolicitacao" onchange="aplicarFiltroAnoConcluidasPorTipoSolicitacao()"
+          <select id="filtroAnoConcluidasPorTipoSolicitacao"
             style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
             <option value="todos">Todos</option>
           </select>
@@ -1151,7 +1461,7 @@
       <div id="infoConcluidasPorTipoSolicitacao"
         style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
         <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoMini">0</span> |
-        <strong></strong>Critério:</strong> Mini/Micro Geração (CONC CTEC e CONC RTEC)
+        <strong>Critério:</strong> Mini/Micro Geração (CONC CTEC e CONC RTEC)
       </div>
     </div>
 
@@ -1164,20 +1474,20 @@
         <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <label for="filtroMesRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
-            <select id="filtroMesRPVD" onchange="aplicarFiltroMesRPVD()"
+            <select id="filtroMesRPVD"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
               <option value="todos">Todos</option>
             </select>
           </div>
           <div style="display: flex; align-items: center; gap: 10px;">
             <label for="filtroAnoRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
-            <select id="filtroAnoRPVD" onchange="aplicarFiltroAnoRPVD()"
+            <select id="filtroAnoRPVD"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
               <option value="todos">Todos</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesRPVD" onclick="toggleDropdownDescricoesRPVD()"
+            <button id="botaoToggleDescricoesRPVD"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1210,13 +1520,13 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <label for="filtroAnoPrazoIntervalos" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
               ano:</label>
-            <select id="filtroAnoPrazoIntervalos" onchange="aplicarFiltroAnoPrazoIntervalos()"
+            <select id="filtroAnoPrazoIntervalos"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
               <option value="todos">Todos</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleMesesPrazoIntervalos" onclick="toggleDropdownMesesPrazoIntervalos()"
+            <button id="botaoToggleMesesPrazoIntervalos"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por mês</span>
@@ -1227,7 +1537,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoIntervalos" onclick="toggleDropdownDescricoesPrazoIntervalos()"
+            <button id="botaoToggleDescricoesPrazoIntervalos"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1247,27 +1557,27 @@
         <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
-            <input type="number" id="intervalo1Max" value="15" min="1" max="999" onchange="atualizarGraficoIntervalos()"
+            <input type="number" id="intervalo1Max" value="15" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 2: até</label>
-            <input type="number" id="intervalo2Max" value="20" min="1" max="999" onchange="atualizarGraficoIntervalos()"
+            <input type="number" id="intervalo2Max" value="20" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 3: até</label>
-            <input type="number" id="intervalo3Max" value="35" min="1" max="999" onchange="atualizarGraficoIntervalos()"
+            <input type="number" id="intervalo3Max" value="35" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
-          <button onclick="resetarIntervalos()"
+          <button id="btnResetarIntervalos"
             style="padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
             Resetar padrão
           </button>
-          <button onclick="gerarGraficoPrazoIntervalos(dadosGlobais)"
+          <button id="btnGerarGraficoPrazoIntervalos"
             style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
             📊 Gerar Gráfico
           </button>
@@ -1310,7 +1620,7 @@
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazo" onclick="toggleDropdownDescricoesPrazo()"
+            <button id="botaoToggleDescricoesPrazo"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1321,7 +1631,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazo" onclick="toggleDropdownCodigoMedidasPrazo()"
+            <button id="botaoToggleCodigoMedidasPrazo"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -1372,7 +1682,7 @@
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoExceto" onclick="toggleDropdownDescricoesPrazoExceto()"
+            <button id="botaoToggleDescricoesPrazoExceto"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1383,7 +1693,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoExceto" onclick="toggleDropdownCodigoMedidasPrazoExceto()"
+            <button id="botaoToggleCodigoMedidasPrazoExceto"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -1434,7 +1744,7 @@
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoMiniMicro" onclick="toggleDropdownDescricoesPrazoMiniMicro()"
+            <button id="botaoToggleDescricoesPrazoMiniMicro"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1445,7 +1755,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoMiniMicro" onclick="toggleDropdownCodigoMedidasPrazoMiniMicro()"
+            <button id="botaoToggleCodigoMedidasPrazoMiniMicro"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -1500,7 +1810,7 @@
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDiasNotasPorUsuario" onclick="toggleDropdownDiasNotasPorUsuario()"
+            <button id="botaoToggleDiasNotasPorUsuario"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por dia</span>
@@ -1511,7 +1821,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesNotasPorUsuario" onclick="toggleDropdownDescricoesNotasPorUsuario()"
+            <button id="botaoToggleDescricoesNotasPorUsuario"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1522,7 +1832,7 @@
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasNotasPorUsuario" onclick="toggleDropdownCodigoMedidasNotasPorUsuario()"
+            <button id="botaoToggleCodigoMedidasNotasPorUsuario"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -1561,7 +1871,6 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleDescricoesAprovacaoReprovacao"
-              onclick="toggleDropdownDescricoesAprovacaoReprovacao()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
@@ -1573,7 +1882,6 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleCodigoMedidasAprovacaoReprovacao"
-              onclick="toggleDropdownCodigoMedidasAprovacaoReprovacao()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
@@ -1619,7 +1927,6 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <button id="botaoToggleUsuariosNotasConcluidasPorDia"
-              onclick="toggleDropdownUsuariosNotasConcluidasPorDia()"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Usuário</span>
@@ -1644,7 +1951,7 @@
     <div id="secaoDadosCadastrados"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
       <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Dados Cadastrados</h2>
-      <button id="botaoExportarTabela" onclick="exportarTabelaParaExcel()"
+      <button id="botaoExportarTabela"
         style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
         📥 Exportar para Excel
       </button>
@@ -1693,12 +2000,6 @@
 
 
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="auth.js"></script>
   <script>
     // Função global para exportar a tabela para Excel
     window.exportarTabelaParaExcel = function () {
@@ -1713,7 +2014,18 @@
     // Configuração do Supabase
     const SUPABASE_URL = 'https://nelzhukmxrgdoarsxcek.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k';
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    window.getSupabaseClient = function () {
+      if (!window.__supabaseClientSingleton) {
+        window.__supabaseClientSingleton = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+          auth: {
+            storageKey: 'sb-nelzhukmxrgdoarsxcek-auth-token'
+          }
+        });
+      }
+      return window.__supabaseClientSingleton;
+    };
+
+    const supabaseClient = window.getSupabaseClient();
 
 
 
@@ -1756,8 +2068,14 @@
       }
     };
 
-    // Controlar acesso à seção de upload para usuário comum
-    document.addEventListener('DOMContentLoaded', function () {
+    function parseData(dataStr) {
+      if (!dataStr) return null;
+      const partes = dataStr.split('.');
+      if (partes.length !== 3) return null;
+      return new Date(partes[2], partes[1] - 1, partes[0]);
+    }
+
+    function applyUserCategoryVisibility() {
       const categoria = sessionStorage.getItem('userCategoria');
       const secaoUpload = document.getElementById('secaoUpload');
       const secaoDadosCadastrados = document.getElementById('secaoDadosCadastrados');
@@ -1783,7 +2101,7 @@
       if (secaoDadosCadastrados) {
         secaoDadosCadastrados.style.display = 'none';
       }
-    });
+    }
 
     window.processarExcel = async function () {
       const fileInput = document.getElementById('fileInput');
@@ -1847,7 +2165,6 @@
             alert('Erro ao importar dados: ' + error.message);
           } else {
             // Registra o log de atualização
-            console.log('Registrando log de atualização de relatório...');
             try {
               const userName = sessionStorage.getItem('userName') || localStorage.getItem('userName') || 'Usuário Desconhecido';
               const userEmail = sessionStorage.getItem('userEmail') || 'email@desconhecido.com';
@@ -1864,8 +2181,6 @@
 
               if (logError) {
                 console.error('Erro ao registrar log:', logError);
-              } else {
-                console.log('Log de atualização registrado com sucesso!');
               }
             } catch (logException) {
               console.error('Exceção ao registrar log:', logException);
@@ -1886,8 +2201,6 @@
 
     // Funções para o modal de notas
     window.abrirModalNotas = function (notas, data, status) {
-      console.log('Notas recebidas no modal:', notas);
-
       const modal = document.getElementById('modalNotas');
       const titulo = document.getElementById('modalTitulo');
       const conteudo = document.getElementById('modalConteudo');
@@ -1935,13 +2248,22 @@
           html += `<option value="CONC RTEC">CONC RTEC</option>`;
           html += `<option value="CANC">CANC</option>`;
           html += `</select>`;
-          html += `<button onclick="atualizarStatusNota('${nota.id}', ${index})" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
+          html += `<button type="button" class="btn-salvar-status-nota" data-nota-id="${nota.id}" data-row-index="${index}" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
           html += `</td>`;
           html += '</tr>';
         });
 
         html += '</tbody></table>';
         conteudo.innerHTML = html;
+        conteudo.querySelectorAll('.btn-salvar-status-nota').forEach((botao) => {
+          botao.addEventListener('click', function () {
+            const notaId = this.dataset.notaId;
+            const rowIndex = Number.parseInt(this.dataset.rowIndex, 10);
+            if (notaId && Number.isInteger(rowIndex)) {
+              window.atualizarStatusNota(notaId, rowIndex);
+            }
+          });
+        });
       }
 
       modal.style.display = 'block';
@@ -2294,9 +2616,6 @@
     };
 
     window.popularFiltroStatusNotasSemContrato = function (dados) {
-      console.log('=== INICIANDO popularFiltroStatusNotasSemContrato ===');
-      console.log('Dados recebidos:', dados ? dados.length : 'NULO');
-
       const statusSet = new Set();
       const statusExcluidos = ['ABER', 'ANDM', 'ANDM ENVI'];
       let totalChecked = 0;
@@ -2319,11 +2638,6 @@
           }
         }
       });
-
-      console.log('Total de itens 0555 verificados:', totalChecked);
-      console.log('Status únicos encontrados:', statusSet.size);
-      console.log('Status excluídos do filtro (ABER/ANDM):', totalExcluidosFiltro);
-      console.log('Status:', Array.from(statusSet).sort());
 
       const statusArray = Array.from(statusSet).sort();
       const container = document.getElementById('containerCheckboxesStatusNotasSemContrato');
@@ -2384,8 +2698,6 @@
 
     // ===== FUNÇÕES PARA NOTAS SEM CONTRATO SEM DATA =====
     window.popularFiltroStatusNotasSemDataNotasSemContrato = function (dados) {
-      console.log('=== INICIANDO popularFiltroStatusNotasSemDataNotasSemContrato ===');
-
       const statusSet = new Set();
       const statusPermitidos = ['ABER', 'ANDM', 'ANDM ENVI'];
       let totalPermitidosFiltro = 0;
@@ -2403,9 +2715,6 @@
           }
         }
       });
-
-      console.log('Status unicos em notas sem data (permitidos):', statusSet.size);
-      console.log('Total permitidos no filtro (ABER/ANDM):', totalPermitidosFiltro);
 
       const statusArray = Array.from(statusSet).sort();
       const container = document.getElementById('containerCheckboxesStatusNotasSemDataNotasSemContrato');
@@ -2450,8 +2759,6 @@
     };
 
     window.gerarGraficoNotasSemDataNotasSemContrato = function (dados) {
-      console.log('=== INICIANDO gerarGraficoNotasSemDataNotasSemContrato ===');
-
       const statusSelected = Array.from(document.getElementById('containerCheckboxesStatusNotasSemDataNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const statusPermitidos = ['ABER', 'ANDM', 'ANDM ENVI'];
 
@@ -2486,10 +2793,6 @@
           }
         }
       });
-
-      console.log('Total de notas sem data após filtros:', totalNotas);
-      console.log('Total permitidas (ABER/ANDM):', totalPermitidas);
-      console.log('Status:', Object.keys(notasPorStatus).sort());
 
       // Ordenar por status
       const statusLabels = Object.keys(notasPorStatus).sort();
@@ -2569,8 +2872,6 @@
     };
 
     window.gerarGraficoComparacaoNotasCarga0555 = function (dados) {
-      console.log('=== INICIANDO gerarGraficoComparacaoNotasCarga0555 ===');
-
       if (!dados || dados.length === 0) {
         console.error('❌ Dados vazios');
         return;
@@ -2591,8 +2892,6 @@
           }
         }
       });
-
-      console.log('Total de números de nota únicos com 0555 (ANDM/ABER/ANDM ENVI):', notasComCodigo0555.size);
 
       // PASSO 2: Filtrar notas Carga (0040/41/42/45) com status ABER/ANDM que estejam no Set
       const codigosCarga = ['0040', '0041', '0042', '0045'];
@@ -2626,9 +2925,6 @@
           }
         }
       });
-
-      console.log('Total de notas Carga vinculadas a 0555:', totalNotas);
-      console.log('Distribuição por mês:', notasPorMes);
 
       // Armazenar dados para uso no onClick
       const dadosCompletos = dados.filter(item => {
@@ -2759,9 +3055,6 @@
     };
 
     window.gerarGraficoNotasSemContrato = function (dados) {
-      console.log('=== INICIANDO gerarGraficoNotasSemContrato ===');
-      console.log('Dados recebidos:', dados ? dados.length : 'NULO');
-
       // VERIFICAÇÃO CRÍTICA
       if (!dados || dados.length === 0) {
         console.error('❌ ERRO FATAL: Dados vazios ou undefined!');
@@ -2818,12 +3111,6 @@
           }
         }
       });
-
-      console.log('✅ Total de notas 0555 incluídas:', totalNotas0555);
-      console.log('❌ Total de notas 0555 EXCLUÍDAS (ABER/ANDM):', totalExcluidos);
-      console.log('Total após filtros de data/status:', totalNotas);
-      console.log('Dados agrupados por mês:', notasPorMes);
-      console.log('Filtros aplicados - Anos:', anosSelected.length, 'Meses:', mesesSelected.length, 'Dias:', diasSelected.length, 'Status:', statusSelected.length);
       if (Object.keys(notasPorMes).length === 0) {
         console.error('⚠️ PROBLEMA: nenhum dado agrupado por mês!');
         console.error('Verificar: Se há items com concluida_em, se checkboxes estão selecionados');
@@ -2906,7 +3193,6 @@
     };
 
     window.exibirNotasSemContrato = function () {
-      console.log('=== CLICOU EM NOTAS SEM CONTRATO ===');
       ativarBotao('btnNotasSemContrato');
 
       // Mostrar o gráfico de notas sem contrato
@@ -2941,55 +3227,6 @@
         ? dadosGlobaisCompletos
         : dadosGlobais;
 
-      // ⚠️ SALVAR EM VARIÁVEL GLOBAL PARA DEBUG
-      window.DEBUG_DADOS = dados;
-
-      console.log('🚨 DEBUG SALVO: Digite no console "DEBUG_DADOS" para inspecionar');
-      console.log('Dados selecionados é dadosGlobaisCompletos?', typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0);
-      console.log('Tamanho dos dados:', dados ? dados.length : 0);
-
-      // DIAGNÓSTICO DETALHADO
-      if (dados && dados.length > 0) {
-        let total0555 = 0;
-        let total0555ComConcluida = 0;
-        let total0555ComStatus = 0;
-        let total0555SemConcluida = 0;
-        let total0555SemStatus = 0;
-        const statusEncontrados = new Set();
-
-        dados.forEach(item => {
-          if (item.codigo_medidas === '0555') {
-            total0555++;
-            const temConcluida = item.concluida_em && item.concluida_em.trim() !== '';
-            const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-            const temStatus = statusRaw && statusRaw !== '';
-
-            if (temConcluida) {
-              total0555ComConcluida++;
-            } else {
-              total0555SemConcluida++;
-            }
-
-            if (temStatus) {
-              total0555ComStatus++;
-              statusEncontrados.add(statusRaw);
-            } else {
-              total0555SemStatus++;
-            }
-          }
-        });
-
-        console.log('📊 DIAGNÓSTICO DETALHADO:');
-        console.log('Total de itens no arquivo:', dados.length);
-        console.log('Total com código 0555:', total0555);
-        console.log('  - Com concluida_em:', total0555ComConcluida);
-        console.log('  - SEM concluida_em:', total0555SemConcluida);
-        console.log('  - Com status:', total0555ComStatus);
-        console.log('  - SEM status:', total0555SemStatus);
-        console.log('Status únicos encontrados:', statusEncontrados.size);
-        console.log('Status:', Array.from(statusEncontrados).sort());
-      }
-
       if (dados && dados.length > 0) {
         popularFiltroAnoNotasSemContrato(dados);
         popularFiltroMesNotasSemContrato(dados);
@@ -3007,6 +3244,30 @@
         console.error('ERRO: dados vazio ou undefined!');
       }
     };
+
+    const estadoRenderSecoes = {
+      versaoDados: 0,
+      secoes: {}
+    };
+
+    function invalidarRenderSecoes() {
+      estadoRenderSecoes.versaoDados += 1;
+      estadoRenderSecoes.secoes = {};
+    }
+
+    function secaoPrecisaRenderizar(nomeSecao) {
+      const versaoAtual = estadoRenderSecoes.versaoDados;
+      if (estadoRenderSecoes.secoes[nomeSecao] === versaoAtual) {
+        return false;
+      }
+
+      estadoRenderSecoes.secoes[nomeSecao] = versaoAtual;
+      return true;
+    }
+
+    function marcarSecaoRenderizada(nomeSecao) {
+      estadoRenderSecoes.secoes[nomeSecao] = estadoRenderSecoes.versaoDados;
+    }
 
     window.exibirNotasAndamento = function () {
       ativarBotao('btnNotasAndamento');
@@ -3037,43 +3298,45 @@
       document.getElementById('graficoRPVD').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
 
-      // Filtrar dados para usar apenas códigos permitidos (0040, 0041, 0042, 0045)
-      const dadosTodos = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
-      const dadosBase = filtrarDadosCodigosPadrao(dadosTodos);
+      if (secaoPrecisaRenderizar('notasAndamento')) {
+        // Filtrar dados para usar apenas códigos permitidos (0040, 0041, 0042, 0045)
+        const dadosTodos = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+        const dadosBase = filtrarDadosCodigosPadrao(dadosTodos);
 
-      // Popular filtros do gráfico FimPlanejado
-      if (typeof popularFiltroDescricoes === 'function') {
-        popularFiltroDescricoes(dadosBase);
-      }
-      if (typeof popularFiltroCodigoMedidasFimPlanejado === 'function') {
-        popularFiltroCodigoMedidasFimPlanejado(dadosBase);
-      }
-      if (typeof popularFiltroStatusFimPlanejado === 'function') {
-        popularFiltroStatusFimPlanejado(dadosBase);
-      }
-      // Gerar gráfico com dados atualizados
-      if (typeof gerarGrafico === 'function') {
-        gerarGrafico(dadosBase);
-      }
+        // Popular filtros do gráfico FimPlanejado
+        if (typeof popularFiltroDescricoes === 'function') {
+          popularFiltroDescricoes(dadosBase);
+        }
+        if (typeof popularFiltroCodigoMedidasFimPlanejado === 'function') {
+          popularFiltroCodigoMedidasFimPlanejado(dadosBase);
+        }
+        if (typeof popularFiltroStatusFimPlanejado === 'function') {
+          popularFiltroStatusFimPlanejado(dadosBase);
+        }
+        // Gerar gráfico com dados atualizados
+        if (typeof gerarGrafico === 'function') {
+          gerarGrafico(dadosBase);
+        }
 
-      // Regenerar gráficos de Carga e GD com dados filtrados
-      if (typeof popularFiltroCodigoMedidasSemGeracoes === 'function') {
-        popularFiltroCodigoMedidasSemGeracoes(dadosBase);
-      }
-      if (typeof popularFiltroCodigoMedidasMiniGeracao === 'function') {
-        popularFiltroCodigoMedidasMiniGeracao(dadosBase);
-      }
-      if (typeof gerarGraficoSemGeracoes === 'function') {
-        gerarGraficoSemGeracoes(dadosBase);
-      }
-      if (typeof gerarGraficoMiniGeracao === 'function') {
-        gerarGraficoMiniGeracao(dadosBase);
-      }
-      if (typeof gerarGraficoOutrosTipos === 'function') {
-        gerarGraficoOutrosTipos(dadosBase);
-      }
-      if (typeof gerarGraficoTextoMedidas === 'function') {
-        gerarGraficoTextoMedidas(dadosBase);
+        // Regenerar gráficos de Carga e GD com dados filtrados
+        if (typeof popularFiltroCodigoMedidasSemGeracoes === 'function') {
+          popularFiltroCodigoMedidasSemGeracoes(dadosBase);
+        }
+        if (typeof popularFiltroCodigoMedidasMiniGeracao === 'function') {
+          popularFiltroCodigoMedidasMiniGeracao(dadosBase);
+        }
+        if (typeof gerarGraficoSemGeracoes === 'function') {
+          gerarGraficoSemGeracoes(dadosBase);
+        }
+        if (typeof gerarGraficoMiniGeracao === 'function') {
+          gerarGraficoMiniGeracao(dadosBase);
+        }
+        if (typeof gerarGraficoOutrosTipos === 'function') {
+          gerarGraficoOutrosTipos(dadosBase);
+        }
+        if (typeof gerarGraficoTextoMedidas === 'function') {
+          gerarGraficoTextoMedidas(dadosBase);
+        }
       }
     };
 
@@ -3108,69 +3371,71 @@
       document.getElementById('graficoNotasConcluidasPorDiaUsuario').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
 
-      // Popular os meses e gerar o gráfico com a seleção automática - usando apenas códigos 0040-0045
-      const dadosTodos = typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais;
-      const dados = filtrarDadosCodigosPadrao(dadosTodos);
-      if (typeof popularFiltroMeses === 'function') {
-        popularFiltroMeses(dados);
-      }
+      if (secaoPrecisaRenderizar('notasConcluidas')) {
+        // Popular os meses e gerar o gráfico com a seleção automática - usando apenas códigos 0040-0045
+        const dadosTodos = typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais;
+        const dados = filtrarDadosCodigosPadrao(dadosTodos);
+        if (typeof popularFiltroMeses === 'function') {
+          popularFiltroMeses(dados);
+        }
 
-      // Popular e gerar gráfico RPVD
-      if (typeof popularFiltroMesRPVD === 'function') {
-        popularFiltroMesRPVD(dados);
-      }
-      if (typeof popularFiltroDescricoesRPVD === 'function') {
-        popularFiltroDescricoesRPVD(dados);
-      }
-      if (typeof popularFiltroAnoRPVD === 'function') {
-        popularFiltroAnoRPVD(dados);
-      }
+        // Popular e gerar gráfico RPVD
+        if (typeof popularFiltroMesRPVD === 'function') {
+          popularFiltroMesRPVD(dados);
+        }
+        if (typeof popularFiltroDescricoesRPVD === 'function') {
+          popularFiltroDescricoesRPVD(dados);
+        }
+        if (typeof popularFiltroAnoRPVD === 'function') {
+          popularFiltroAnoRPVD(dados);
+        }
 
-      // Inicializar com o mês e ano vigente
-      const dataAtual = new Date();
-      const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
-      const anoAtual = dataAtual.getFullYear();
-      const mesAnoAtual = mesAtual + '.' + anoAtual;
+        // Inicializar com o mês e ano vigente
+        const dataAtual = new Date();
+        const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+        const anoAtual = dataAtual.getFullYear();
+        const mesAnoAtual = mesAtual + '.' + anoAtual;
 
-      const filtroMesRPVD = document.getElementById('filtroMesRPVD');
-      const filtroAnoRPVD = document.getElementById('filtroAnoRPVD');
+        const filtroMesRPVD = document.getElementById('filtroMesRPVD');
+        const filtroAnoRPVD = document.getElementById('filtroAnoRPVD');
 
-      // Definir o mês vigente
-      if (filtroMesRPVD) {
-        // Verificar se a opção existe
-        let mesEncontrado = false;
-        for (let option of filtroMesRPVD.options) {
-          if (option.value === mesAnoAtual) {
-            filtroMesRPVD.value = mesAnoAtual;
-            mesEncontrado = true;
-            break;
+        // Definir o mês vigente
+        if (filtroMesRPVD) {
+          // Verificar se a opção existe
+          let mesEncontrado = false;
+          for (let option of filtroMesRPVD.options) {
+            if (option.value === mesAnoAtual) {
+              filtroMesRPVD.value = mesAnoAtual;
+              mesEncontrado = true;
+              break;
+            }
+          }
+          // Se o mês atual não existir, deixar em "Todos"
+          if (!mesEncontrado) {
+            filtroMesRPVD.value = 'todos';
           }
         }
-        // Se o mês atual não existir, deixar em "Todos"
-        if (!mesEncontrado) {
-          filtroMesRPVD.value = 'todos';
-        }
-      }
 
-      // Definir o ano vigente
-      if (filtroAnoRPVD) {
-        // Verificar se a opção existe
-        let anoEncontrado = false;
-        for (let option of filtroAnoRPVD.options) {
-          if (option.value == anoAtual) {
-            filtroAnoRPVD.value = anoAtual;
-            anoEncontrado = true;
-            break;
+        // Definir o ano vigente
+        if (filtroAnoRPVD) {
+          // Verificar se a opção existe
+          let anoEncontrado = false;
+          for (let option of filtroAnoRPVD.options) {
+            if (option.value == anoAtual) {
+              filtroAnoRPVD.value = anoAtual;
+              anoEncontrado = true;
+              break;
+            }
+          }
+          // Se o ano atual não existir, deixar em "Todos"
+          if (!anoEncontrado) {
+            filtroAnoRPVD.value = 'todos';
           }
         }
-        // Se o ano atual não existir, deixar em "Todos"
-        if (!anoEncontrado) {
-          filtroAnoRPVD.value = 'todos';
-        }
-      }
 
-      if (typeof gerarGraficoRPVD === 'function') {
-        gerarGraficoRPVD(dados);
+        if (typeof gerarGraficoRPVD === 'function') {
+          gerarGraficoRPVD(dados);
+        }
       }
     };
 
@@ -3205,24 +3470,26 @@
       document.getElementById('graficoRPVD').style.display = 'none';
       document.getElementById('secaoDadosCadastrados').style.display = 'none';
 
-      // Popular os filtros de ano e gerar os gráficos
-      const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0
-        ? dadosGlobaisCompletos
-        : dadosGlobais;
+      if (secaoPrecisaRenderizar('prazosAnalise')) {
+        // Popular os filtros de ano e gerar os gráficos
+        const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0
+          ? dadosGlobaisCompletos
+          : dadosGlobais;
 
-      if (dados && dados.length > 0) {
-        popularFiltroAnoPrazoMedio(dados);
-        gerarGraficoPrazoMedio(dados);
-        popularFiltroAnoPrazoIntervalos(dados);
-        popularFiltroMesPrazoIntervalos(dados);
-        popularFiltroDescricoesPrazoIntervalos(dados);
-        gerarGraficoPrazoIntervalos(dados);
+        if (dados && dados.length > 0) {
+          popularFiltroAnoPrazoMedio(dados);
+          gerarGraficoPrazoMedio(dados);
+          popularFiltroAnoPrazoIntervalos(dados);
+          popularFiltroMesPrazoIntervalos(dados);
+          popularFiltroDescricoesPrazoIntervalos(dados);
+          gerarGraficoPrazoIntervalos(dados);
 
-        popularFiltroAnoPrazoMedioExceto(dados);
-        gerarGraficoPrazoMedioExceto(dados);
+          popularFiltroAnoPrazoMedioExceto(dados);
+          gerarGraficoPrazoMedioExceto(dados);
 
-        popularFiltroAnoPrazoMedioMiniMicro(dados);
-        gerarGraficoPrazoMedioMiniMicro(dados);
+          popularFiltroAnoPrazoMedioMiniMicro(dados);
+          gerarGraficoPrazoMedioMiniMicro(dados);
+        }
       }
     };
 
@@ -3343,13 +3610,22 @@
           html += `<option value="CONC RTEC">CONC RTEC</option>`;
           html += `<option value="CANC">CANC</option>`;
           html += `</select>`;
-          html += `<button onclick="atualizarStatusNota('${nota.id}', ${index})" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
+          html += `<button type="button" class="btn-salvar-status-nota" data-nota-id="${nota.id}" data-row-index="${index}" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
           html += `</td>`;
           html += '</tr>';
         });
 
         html += '</tbody></table>';
         conteudo.innerHTML = html;
+        conteudo.querySelectorAll('.btn-salvar-status-nota').forEach((botao) => {
+          botao.addEventListener('click', function () {
+            const notaId = this.dataset.notaId;
+            const rowIndex = Number.parseInt(this.dataset.rowIndex, 10);
+            if (notaId && Number.isInteger(rowIndex)) {
+              window.atualizarStatusNota(notaId, rowIndex);
+            }
+          });
+        });
       }
 
       modal.style.display = 'block';
@@ -3405,13 +3681,22 @@
           html += `<option value="CONC RTEC">CONC RTEC</option>`;
           html += `<option value="CANC">CANC</option>`;
           html += `</select>`;
-          html += `<button onclick="atualizarStatusNota('${nota.id}', ${index})" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
+          html += `<button type="button" class="btn-salvar-status-nota" data-nota-id="${nota.id}" data-row-index="${index}" style="padding: 6px 12px; margin-top: 4px; background: #2e7d32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 100%;">Salvar</button>`;
           html += `</td>`;
           html += '</tr>';
         });
 
         html += '</tbody></table>';
         conteudo.innerHTML = html;
+        conteudo.querySelectorAll('.btn-salvar-status-nota').forEach((botao) => {
+          botao.addEventListener('click', function () {
+            const notaId = this.dataset.notaId;
+            const rowIndex = Number.parseInt(this.dataset.rowIndex, 10);
+            if (notaId && Number.isInteger(rowIndex)) {
+              window.atualizarStatusNota(notaId, rowIndex);
+            }
+          });
+        });
       }
 
       modal.style.display = 'block';
@@ -3616,6 +3901,7 @@
         // Armazenar dados globalmente
         dadosGlobais = todosOsDados;
         dadosGlobaisCompletos = todosOsDados;
+        invalidarRenderSecoes();
 
         const dadosCodigosPadrao = filtrarDadosCodigosPadrao(todosOsDados);
 
@@ -3688,6 +3974,11 @@
         popularFiltroAnoConcluidasPorTipoDemais(dadosCodigosPadrao);
         gerarGraficoConcluidasPorTipoDemais(dadosCodigosPadrao);
 
+        // Seções já processadas no carregamento inicial
+        marcarSecaoRenderizada('notasAndamento');
+        marcarSecaoRenderizada('prazosAnalise');
+        marcarSecaoRenderizada('produtividade');
+
         // Ocultar barra de carregamento quando tudo estiver carregado
         hideLoadingBar();
       } catch (error) {
@@ -3755,6 +4046,21 @@
         return fimB.localeCompare(fimA); // maior data (mais recente) primeiro
       });
 
+      if (!tbody.dataset.excluirHandlerBound) {
+        tbody.addEventListener('click', function (event) {
+          const botaoExcluir = event.target.closest('.btn-excluir-registro');
+          if (!botaoExcluir || !tbody.contains(botaoExcluir)) {
+            return;
+          }
+
+          const id = Number.parseInt(botaoExcluir.dataset.id, 10);
+          if (Number.isInteger(id)) {
+            window.excluirRegistro(id);
+          }
+        });
+        tbody.dataset.excluirHandlerBound = 'true';
+      }
+
       tbody.innerHTML = dadosOrdenados.map(item => `
         <tr id="row_${item.id}" style="border-bottom: 1px solid #eee;">
           <td style="padding: 12px;">${item.nota || ''}</td>
@@ -3770,7 +4076,7 @@
           <td style="padding: 12px;">${item.concluida_em || ''}</td>
           <td style="padding: 12px;">${item.modificado_por || ''}</td>
           <td style="padding: 12px; text-align: center;">
-            <button onclick="excluirRegistro(${item.id})" 
+            <button type="button" class="btn-excluir-registro" data-id="${item.id}"
               style="background: #dc3545; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;">
               🗑️ Excluir
             </button>
@@ -3898,14 +4204,15 @@
 
         dadosGlobaisCompletos = todosOsDadosCompletos.length > 0 ? todosOsDadosCompletos : dadosFiltrados;
 
-        gerarGrafico(dadosGlobaisCompletos);
+        const dadosFimPlanejado = filtrarDadosCodigosPadrao(dadosGlobaisCompletos);
+        gerarGrafico(dadosFimPlanejado);
 
         // Popular filtro de descrições e de meses
-        popularFiltroDescricoes(dadosGlobaisCompletos);
-        popularFiltroMesesFimPlanejado(dadosFiltrados);
+        popularFiltroDescricoes(dadosFimPlanejado);
+        popularFiltroMesesFimPlanejado(dadosFimPlanejado);
         popularFiltroMeses(dadosFiltrados);
         popularFiltroCodigoMedidas(dadosGlobaisCompletos);
-        popularFiltroStatusFimPlanejado(dadosGlobaisCompletos);
+        popularFiltroStatusFimPlanejado(dadosFimPlanejado);
 
         gerarGraficoPrazoMedio(dadosFiltrados);
         gerarGraficoPrazoIntervalos(dadosFiltrados);
@@ -4468,7 +4775,6 @@
         : dadosGlobais;
 
       if (!dados || dados.length === 0) {
-        console.warn('Nenhum dado disponível para diagnóstico.');
         return [];
       }
 
@@ -4493,13 +4799,6 @@
       const intervalo1Max = parseInt(document.getElementById('intervalo1Max')?.value) || 15;
       const intervalo2Max = parseInt(document.getElementById('intervalo2Max')?.value) || 20;
       const intervalo3Max = parseInt(document.getElementById('intervalo3Max')?.value) || 35;
-
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
 
       const temAnexo = (texto) => {
         const t = (texto || '').toUpperCase();
@@ -4601,10 +4900,6 @@
       const notasConcluidasSet = new Set(notasConcluidasMes.map(item => String(item.id ?? item.nota ?? `${item.nota}-${item.concluida_em}-${item.inicio_planejado}`)));
       const faltantes = detalhesExclusao.filter(item => notasConcluidasSet.has(item.key) && !notasIntervalos.has(item.key));
 
-      console.table(faltantes);
-      console.log('Total no gráfico Notas Concluídas por Mês:', notasConcluidasMes.length);
-      console.log('Total no gráfico Intervalos:', notasIntervalos.size);
-      console.log('Diferença:', notasConcluidasMes.length - notasIntervalos.size);
       return faltantes;
     };
 
@@ -6696,10 +6991,17 @@
       modal.innerHTML = '<div style="background: white; border-radius: 10px; padding: 24px; max-width: 90vw; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">' +
         '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">' +
         '<h2 style="color: #2e7d32; margin: 0;">' + titulo + ' (' + notas.length + ' notas)</h2>' +
-        '<button onclick="document.getElementById(\'modalNotasRPVD\').style.display = \'none\';" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">Fechar</button>' +
+        '<button id="btnFecharModalNotasRPVD" style="background: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">Fechar</button>' +
         '</div>' +
         tabelaHTML +
         '</div>';
+
+      const btnFecharModalRPVD = modal.querySelector('#btnFecharModalNotasRPVD');
+      if (btnFecharModalRPVD) {
+        btnFecharModalRPVD.addEventListener('click', function () {
+          modal.style.display = 'none';
+        });
+      }
 
       modal.style.display = 'flex';
     };
@@ -7304,8 +7606,6 @@
       // Baixar arquivo
       const nomeArquivo = `notas_sem_contrato_0555_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, nomeArquivo);
-
-      console.log(`✅ Exportados ${dadosFiltrados.length} registros para Excel`);
     };
 
     window.exportarNotasSemDataNotasSemContratoExcel = function () {
@@ -7389,8 +7689,6 @@
       // Baixar arquivo
       const nomeArquivo = `notas_0555_sem_data_conclusao_${new Date().toISOString().slice(0, 10)}.xlsx`;
       XLSX.writeFile(wb, nomeArquivo);
-
-      console.log(`✅ Exportados ${dadosFiltrados.length} registros para Excel`);
     };
 
     window.exportarNotasFimPlanejadoExcel = function () {
@@ -7590,7 +7888,15 @@
     };
     // Função para gerar gráfico de barras
     window.gerarGrafico = function (dados, mesFiltro = null) {
-      if (!dados || dados.length === 0) {
+      const dadosPermitidos = filtrarDadosCodigosPadrao(dados || []);
+      if (!dadosPermitidos || dadosPermitidos.length === 0) {
+        document.getElementById('totalGeralNotas').textContent = 0;
+        document.getElementById('totalANDM').textContent = 0;
+        document.getElementById('totalABER').textContent = 0;
+        if (chartInstance) {
+          chartInstance.destroy();
+          chartInstance = null;
+        }
         return;
       }
 
@@ -7636,33 +7942,23 @@
 
       // Debug: verificar quantos registros de cada status existem
       const contagemStatus = {};
-      dados.forEach(item => {
+      dadosPermitidos.forEach(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBase(status);
         contagemStatus[statusBase] = (contagemStatus[statusBase] || 0) + 1;
       });
-      console.log('Contagem por status no total de dados:', contagemStatus);
-      console.log('Status ABER marcado?', statusChecados.has('ABER'));
-      console.log('Status ANDM marcado?', statusChecados.has('ANDM'));
-      console.log('Nenhum status marcado?', nenhumStatusMarcado);
-      console.log('Todos status marcados?', todosStatusMarcados);
 
       // Filtrar por status selecionado e aplicar filtros de descrição/código
       let rejeitadosPorStatus = 0;
       let rejeitadosPorDescricao = 0;
       let rejeitadosPorCodigo = 0;
 
-      const dadosFiltrados = dados.filter(item => {
+      const dadosFiltrados = dadosPermitidos.filter(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBase(status);
         const descricao = (item.descricao || '').trim();
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
-
-        // Excluir código medidas 0034 deste gráfico
-        if (codigoMedidas === '0034') {
-          return false;
-        }
 
         let mesOk = true;
         if (mesSelecionado && mesSelecionado !== 'todos') {
@@ -7689,17 +7985,6 @@
 
         return statusOk && descricaoOk && codigoOk && mesOk;
       });
-
-      console.log('===== ANÁLISE DE FILTROS =====');
-      console.log('Total de dados recebidos:', dados.length);
-      console.log('Total de dados filtrados:', dadosFiltrados.length);
-      console.log('Rejeitados por Status:', rejeitadosPorStatus);
-      console.log('Rejeitados por Descrição:', rejeitadosPorDescricao);
-      console.log('Rejeitados por Código Medidas:', rejeitadosPorCodigo);
-      console.log('Descrições marcadas:', descricoesChecadas.size, 'Todas marcadas?', todasDescricoesMarcadas);
-      console.log('Códigos marcados:', codigosChecados.size, 'Todos marcados?', todosCodigosMarcados);
-      console.log('Primeiras 5 datas fim_planejado:', dadosFiltrados.slice(0, 5).map(d => d.fim_planejado));
-      console.log('Últimas 5 datas fim_planejado:', dadosFiltrados.slice(-5).map(d => d.fim_planejado));
 
       // Agrupar dados por fim_planejado e status
       const agrupamentoPorData = {};
@@ -7741,9 +8026,6 @@
         if (b === 'Sem data') return -1;
         return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
       });
-
-      console.log('Total de labels (datas únicas):', labels.length);
-      console.log('Todas as labels:', labels);
 
       // Preparar dados para cada status selecionado
       const statusOrdenados = Array.from(statusPresentes).sort();
@@ -7909,19 +8191,12 @@
     // Função para gerar gráfico de Medidas 0034
     window.gerarGraficoMedidas0034 = function (dados, mesFiltro = null) {
       if (!dados || dados.length === 0) {
-        console.log('Medidas 0034: Nenhum dado recebido');
         return;
       }
-
-      console.log('===== MEDIDAS 0034 - INÍCIO =====');
-      console.log('Total de dados recebidos:', dados.length);
-      console.log('Filtro de mês:', mesFiltro);
 
       // Verificar quantos registros têm 0034 na descrição ou no código
       const com0034Descricao = dados.filter(item => (item.descricao || '').trim().includes('0034'));
       const com0034Codigo = dados.filter(item => (item.codigo_medidas || '').trim() === '0034');
-      console.log('Registros com 0034 na descrição:', com0034Descricao.length);
-      console.log('Registros com codigo_medidas = 0034:', com0034Codigo.length);
 
       // Verificar status dos registros com 0034
       const statusCount = {};
@@ -7929,7 +8204,6 @@
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         statusCount[status] = (statusCount[status] || 0) + 1;
       });
-      console.log('Status dos registros com 0034:', statusCount);
 
       // Obter descrições selecionadas nos checkboxes
       const checkboxesDescricao = document.querySelectorAll('#containerCheckboxesDescricoesMedidas0034 input[type="checkbox"]');
@@ -7974,15 +8248,6 @@
         return true;
       });
 
-      console.log('Total de dados filtrados (0034 + ABER/ANDM):', dadosFiltrados.length);
-      console.log('Primeiros 3 registros filtrados:', dadosFiltrados.slice(0, 3).map(d => ({
-        nota: d.nota,
-        descricao: d.descricao,
-        status: d.status_usuario || d.status,
-        fim_planejado: d.fim_planejado
-      })));
-
-
       // Agrupar dados por fim_planejado e status
       const agrupamentoPorData = {};
       const totaisPorStatus = {
@@ -8014,19 +8279,12 @@
       document.getElementById('totalANDMMedidas0034').textContent = totaisPorStatus['ANDM'];
       document.getElementById('totalABERMedidas0034').textContent = totaisPorStatus['ABER'];
 
-      console.log('Totais por status - ANDM:', totaisPorStatus['ANDM'], 'ABER:', totaisPorStatus['ABER']);
-      console.log('Datas únicas encontradas:', Object.keys(agrupamentoPorData).length);
-      console.log('Agrupamento por data:', agrupamentoPorData);
-
       // Converter para arrays e ordenar por data
       const labels = Object.keys(agrupamentoPorData).sort((a, b) => {
         if (a === 'Sem data') return 1;
         if (b === 'Sem data') return -1;
         return new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'));
       });
-
-      console.log('Labels ordenadas (datas):', labels);
-      console.log('Total de labels:', labels.length);
 
       // Preparar datasets para ABER e ANDM
       const datasets = [
@@ -8080,10 +8338,6 @@
       if (chartMedidas0034Instance) {
         chartMedidas0034Instance.destroy();
       }
-
-      console.log('Criando gráfico com', labels.length, 'labels');
-      console.log('Dataset ANDM:', datasets[0].data);
-      console.log('Dataset ABER:', datasets[1].data);
 
       // Criar novo gráfico
       const ctx = document.getElementById('chartMedidas0034').getContext('2d');
@@ -8495,8 +8749,6 @@
         option.textContent = `${mes}/${ano}`;
         selectMes.appendChild(option);
       });
-
-      console.log('Filtro de meses Medidas 0034 populado com', mesesOrdenados.length, 'meses');
     }
 
     // Função para popular filtro de meses do gráfico Medidas 0034 (Cópia)
@@ -8606,14 +8858,6 @@
         return;
       }
 
-      // Função para converter data DD.MM.YYYY para objeto Date
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
-
       // Calcular diferenças e agrupar por mês/ano
       const prazosPorMes = {};
       let somaTotalDias = 0;
@@ -8695,7 +8939,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
 
-              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+              const notasFiltradas = notasConcluidas.filter(item => {
                 const concluidaEm = item.concluida_em || '';
                 if (!concluidaEm && dataLabel === 'Sem data') return true;
                 const partes = concluidaEm.split('.');
@@ -9117,13 +9361,6 @@
         }
       });
 
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
-
       const contagens = [0, 0, 0];
       let totalConsideradas = 0;
 
@@ -9407,12 +9644,6 @@
       const intervalo1Max = parseInt(document.getElementById('intervalo1MaxNotas0034MiniGeracao')?.value) || 15;
       const intervalo2Max = parseInt(document.getElementById('intervalo2MaxNotas0034MiniGeracao')?.value) || 20;
       const intervalo3Max = parseInt(document.getElementById('intervalo3MaxNotas0034MiniGeracao')?.value) || 35;
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
       // Obter ano selecionado
       const selectAno = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
       const anoSelecionado = selectAno ? selectAno.value : 'todos';
@@ -9564,47 +9795,97 @@
       });
     };
 
-    // Função para gerar gráfico de Prazo Médio Mensal
-    window.gerarGraficoPrazoMedio = function (dados) {
-      if (!dados || dados.length === 0) {
-        return;
-      }
+    function deveExcluirIntervaloPrazoMedio(diferencaDias) {
+      return diferencaDias === 1;
+    }
 
-      // Obter ano selecionado no dropdown
-      const filtroAnoPrazoMedioElement = document.getElementById('filtroAnoPrazoMedio');
-      const anoSelecionado = filtroAnoPrazoMedioElement ? filtroAnoPrazoMedioElement.value : 'todos';
+    function parseDataDDMMYYYY(dataStr) {
+      if (!dataStr) return null;
+      const partes = dataStr.split('.');
+      if (partes.length !== 3) return null;
+      return new Date(partes[2], partes[1] - 1, partes[0]);
+    }
 
-      // Obter descrições selecionadas nos checkboxes
-      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazo input[type="checkbox"]');
-      const descricoesChecadas = new Set();
+    function calcularResumoPrazoMedio(notasConcluidas) {
+      const prazosPorMes = {};
+      let somaTotalDias = 0;
+      let totalNotasValidas = 0;
+
+      notasConcluidas.forEach(item => {
+        const inicioPlanejado = parseDataDDMMYYYY(item.inicio_planejado);
+        const concluida = parseDataDDMMYYYY(item.concluida_em);
+
+        if (inicioPlanejado && concluida) {
+          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
+
+          if (deveExcluirIntervaloPrazoMedio(diferencaDias)) {
+            return;
+          }
+
+          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
+
+          if (!prazosPorMes[mesAno]) {
+            prazosPorMes[mesAno] = { soma: 0, count: 0 };
+          }
+
+          prazosPorMes[mesAno].soma += diferencaDias;
+          prazosPorMes[mesAno].count++;
+          somaTotalDias += diferencaDias;
+          totalNotasValidas++;
+        }
+      });
+
+      const labels = Object.keys(prazosPorMes).sort((a, b) => {
+        const [mesA, anoA] = a.split('.').map(Number);
+        const [mesB, anoB] = b.split('.').map(Number);
+        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
+      });
+
+      const medias = labels.map(mes => {
+        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
+        return Math.round(media * 10) / 10;
+      });
+
+      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
+
+      return { prazosPorMes, labels, medias, totalNotasValidas, prazoMedioGeral };
+    }
+
+    function obterValoresSelecionadosCheckboxes(containerId) {
+      const checkboxes = document.querySelectorAll(`#${containerId} input[type="checkbox"]`);
+      const selecionados = new Set();
       checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
-          descricoesChecadas.add(checkbox.value);
+          selecionados.add(checkbox.value);
         }
       });
+      return selecionados;
+    }
 
-      // Obter códigos medidas selecionados nos checkboxes
-      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazo input[type="checkbox"]');
-      const codigosChecados = new Set();
-      checkboxesCodigo.forEach(checkbox => {
-        if (checkbox.checked) {
-          codigosChecados.add(checkbox.value);
-        }
-      });
+    function filtrarNotasConcluidasPrazo(dados, config) {
+      const {
+        filtroAnoId,
+        containerDescricoesId,
+        containerCodigosId,
+        modoDescricao
+      } = config;
 
-      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) com datas válidas e descrição selecionada
-      const notasConcluidas = dados.filter(item => {
+      const selectAno = document.getElementById(filtroAnoId);
+      const anoSelecionado = selectAno ? selectAno.value : 'todos';
+      const descricoesChecadas = obterValoresSelecionadosCheckboxes(containerDescricoesId);
+      const codigosChecados = obterValoresSelecionadosCheckboxes(containerCodigosId);
+
+      return dados.filter(item => {
         const status = item.status_usuario || '';
         const descricao = item.descricao || '';
+        const descricaoLower = descricao.toLowerCase();
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
         const concluidaEm = (item.concluida_em || '').trim();
 
-        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         if (!codigosPermitidos.includes(codigoMedidas)) return false;
 
-        // Aplicar filtro de ano
         let anoOk = true;
         if (anoSelecionado !== 'todos' && concluidaEm) {
           const partes = concluidaEm.split('.');
@@ -9613,7 +9894,6 @@
           }
         }
 
-        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
         const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
           textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
           textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
@@ -9621,9 +9901,34 @@
         const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
           item.inicio_planejado &&
           item.concluida_em;
+
+        const ehMiniMicro = descricaoLower.includes('mini geração') ||
+          descricaoLower.includes('micro geração');
+
+        const descricaoTipoOk = modoDescricao === 'somenteMiniMicro'
+          ? ehMiniMicro
+          : modoDescricao === 'excetoMiniMicro'
+            ? !ehMiniMicro
+            : true;
+
         const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && descricaoOk && codigoOk && anoOk && temAnexo;
+
+        return statusOk && descricaoTipoOk && descricaoOk && codigoOk && anoOk && temAnexo;
+      });
+    }
+
+    // Função para gerar gráfico de Prazo Médio Mensal
+    window.gerarGraficoPrazoMedio = function (dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      const notasConcluidas = filtrarNotasConcluidasPrazo(dados, {
+        filtroAnoId: 'filtroAnoPrazoMedio',
+        containerDescricoesId: 'containerCheckboxesDescricoesPrazo',
+        containerCodigosId: 'containerCheckboxesCodigoMedidasPrazo',
+        modoDescricao: 'todas'
       });
 
       if (notasConcluidas.length === 0) {
@@ -9636,72 +9941,15 @@
         return;
       }
 
-      // Função para converter data DD.MM.YYYY para objeto Date
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        // Date(ano, mês-1, dia)
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
+      const { prazosPorMes, labels, medias, totalNotasValidas, prazoMedioGeral } = calcularResumoPrazoMedio(notasConcluidas);
 
-      // Calcular diferenças e agrupar por mês/ano
-      const prazosPorMes = {};
-      let somaTotalDias = 0;
-      let totalNotasValidas = 0;
-
-      notasConcluidas.forEach(item => {
-        const inicioPlanejado = parseData(item.inicio_planejado);
-        const concluida = parseData(item.concluida_em);
-
-        if (inicioPlanejado && concluida) {
-          // Calcular diferença em dias (data de conclusão - início planejado)
-          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
-
-          // Regra: excluir notas com intervalo de conclusão exatamente 1 dia
-          if (diferencaDias === 1) {
-            return;
-          }
-
-          // Agrupar por mês/ano (baseado na data de conclusão)
-          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-
-          if (!prazosPorMes[mesAno]) {
-            prazosPorMes[mesAno] = { soma: 0, count: 0 };
-          }
-
-          prazosPorMes[mesAno].soma += diferencaDias;
-          prazosPorMes[mesAno].count++;
-
-          somaTotalDias += diferencaDias;
-          totalNotasValidas++;
-        }
-      });
-
-      // Calcular médias mensais
-      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
-        const [mesA, anoA] = a.split('.').map(Number);
-        const [mesB, anoB] = b.split('.').map(Number);
-        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
-      });
-
-      const labels = mesesOrdenados;
-      const medias = mesesOrdenados.map(mes => {
-        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
-        return Math.round(media * 10) / 10; // Arredondar para 1 casa decimal
-      });
-
-      // Atualizar contadores
-      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
       document.getElementById('totalNotasAnalisadas').textContent = totalNotasValidas;
       document.getElementById('prazoMedioGeral').textContent = prazoMedioGeral;
 
-      // Destruir gráfico anterior se existir
       if (chartPrazoMedioInstance) {
         chartPrazoMedioInstance.destroy();
       }
 
-      // Criar novo gráfico
       const ctx = document.getElementById('chartPrazoMedio').getContext('2d');
       chartPrazoMedioInstance = new Chart(ctx, {
         type: 'line',
@@ -9749,7 +9997,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
 
-              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+              const notasFiltradas = notasConcluidas.filter(item => {
                 const concluidaEm = item.concluida_em || '';
                 if (!concluidaEm && dataLabel === 'Sem data') return true;
                 const partes = concluidaEm.split('.');
@@ -9861,63 +10109,11 @@
         return;
       }
 
-      // Obter ano selecionado no filtro
-      const selectAno = document.getElementById('filtroAnoPrazoMedioExceto');
-      const anoSelecionado = selectAno ? selectAno.value : 'todos';
-
-      // Obter descrições selecionadas nos checkboxes
-      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoExceto input[type="checkbox"]');
-      const descricoesChecadas = new Set();
-      checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-          descricoesChecadas.add(checkbox.value);
-        }
-      });
-
-      // Obter códigos medidas selecionados nos checkboxes
-      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazoExceto input[type="checkbox"]');
-      const codigosChecados = new Set();
-      checkboxesCodigo.forEach(checkbox => {
-        if (checkbox.checked) {
-          codigosChecados.add(checkbox.value);
-        }
-      });
-
-      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) que NÃO sejam mini/micro geração
-      const notasConcluidas = dados.filter(item => {
-        const status = item.status_usuario || '';
-        const descricao = item.descricao || '';
-        const codigoMedidas = (item.codigo_medidas || '').trim();
-        const textoMedidas = (item.texto_medidas || '').toUpperCase();
-        const concluidaEm = (item.concluida_em || '').trim();
-
-        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
-        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
-        if (!codigosPermitidos.includes(codigoMedidas)) return false;
-
-        // Aplicar filtro de ano
-        let anoOk = true;
-        if (anoSelecionado !== 'todos' && concluidaEm) {
-          const partes = concluidaEm.split('.');
-          if (partes.length >= 3) {
-            anoOk = partes[2] === anoSelecionado;
-          }
-        }
-
-        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
-        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
-          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
-          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
-
-        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
-          item.inicio_planejado &&
-          item.concluida_em;
-        // Excluir mini e micro geração
-        const naoEMiniMicro = !descricao.toLowerCase().includes('mini geração') &&
-          !descricao.toLowerCase().includes('micro geração');
-        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
-        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && naoEMiniMicro && descricaoOk && codigoOk && anoOk && temAnexo;
+      const notasConcluidas = filtrarNotasConcluidasPrazo(dados, {
+        filtroAnoId: 'filtroAnoPrazoMedioExceto',
+        containerDescricoesId: 'containerCheckboxesDescricoesPrazoExceto',
+        containerCodigosId: 'containerCheckboxesCodigoMedidasPrazoExceto',
+        modoDescricao: 'excetoMiniMicro'
       });
 
       if (notasConcluidas.length === 0) {
@@ -9930,58 +10126,8 @@
         return;
       }
 
-      // Função para converter data DD.MM.YYYY para objeto Date
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
+      const { prazosPorMes, labels, medias, totalNotasValidas, prazoMedioGeral } = calcularResumoPrazoMedio(notasConcluidas);
 
-      // Calcular diferenças e agrupar por mês/ano
-      const prazosPorMes = {};
-      let somaTotalDias = 0;
-      let totalNotasValidas = 0;
-
-      notasConcluidas.forEach(item => {
-        const inicioPlanejado = parseData(item.inicio_planejado);
-        const concluida = parseData(item.concluida_em);
-
-        if (inicioPlanejado && concluida) {
-          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
-
-          // Regra: excluir notas com intervalo de conclusão exatamente 1 dia
-          if (diferencaDias === 1) {
-            return;
-          }
-
-          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-
-          if (!prazosPorMes[mesAno]) {
-            prazosPorMes[mesAno] = { soma: 0, count: 0 };
-          }
-
-          prazosPorMes[mesAno].soma += diferencaDias;
-          prazosPorMes[mesAno].count++;
-
-          somaTotalDias += diferencaDias;
-          totalNotasValidas++;
-        }
-      });
-
-      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
-        const [mesA, anoA] = a.split('.').map(Number);
-        const [mesB, anoB] = b.split('.').map(Number);
-        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
-      });
-
-      const labels = mesesOrdenados;
-      const medias = mesesOrdenados.map(mes => {
-        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
-        return Math.round(media * 10) / 10;
-      });
-
-      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
       document.getElementById('totalNotasAnalisadasExceto').textContent = totalNotasValidas;
       document.getElementById('prazoMedioGeralExceto').textContent = prazoMedioGeral;
 
@@ -10036,7 +10182,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
 
-              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+              const notasFiltradas = notasConcluidas.filter(item => {
                 const concluidaEm = item.concluida_em || '';
                 if (!concluidaEm && dataLabel === 'Sem data') return true;
                 const partes = concluidaEm.split('.');
@@ -10148,63 +10294,11 @@
         return;
       }
 
-      // Obter ano selecionado no filtro
-      const selectAno = document.getElementById('filtroAnoPrazoMedioMiniMicro');
-      const anoSelecionado = selectAno ? selectAno.value : 'todos';
-
-      // Obter descrições selecionadas nos checkboxes
-      const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoesPrazoMiniMicro input[type="checkbox"]');
-      const descricoesChecadas = new Set();
-      checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-          descricoesChecadas.add(checkbox.value);
-        }
-      });
-
-      // Obter códigos medidas selecionados nos checkboxes
-      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasPrazoMiniMicro input[type="checkbox"]');
-      const codigosChecados = new Set();
-      checkboxesCodigo.forEach(checkbox => {
-        if (checkbox.checked) {
-          codigosChecados.add(checkbox.value);
-        }
-      });
-
-      // Filtrar apenas notas concluídas (CONC CTEC ou CONC RTEC) que SEJAM mini/micro geração
-      const notasConcluidas = dados.filter(item => {
-        const status = item.status_usuario || '';
-        const descricao = item.descricao || '';
-        const codigoMedidas = (item.codigo_medidas || '').trim();
-        const textoMedidas = (item.texto_medidas || '').toUpperCase();
-        const concluidaEm = (item.concluida_em || '').trim();
-
-        // Verificar códigos permitidos (0040, 0041, 0042, 0045)
-        const codigosPermitidos = ['0040', '0041', '0042', '0045'];
-        if (!codigosPermitidos.includes(codigoMedidas)) return false;
-
-        // Aplicar filtro de ano
-        let anoOk = true;
-        if (anoSelecionado !== 'todos' && concluidaEm) {
-          const partes = concluidaEm.split('.');
-          if (partes.length >= 3) {
-            anoOk = partes[2] === anoSelecionado;
-          }
-        }
-
-        // Verificar se o texto de medidas contém "SEM ANEXO" ou variações
-        const temAnexo = !(textoMedidas.includes('SEM ANEXO') || textoMedidas.includes('SEM APÊNDICE') ||
-          textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
-          textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
-
-        const statusOk = (status === 'CONC CTEC' || status === 'CONC RTEC') &&
-          item.inicio_planejado &&
-          item.concluida_em;
-        // Incluir apenas mini e micro geração
-        const ehMiniMicro = descricao.toLowerCase().includes('mini geração') ||
-          descricao.toLowerCase().includes('micro geração');
-        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
-        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
-        return statusOk && ehMiniMicro && descricaoOk && codigoOk && anoOk && temAnexo;
+      const notasConcluidas = filtrarNotasConcluidasPrazo(dados, {
+        filtroAnoId: 'filtroAnoPrazoMedioMiniMicro',
+        containerDescricoesId: 'containerCheckboxesDescricoesPrazoMiniMicro',
+        containerCodigosId: 'containerCheckboxesCodigoMedidasPrazoMiniMicro',
+        modoDescricao: 'somenteMiniMicro'
       });
 
       if (notasConcluidas.length === 0) {
@@ -10217,58 +10311,8 @@
         return;
       }
 
-      // Função para converter data DD.MM.YYYY para objeto Date
-      function parseData(dataStr) {
-        if (!dataStr) return null;
-        const partes = dataStr.split('.');
-        if (partes.length !== 3) return null;
-        return new Date(partes[2], partes[1] - 1, partes[0]);
-      }
+      const { prazosPorMes, labels, medias, totalNotasValidas, prazoMedioGeral } = calcularResumoPrazoMedio(notasConcluidas);
 
-      // Calcular diferenças e agrupar por mês/ano
-      const prazosPorMes = {};
-      let somaTotalDias = 0;
-      let totalNotasValidas = 0;
-
-      notasConcluidas.forEach(item => {
-        const inicioPlanejado = parseData(item.inicio_planejado);
-        const concluida = parseData(item.concluida_em);
-
-        if (inicioPlanejado && concluida) {
-          const diferencaDias = Math.round((concluida - inicioPlanejado) / (1000 * 60 * 60 * 24));
-
-          // Regra: excluir notas com intervalo de conclusão exatamente 1 dia
-          if (diferencaDias === 1) {
-            return;
-          }
-
-          const mesAno = `${String(concluida.getMonth() + 1).padStart(2, '0')}.${concluida.getFullYear()}`;
-
-          if (!prazosPorMes[mesAno]) {
-            prazosPorMes[mesAno] = { soma: 0, count: 0 };
-          }
-
-          prazosPorMes[mesAno].soma += diferencaDias;
-          prazosPorMes[mesAno].count++;
-
-          somaTotalDias += diferencaDias;
-          totalNotasValidas++;
-        }
-      });
-
-      const mesesOrdenados = Object.keys(prazosPorMes).sort((a, b) => {
-        const [mesA, anoA] = a.split('.').map(Number);
-        const [mesB, anoB] = b.split('.').map(Number);
-        return (anoA * 12 + mesA) - (anoB * 12 + mesB);
-      });
-
-      const labels = mesesOrdenados;
-      const medias = mesesOrdenados.map(mes => {
-        const media = prazosPorMes[mes].soma / prazosPorMes[mes].count;
-        return Math.round(media * 10) / 10;
-      });
-
-      const prazoMedioGeral = totalNotasValidas > 0 ? Math.round((somaTotalDias / totalNotasValidas) * 10) / 10 : 0;
       document.getElementById('totalNotasAnalisadasMiniMicro').textContent = totalNotasValidas;
       document.getElementById('prazoMedioGeralMiniMicro').textContent = prazoMedioGeral;
 
@@ -10323,7 +10367,7 @@
               const index = activeElements[0].index;
               const dataLabel = labels[index];
 
-              const notasFiltradas = notasFiltradasPorAnoMes.filter(item => {
+              const notasFiltradas = notasConcluidas.filter(item => {
                 const concluidaEm = item.concluida_em || '';
                 if (!concluidaEm && dataLabel === 'Sem data') return true;
                 const partes = concluidaEm.split('.');
@@ -10460,8 +10504,6 @@
         const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
         return temDescricao && temStatus && codigoPermitido && codigoOk;
       });
-
-      console.log('Total de registros Mini Geração:', dadosFiltrados.length);
       document.getElementById('totalMiniGeracao').textContent = dadosFiltrados.length;
 
       if (dadosFiltrados.length === 0) {
@@ -12775,15 +12817,11 @@
     window.gerarGraficoConcluidasPorTipoSolicitacao = function (dados) {
       // Verificar se há dados disponíveis
       if (!dados || dados.length === 0) {
-        console.warn('Nenhum dado disponível para gerar o gráfico de Concluídas por Tipo de Solicitação.');
         return;
       }
 
       // Obter o ano selecionado do filtro
       const anoSelecionado = parseInt(document.getElementById('filtroAnoConcluidasPorTipoSolicitacao').value);
-
-      console.log('Ano selecionado:', anoSelecionado);
-      console.log('Total de dados recebidos:', dados.length);
 
       // Filtrar dados por status CONC CTEC ou CONC RTEC
       const notasConcluidas = dados.filter(item => {
@@ -12825,10 +12863,7 @@
         return true;
       });
 
-      console.log('Notas concluídas filtradas:', notasConcluidas.length);
-
       if (notasConcluidas.length === 0) {
-        console.warn('Nenhuma nota concluída após filtragem para o ano', anoSelecionado);
         // Destruir gráfico se existir
         if (chartConcluidasPorTipoSolicitacaoInstance) {
           chartConcluidasPorTipoSolicitacaoInstance.destroy();
@@ -12880,12 +12915,6 @@
       const miniRTEC = meses.map(mes => mesesMap[mes].miniRTEC);
       const demaisCTEC = meses.map(mes => mesesMap[mes].demaisCTEC);
       const demaisRTEC = meses.map(mes => mesesMap[mes].demaisRTEC);
-
-      console.log('Meses encontrados:', meses);
-      console.log('Mini CTEC:', miniCTEC);
-      console.log('Mini RTEC:', miniRTEC);
-      console.log('Demais CTEC:', demaisCTEC);
-      console.log('Demais RTEC:', demaisRTEC);
 
       // Calcular percentuais
       const percentuaisMini = meses.map(mes => {
@@ -13157,15 +13186,11 @@
     window.gerarGraficoConcluidasPorTipoDemais = function (dados) {
       // Verificar se há dados disponíveis
       if (!dados || dados.length === 0) {
-        console.warn('Nenhum dado disponível para gerar o gráfico de Concluídas por Tipo Demais.');
         return;
       }
 
       // Obter o ano selecionado do filtro
       const anoSelecionado = parseInt(document.getElementById('filtroAnoConcluidasPorTipoDemais').value);
-
-      console.log('Ano selecionado (Demais):', anoSelecionado);
-      console.log('Total de dados recebidos:', dados.length);
 
       // Filtrar dados por status CONC CTEC ou CONC RTEC
       const notasConcluidas = dados.filter(item => {
@@ -13207,10 +13232,7 @@
         return true;
       });
 
-      console.log('Notas Demais filtradas:', notasConcluidas.length);
-
       if (notasConcluidas.length === 0) {
-        console.warn('Nenhuma nota Demais após filtragem para o ano', anoSelecionado);
         if (chartConcluidasPorTipoDemaisInstance) {
           chartConcluidasPorTipoDemaisInstance.destroy();
           chartConcluidasPorTipoDemaisInstance = null;
@@ -13260,10 +13282,6 @@
 
       const demaisCTEC = meses.map(mes => mesesMap[mes].demaisCTEC);
       const demaisRTEC = meses.map(mes => mesesMap[mes].demaisRTEC);
-
-      console.log('Meses encontrados (Demais):', meses);
-      console.log('Demais CTEC:', demaisCTEC);
-      console.log('Demais RTEC:', demaisRTEC);
 
       // Calcular percentuais
       const percentuaisDemais = meses.map(mes => {
@@ -13691,6 +13709,21 @@
 
     // Carregar dados ao iniciar a página
     window.addEventListener('DOMContentLoaded', function () {
+      bindMenuActionButtons();
+      bindMainActionButtons();
+      bindUploadActionButtons();
+      bindExportActionButtons();
+      bindModalActionButtons();
+      bindDropdownActionButtons();
+      bindFilterActionButtons();
+      bindPrazoIntervalosActionButtons();
+      if (typeof bindIntervaloNotas0034MiniGeracaoButtons === 'function') {
+        bindIntervaloNotas0034MiniGeracaoButtons();
+      }
+      applyUserCategoryVisibility();
+      if (typeof exibirUltimaAtualizacaoRelatorio === 'function') {
+        exibirUltimaAtualizacaoRelatorio();
+      }
       carregarDados();
       // Exibir gráficos de "Notas em Andamento" por padrão
       exibirNotasAndamento();
