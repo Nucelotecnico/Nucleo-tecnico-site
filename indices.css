@@ -81,52 +81,52 @@ body {
     filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2)) !important;
     animation: titleFadeIn 0.8s ease-out;
 }
-
+.titulo-gerenciador {
 @keyframes titleFadeIn {
-    from {
+    from {eight: 700;
         opacity: 0;
         transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-    text-shadow: none;
+    }ext-align: center;
+    to {er-spacing: 2px;
+        opacity: 1;ear-gradient(135deg, #2e7d32 0%, #43a047 50%, #66bb6a 100%);
+        transform: translateY(0);;
+    }webkit-text-fill-color: transparent;
+}   background-clip: text;
+    text-shadow: none;w(2px 2px 4px rgba(46, 125, 50, 0.2));
     filter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2));
     position: relative;
     z-index: 1;
-}
-
+}titulo2 {
+    
 @keyframes titleFadeIn {
     from {
         opacity: 0;
         transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
+    }rom {
+    to {opacity: 0;
+        opacity: 1;translateY(-20px);
         transform: translateY(0);
-    }
-}
-
+    }o {
+}       opacity: 1;
+        transform: translateY(0);
 @keyframes titleShine {
     0% {
-        left: -100%;
-    }
-    50%, 100% {
+        left: -100%;e;
+    }ilter: drop-shadow(2px 2px 4px rgba(46, 125, 50, 0.2));
+    50%, 100% {elative;
         left: 100%;
     }
 }
-
-h1 {
+@keyframes titleFadeIn {
+h1 {from {
     text-align: center;
-    color: #66bb6a;
+    color: #66bb6a;translateY(-20px);
     font-weight: 800;
     margin: 30px 0 20px;
     font-size: 2.2em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+}   }
 }
-
 button {
     padding: 10px 20px;
     margin-top: 8px;
@@ -134,8 +134,237 @@ button {
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+}   }
 }
-
 html {
     overflow-y: scroll;
+}   text-align: center;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}    color: #2e7d32;    border-radius: 8px;    background: #e8f5e9;    padding: 12px;    margin-top: 16px;.info-box-green, #infoNotasConcluidasPorMes {}    white-space: nowrap;    font-size: 14px;    gap: 8px;    align-items: center;    display: flex;    font-weight: 600;    cursor: pointer;    border-radius: 6px;    border: none;    color: white;    background: #4caf50;    padding: 8px 16px;.grafico-export-btn, .btn-upload-importar {}    margin-top: 8px;    min-height: 40px;    border: 1px solid #e0e0e0;    border-radius: 6px;    background: #f9f9f9;    padding: 12px;    gap: 8px;    align-items: flex-start;    flex-direction: column;    display: none;.grafico-filter-checkboxes {}    font-size: 14px;    gap: 8px;    align-items: center;    display: flex;    font-weight: 600;    cursor: pointer;    border-radius: 6px;    border: none;    color: white;    background: #2e7d32;    padding: 10px 16px;.grafico-filter-btn, .btn-filter-dropdown {}    gap: 8px;    flex-direction: column;    display: flex;.filter-col {}    min-width: 120px;    cursor: pointer;    background: #fff;    font-size: 14px;    border-radius: 6px;    border: 1px solid #ccc;    padding: 8px 12px;.filtro-select, .grafico-filter-select {}    font-weight: 500;    color: #666;    font-size: 14px;.filtro-label, .grafico-filter-label {}    margin: 0 auto;    max-width: 1000px;.grafico-canvas-container, .grafico-canvas-large, .container-max-1000 {}    flex-wrap: wrap;    gap: 10px;    align-items: center;    display: flex;.grafico-actions, .chart-actions {}    margin: 0;    color: #2e7d32;.grafico-title, .chart-title-green {}    flex-wrap: wrap;    margin-bottom: 16px;    gap: 16px;    align-items: center;    justify-content: space-between;    display: flex;.grafico-header, .chart-header {}    margin-right: auto;    margin-left: auto;    width: 100%;    max-width: 1000px;    box-shadow: 0 2px 8px rgba(0,0,0,0.08);    margin-bottom: 24px;    padding: 24px;    border-radius: 10px;    background: #fff;    display: block;.grafico-section {
+/* Padronização completa para gráficos conforme modelo fornecido */
+.grafico-section,
+.grafico-canvas-container,
+.grafico-canvas-large,
+.container-max-1000,
+.container-max-1200,
+.container-max-1400 {
+    display: block;
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 1000px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.grafico-header, .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.grafico-title, .chart-title-green {
+    color: #2e7d32;
+    margin: 0;
+}
+.grafico-actions, .chart-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.filtro-label, .grafico-filter-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+.filtro-select, .grafico-filter-select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    min-width: 120px;
+}
+.filter-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.grafico-filter-btn, .btn-filter-dropdown {
+    padding: 10px 16px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+.grafico-filter-checkboxes {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    min-height: 40px;
+    margin-top: 8px;
+}
+.grafico-export-btn, .btn-upload-importar {
+    padding: 8px 16px;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.info-box-green, #infoNotasConcluidasPorMes {
+    margin-top: 16px;
+    padding: 12px;
+    background: #e8f5e9;
+    border-radius: 8px;
+    color: #2e7d32;
 }

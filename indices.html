@@ -559,6 +559,7 @@
       <span id="ultimaAtualizacaoRelatorio"
         style="margin-left: 8px; color: #2e7d32; font-weight: bold;">Carregando...</span>
     </div>
+    <br>
 
     <!-- Botões do Gráfico de Quantidade notas ABER e ANDM por tipo -->
     <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
@@ -599,6 +600,7 @@
         <div
           style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
           <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
+
           <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
@@ -608,1390 +610,1390 @@
                 <option value="todos">Todos os meses</option>
               </select>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoes"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por descrição</span>
-              </button>
-              <div id="containerCheckboxesDescricoes"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleCodigoMedidas"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por Código Medidas</span>
-              </button>
-              <div id="containerCheckboxesCodigoMedidas"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleStatusFimPlanejado"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por Status</span>
-              </button>
-              <div id="containerCheckboxesStatusFimPlanejado"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="btnExportarFimPlanejado"
-                style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
-                <span>📥</span>
-                <span>Exportar Excel</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartFimPlanejado"></canvas>
-        </div>
-        <div id="infoGeralNotas"
-          style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-          <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
-          <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
-          <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
-        </div>
-      </div>
-    </div>
+          
 
-    <!-- Gráfico de Todos os Tipos de Descrição -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoOutrosTipos"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Quantidade notas ABER e ANDM por tipo</h2>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartOutrosTipos"></canvas>
-        </div>
-        <div id="infoOutrosTipos"
-          style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
-          <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> |
-          <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
-        </div>
-      </div>
-    </div>
-
-
-
-    <!-- Gráfico de Texto Medidas -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoTextoMedidas"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <h2 style="color: #2e7d32; margin-bottom: 16px;">📝 Quantidade de Notas por Texto de Medidas</h2>
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <canvas id="chartTextoMedidas"></canvas>
-        </div>
-        <div id="infoTextoMedidas"
-          style="margin-top: 16px; padding: 12px; background: #f0f4f8; border-radius: 8px; color: #1976d2;">
-          <strong>Total de notas:</strong> <span id="totalTextoMedidas">0</span> |
-          <strong>Categorias únicas:</strong> <span id="categoriasUnicasTextoMedidas">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico Medidas 0034 -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoMedidas0034"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-          <strong>Regras para geração deste gráfico:</strong><br>
-          - Considera apenas notas com <b>código de medidas 0034</b>.<br>
-          - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
-          - Notas filtradas por mês e por descrição, conforme seleção dos filtros acima.<br>
-          - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
-          - Outras regras específicas podem ser aplicadas conforme a lógica do sistema.<br>
-        </div>
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
-          <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroMesMedidas0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-                mês:</label>
-              <select id="filtroMesMedidas0034" onchange="filtrarGraficoMedidas0034PorMes()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
-                <option value="todos">Todos os meses</option>
-              </select>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesMedidas0034"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por descrição</span>
-              </button>
-              <div id="containerCheckboxesDescricoesMedidas0034"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <canvas id="chartMedidas0034"></canvas>
-        </div>
-        <div id="infoMedidas0034"
-          style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-          <strong>Total de notas:</strong> <span id="totalMedidas0034">0</span> |
-          <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034"
-            style="color: #2e7d32;">0</span> |
-          <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABERMedidas0034"
-            style="color: #66bb6a;">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico Medidas 0034 (Cópia) -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoMedidas0034Clone"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-          <strong>Regras para geração deste gráfico:</strong><br>
-          - Considera apenas notas com <b>código de medidas 0034</b>.<br>
-          - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
-          - Notas filtradas por descrição, conforme seleção dos filtros acima.<br>
-          - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
-        </div>
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM por Texto de Medidas - Código 0034
-          </h2>
-          <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroMesMedidas0034Clone" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-                mês:</label>
-              <select id="filtroMesMedidas0034Clone" onchange="filtrarGraficoMedidas0034ClonePorMes()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
-                <option value="todos">Todos os meses</option>
-              </select>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesMedidas0034Clone"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por descrição</span>
-              </button>
-              <div id="containerCheckboxesDescricoesMedidas0034Clone"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <canvas id="chartMedidas0034Clone"></canvas>
-        </div>
-        <div id="infoMedidas0034Clone"
-          style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-          <strong>Total de notas:</strong> <span id="totalMedidas0034Clone">0</span> |
-          <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034Clone"
-            style="color: #2e7d32;">0</span> |
-          <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABERMedidas0034Clone"
-            style="color: #66bb6a;">0</span>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Gráfico Prazo Médio Medidas 0034 -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoPrazoMedio0034"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">📈 Prazo Médio Mensal - Código 0034</h2>
-          <div style="display: flex; gap: 12px; align-items: flex-start;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroAnoPrazo0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-                ano:</label>
-              <select id="filtroAnoPrazo0034" onchange="aplicarFiltroAnoPrazo0034()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-                <option value="todos">Todos</option>
-              </select>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDescricoesPrazo0034"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por descrição</span>
-              </button>
-              <div id="containerCheckboxesDescricoesPrazo0034"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1200px; margin: 0 auto;">
-          <canvas id="chartPrazoMedio0034"></canvas>
-        </div>
-        <div id="infoPrazoMedio0034"
-          style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-          <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas0034">0</span> |
-          <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral0034">0</span> dias
-        </div>
-      </div>
-      <!-- Novo gráfico: Intervalo Notas 0034 Concluídas - Analisar Carga Acessante Mini Geração -->
-      <div id="graficoIntervaloNotas0034MiniGeracao"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoIntervaloNotas0034MiniGeracao"
-              style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
-            <select id="filtroAnoIntervaloNotas0034MiniGeracao"
-              onchange="aplicarFiltroAnoIntervaloNotas0034MiniGeracao()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao"
+            <button id="botaoToggleDescricoes"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por mês</span>
+              <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesMesesIntervaloNotas0034MiniGeracao"
+            <div id="containerCheckboxesDescricoes"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-        </div>
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">📊 Notas 0034 Concluídas - Intervalo (Início Planejado x
-            Conclusão)<br><span style="font-size:14px;color:#666">Analisar Carga Acessante Mini Geração</span></h2>
-        </div>
-        <div
-          style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e0e0e0;">
-          <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
-              <input type="number" id="intervalo1MaxNotas0034MiniGeracao" value="15" min="1" max="999"
-                style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-              <span style="font-size: 13px; color: #666;">dias</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 13px; color: #666;">Intervalo 2: até</label>
-              <input type="number" id="intervalo2MaxNotas0034MiniGeracao" value="20" min="1" max="999"
-                style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-              <span style="font-size: 13px; color: #666;">dias</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <label style="font-size: 13px; color: #666;">Intervalo 3: até</label>
-              <input type="number" id="intervalo3MaxNotas0034MiniGeracao" value="35" min="1" max="999"
-                style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-              <span style="font-size: 13px; color: #666;">dias</span>
-            </div>
-            <button id="btnGerarGraficoIntervaloNotas0034MiniGeracao"
-              style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
-              📊 Gerar Gráfico
-            </button>
-          </div>
-        </div>
-        <script>
-          // Exibe o gráfico apenas ao clicar no botão MEDIDAS 0034
-          function exibirGraficoIntervaloNotas0034MiniGeracao() {
-            document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'block';
-            popularFiltroAnoIntervaloNotas0034MiniGeracao(dadosGlobais);
-            popularFiltroMesIntervaloNotas0034MiniGeracao(dadosGlobais);
-            gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-          }
-
-          // Popular filtro de ano (select)
-          function popularFiltroAnoIntervaloNotas0034MiniGeracao(dados) {
-            const anosSet = new Set();
-            dados.forEach(item => {
-              if (item.codigo_medidas === '0034' && item.inicio_planejado) {
-                const partes = item.inicio_planejado.split('.');
-                if (partes.length === 3) anosSet.add(partes[2]);
-              }
-            });
-            const selectAno = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
-            if (!selectAno) return;
-            selectAno.innerHTML = '<option value="todos">Todos</option>';
-            const anoVigente = new Date().getFullYear().toString();
-            Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10)).forEach(ano => {
-              const option = document.createElement('option');
-              option.value = ano;
-              option.textContent = ano;
-              if (ano === anoVigente) option.selected = true;
-              selectAno.appendChild(option);
-            });
-          }
-
-          // Popular filtro de mês (dropdown checkboxes)
-          function popularFiltroMesIntervaloNotas0034MiniGeracao(dados) {
-            const mesesDisponiveis = [
-              { value: '01', label: 'Janeiro' },
-              { value: '02', label: 'Fevereiro' },
-              { value: '03', label: 'Março' },
-              { value: '04', label: 'Abril' },
-              { value: '05', label: 'Maio' },
-              { value: '06', label: 'Junho' },
-              { value: '07', label: 'Julho' },
-              { value: '08', label: 'Agosto' },
-              { value: '09', label: 'Setembro' },
-              { value: '10', label: 'Outubro' },
-              { value: '11', label: 'Novembro' },
-              { value: '12', label: 'Dezembro' }
-            ];
-            const mesesSet = new Set();
-            dados.forEach(item => {
-              if (item.codigo_medidas === '0034' && item.inicio_planejado) {
-                const partes = item.inicio_planejado.split('.');
-                if (partes.length >= 2) mesesSet.add(partes[1]);
-              }
-            });
-            const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
-            if (!container) return;
-            container.innerHTML = '';
-            // Botões Marcar/Desmarcar todos
-            const botoesContainer = document.createElement('div');
-            botoesContainer.style.display = 'flex';
-            botoesContainer.style.gap = '8px';
-            botoesContainer.style.marginBottom = '12px';
-            botoesContainer.style.paddingBottom = '8px';
-            botoesContainer.style.borderBottom = '1px solid #ddd';
-            const btnMarcarTodos = document.createElement('button');
-            btnMarcarTodos.textContent = 'Marcar todos';
-            btnMarcarTodos.style.padding = '6px 12px';
-            btnMarcarTodos.style.background = '#4caf50';
-            btnMarcarTodos.style.color = 'white';
-            btnMarcarTodos.style.border = 'none';
-            btnMarcarTodos.style.borderRadius = '4px';
-            btnMarcarTodos.style.cursor = 'pointer';
-            btnMarcarTodos.style.fontSize = '12px';
-            btnMarcarTodos.style.fontWeight = '600';
-            btnMarcarTodos.onclick = () => {
-              document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = true);
-              gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-            };
-            const btnDesmarcarTodos = document.createElement('button');
-            btnDesmarcarTodos.textContent = 'Desmarcar todos';
-            btnDesmarcarTodos.style.padding = '6px 12px';
-            btnDesmarcarTodos.style.background = '#f44336';
-            btnDesmarcarTodos.style.color = 'white';
-            btnDesmarcarTodos.style.border = 'none';
-            btnDesmarcarTodos.style.borderRadius = '4px';
-            btnDesmarcarTodos.style.cursor = 'pointer';
-            btnDesmarcarTodos.style.fontSize = '12px';
-            btnDesmarcarTodos.style.fontWeight = '600';
-            btnDesmarcarTodos.onclick = () => {
-              document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = false);
-              gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-            };
-            botoesContainer.appendChild(btnMarcarTodos);
-            botoesContainer.appendChild(btnDesmarcarTodos);
-            container.appendChild(botoesContainer);
-            mesesDisponiveis.forEach(mes => {
-              if (!mesesSet.has(mes.value)) return;
-              const label = document.createElement('label');
-              label.style.display = 'flex';
-              label.style.alignItems = 'center';
-              label.style.gap = '6px';
-              label.style.cursor = 'pointer';
-              const checkbox = document.createElement('input');
-              checkbox.type = 'checkbox';
-              checkbox.value = mes.value;
-              checkbox.checked = true;
-              checkbox.className = 'filtro-mes-intervalo-notas0034-checkbox';
-              checkbox.onchange = () => gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-              label.appendChild(checkbox);
-              label.appendChild(document.createTextNode(mes.label));
-              container.appendChild(label);
-            });
-          }
-
-          // Dropdown meses
-          function toggleDropdownMesesIntervaloNotas0034MiniGeracao() {
-            const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
-            if (container) {
-              container.style.display = container.style.display === 'none' ? 'flex' : 'none';
-            }
-          }
-
-          // Filtro ano
-          function aplicarFiltroAnoIntervaloNotas0034MiniGeracao() {
-            gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-          }
-
-          function bindIntervaloNotas0034MiniGeracaoButtons() {
-            var btnMedidas = document.getElementById('btnMedidas0034');
-            if (btnMedidas) {
-              btnMedidas.addEventListener('click', exibirGraficoIntervaloNotas0034MiniGeracao);
-            }
-            // Oculta o gráfico ao clicar em outros botões principais
-            var outrosBotoes = [
-              'btnPrazoMedio0034',
-              'btnTextoMedidas',
-              'btnSemGeracoes',
-              'btnMiniGeracao',
-              'btnOutrosTipos',
-              'btnFimPlanejado',
-              'btnNotasConcluidasPorMes',
-              'btnNotasSemContrato'
-            ];
-            outrosBotoes.forEach(function (id) {
-              var btn = document.getElementById(id);
-              if (btn) {
-                btn.addEventListener('click', function () {
-                  var graficoIntervalo = document.getElementById('graficoIntervaloNotas0034MiniGeracao');
-                  if (graficoIntervalo) {
-                    graficoIntervalo.style.display = 'none';
-                  }
-                });
-              }
-            });
-
-            var botaoToggleMeses = document.getElementById('botaoToggleMesesIntervaloNotas0034MiniGeracao');
-            if (botaoToggleMeses) {
-              botaoToggleMeses.addEventListener('click', toggleDropdownMesesIntervaloNotas0034MiniGeracao);
-            }
-
-            var btnGerarGrafico = document.getElementById('btnGerarGraficoIntervaloNotas0034MiniGeracao');
-            if (btnGerarGrafico) {
-              btnGerarGrafico.addEventListener('click', function () {
-                gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
-              });
-            }
-          }
-        </script>
-        <div
-          style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-          <strong>Regras para geração do gráfico:</strong><br>
-          <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
-            <li>Notas consideradas apenas com <b>código de medidas 0034</b>.</li>
-            <li>Descrição deve conter <b>"analisar carga acessante mini geração"</b>.</li>
-            <li>Status do usuário pode ser <b>CONC CTEC</b>, <b>CONC RTEC</b>, (concluídas).</li>
-            <li>Notas com status <b>ANDM</b> e <b>ABER</b> são <b>excluídas</b> deste gráfico.</li>
-            <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.<br></li>
-            <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
-            <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
-            <li>Intervalos são agrupados conforme os valores definidos nos campos acima.</li>
-          </ul>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartIntervaloNotas0034MiniGeracao"></canvas>
-        </div>
-        <div id="infoIntervaloNotas0034MiniGeracao"
-          style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-          <strong>Total de notas consideradas:</strong> <span id="totalNotasIntervaloNotas0034MiniGeracao">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal para exibir notas detalhadas -->
-    <div id="modalNotas"
-      style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
-      <div
-        style="background: white; margin: 50px auto; max-width: 90%; max-height: 85vh; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-        <div
-          style="background: #2e7d32; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="margin: 0;" id="modalTitulo">Notas Detalhadas</h3>
-          <button id="btnFecharModalNotas"
-            style="background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
-        </div>
-        <div style="padding: 20px 20px 40px 20px; max-height: calc(85vh - 80px); overflow-y: auto;">
-          <div id="modalConteudo"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico Quantidade de notas ABER e ANDM - Carga -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoSemGeracoes"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasSemGeracoes"
+            <button id="botaoToggleCodigoMedidas"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasSemGeracoes"
+            <div id="containerCheckboxesCodigoMedidas"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartSemGeracoes"></canvas>
-        </div>
-        <div id="infoSemGeracoes"
-          style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
-          <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráfico Quantidade de notas ABER e ANDM - GD -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <div id="graficoMiniGeracao"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasMiniGeracao"
+            <button id="botaoToggleStatusFimPlanejado"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
+              <span>Filtrar por Status</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasMiniGeracao"
+            <div id="containerCheckboxesStatusFimPlanejado"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartMiniGeracao"></canvas>
-        </div>
-        <div id="infoMiniGeracao"
-          style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
-          <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ...existing code... -->
-
-
-
-    <!-- Gráfico de Notas Concluídas por Mês -->
-    <div id="graficoNotasConcluidasPorMes"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-        <h2 style="color: #2e7d32; margin: 0;">📅 Notas Concluídas por Mês</h2>
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
-            por ano:</label>
-          <select id="filtroAnoNotasConcluidasPorMes"
-            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-            <option value="todos">Todos</option>
-          </select>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleMesesNotasConcluidasPorMes"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por mês</span>
+            <button id="btnExportarFimPlanejado"
+              style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+              <span>📥</span>
+              <span>Exportar Excel</span>
             </button>
-            <div id="containerCheckboxesMesesNotasConcluidasPorMes"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
           </div>
-          <button id="btnExportarNotasConcluidasPorMes"
-            style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
-            <span>📥</span>
-            <span>Exportar Excel</span>
-          </button>
         </div>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartNotasConcluidasPorMes"></canvas>
+        <canvas id="chartFimPlanejado"></canvas>
       </div>
-      <div id="infoNotasConcluidasPorMes"
-        style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorMes">0</span>
+      <div id="infoGeralNotas"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráfico de Notas Concluídas (CONC CTEC e CONC RTEC) -->
+  <!-- Gráfico de Todos os Tipos de Descrição -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoOutrosTipos"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Quantidade notas ABER e ANDM por tipo</h2>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartOutrosTipos"></canvas>
+      </div>
+      <div id="infoOutrosTipos"
+        style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
+        <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> |
+        <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
+      </div>
+    </div>
+  </div>
 
-    <div id="graficoConcluidas"
+
+
+  <!-- Gráfico de Texto Medidas -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoTextoMedidas"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h2 style="color: #2e7d32; margin-bottom: 16px;">📝 Quantidade de Notas por Texto de Medidas</h2>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartTextoMedidas"></canvas>
+      </div>
+      <div id="infoTextoMedidas"
+        style="margin-top: 16px; padding: 12px; background: #f0f4f8; border-radius: 8px; color: #1976d2;">
+        <strong>Total de notas:</strong> <span id="totalTextoMedidas">0</span> |
+        <strong>Categorias únicas:</strong> <span id="categoriasUnicasTextoMedidas">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico Medidas 0034 -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoMedidas0034"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
+        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+        <strong>Regras para geração deste gráfico:</strong><br>
+        - Considera apenas notas com <b>código de medidas 0034</b>.<br>
+        - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
+        - Notas filtradas por mês e por descrição, conforme seleção dos filtros acima.<br>
+        - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
+        - Outras regras específicas podem ser aplicadas conforme a lógica do sistema.<br>
+      </div>
+      <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">✅ Notas Concluídas por Data de Conclusão</h2>
-        <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            <label for="filtroMesMedidas0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
               mês:</label>
-            <select id="filtroMesConcluidas"
+            <select id="filtroMesMedidas0034" onchange="filtrarGraficoMedidas0034PorMes()"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDiasConcluidas"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por dia</span>
-            </button>
-            <div id="containerCheckboxesDiasConcluidas"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasConcluidas"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidasConcluidas"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartConcluidas"></canvas>
-      </div>
-      <div id="infoConcluidas"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
-        <strong>Total de notas concluídas:</strong> <span id="totalConcluidas">0</span> |
-        <strong style="color: #388e3c;">CONC CTEC:</strong> <span id="totalCONC_CTEC" style="color: #388e3c;">0</span> |
-        <strong style="color: #81c784;">CONC RTEC:</strong> <span id="totalCONC_RTEC" style="color: #81c784;">0</span> |
-        <strong style="color: #388e3c;">% Aprovação CONC CTEC:</strong> <span id="percentualAprovacao"
-          style="color: #388e3c; font-weight: bold;">0%</span>
-      </div>
-    </div>
-
-    <!-- Container para os gráficos de Notas sem contrato -->
-    <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
-      <!-- Gráfico de Notas sem contrato (Código 0555) -->
-      <div id="graficoNotasSemContrato"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-          <h2 style="color: #2e7d32; margin: 0;">🧾 Notas com medida 0555 concluídas</h2>
-          <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
-            <button id="btnExportarNotasSemContrato"
-              style="padding: 10px 16px; background: Quantidade de Notas ABER E ANDM Carga e GD; background: #4caf50;color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
-              <span>📊</span>
-              <span>Exportar Excel</span>
-            </button>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleAnoNotasSemContrato"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por ano</span>
-              </button>
-              <div id="containerCheckboxesAnoNotasSemContrato"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleMesNotasSemContrato"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por mês</span>
-              </button>
-              <div id="containerCheckboxesMesNotasSemContrato"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleDiasNotasSemContrato"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por dia</span>
-              </button>
-              <div id="containerCheckboxesDiasNotasSemContrato"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleStatusNotasSemContrato"
-                style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por status</span>
-              </button>
-              <div id="containerCheckboxesStatusNotasSemContrato"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartNotasSemContrato"></canvas>
-        </div>
-        <div id="infoNotasSemContrato" style="padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-          <strong>Total de notas:</strong> <span id="totalNotasSemContrato">0</span>
-        </div>
-      </div>
-
-      <!-- Gráfico de Notas sem contrato SEM DATA DE CONCLUSÃO (Código 0555) -->
-      <div id="graficoNotasSemDataNotasSemContrato"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-          <h2 style="color: #d32f2f; margin: 0;">⏳ Notas com medida 0555 ABER ou ANDM sem data de conclusão</h2>
-          <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
-            <button id="btnExportarNotasSemDataSemContrato"
-              style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
-              <span>📊</span>
-              <span>Exportar Excel</span>
-            </button>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-              <button id="botaoToggleStatusNotasSemDataNotasSemContrato"
-                style="padding: 10px 16px; background: #d32f2f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                <span>▼</span>
-                <span>Filtrar por status</span>
-              </button>
-              <div id="containerCheckboxesStatusNotasSemDataNotasSemContrato"
-                style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
-                <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartNotasSemDataNotasSemContrato"></canvas>
-        </div>
-        <div id="infoNotasSemDataNotasSemContrato"
-          style="padding: 12px; background: #ffebee; border-radius: 8px; color: #d32f2f;">
-          <strong>Total de notas sem data de conclusão:</strong> <span id="totalNotasSemDataNotasSemContrato">0</span>
-        </div>
-      </div>
-
-      <!-- Gráfico de Comparação: Notas Carga vinculadas a 0555 -->
-      <div id="graficoComparacaoNotasCarga0555"
-        style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-top: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div style="margin-bottom: 16px;">
-          <h2 style="color: #1976d2; margin: 0;">🔍 Notas com med 0040 sem contrato assinado (sem med 0555 concluída)
-          </h2>
-          <p style="color: #666; font-size: 13px; margin: 8px 0 0 0;">
-            Exibe notas com código 0040, 0041, 0042, 0045 (status ABER/ANDM) que:<br>
-            - Estão vinculadas a pelo menos uma nota 0555 (com status ANDM, ABER ou ANDM ENVI) de mesmo número;<br>
-            - São agrupadas por mês de fim planejado (ou "Sem data" se não houver data);<br>
-            - Não exibem notas cuja descrição contenha "Consumidor de BT".<br>
-            <br>
-            <strong>Filtros aplicados:</strong><br>
-            • Apenas notas Carga (0040/41/42/45) com status ABER ou ANDM;<br>
-            • Apenas notas vinculadas a notas 0555 com status ANDM, ABER ou ANDM ENVI;<br>
-            • Notas com "Descrição Consumidor de BT" são excluídas.<br>
-          </p>
-        </div>
-        <div style="max-width: 1000px; margin: 0 auto;">
-          <canvas id="chartComparacaoNotasCarga0555"></canvas>
-        </div>
-        <div id="infoComparacaoNotasCarga0555"
-          style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1565c0;">
-          <strong>Total de notas Carga vinculadas:</strong> <span id="totalComparacaoNotasCarga0555">0</span>
-        </div>
-      </div>
-    </div>
-    <!-- Fim do container para os gráficos de Notas sem contrato -->
-
-    <!-- Gráfico de Concluídas por Tipo Demais -->
-    <div id="graficoConcluidasPorTipoDemais"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Carga</h2>
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
-            <input type="checkbox" id="ocultarBarrasDemais" style="cursor: pointer;">
-            <span>Ocultar barras</span>
-          </label>
-          <label for="filtroAnoConcluidasPorTipoDemais" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
-            por ano:</label>
-          <select id="filtroAnoConcluidasPorTipoDemais"
-            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-            <option value="todos">Todos</option>
-          </select>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
-        <canvas id="chartConcluidasPorTipoDemais"></canvas>
-      </div>
-      <div id="infoConcluidasPorTipoDemais"
-        style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoDemais">0</span> |
-        <strong>Critério:</strong> Demais Tipos de Solicitação (CONC CTEC e CONC RTEC)
-      </div>
-    </div>
-
-    <!-- Gráfico de Concluídas por Tipo de Solicitação (Mini/Micro vs Demais) -->
-    <div id="graficoConcluidasPorTipoSolicitacao"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Mini/Micro Geração</h2>
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
-            <input type="checkbox" id="ocultarBarrasMini" style="cursor: pointer;">
-            <span>Ocultar barras</span>
-          </label>
-          <label for="filtroAnoConcluidasPorTipoSolicitacao"
-            style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
-          <select id="filtroAnoConcluidasPorTipoSolicitacao"
-            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-            <option value="todos">Todos</option>
-          </select>
-        </div>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
-        <canvas id="chartConcluidasPorTipoSolicitacao"></canvas>
-      </div>
-      <div id="infoConcluidasPorTipoSolicitacao"
-        style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoMini">0</span> |
-        <strong>Critério:</strong> Mini/Micro Geração (CONC CTEC e CONC RTEC)
-      </div>
-    </div>
-
-    <!-- Gráfico RPVD (Recondução por Vencimento de Documentação) -->
-    <div id="graficoRPVD"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 RPVD - Notas Reprovada por Motivos Não Técnicos</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
-            <select id="filtroMesRPVD"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
-            <select id="filtroAnoRPVD"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesRPVD"
+            <button id="botaoToggleDescricoesMedidas0034"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesRPVD"
+            <div id="containerCheckboxesDescricoesMedidas0034"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
         </div>
       </div>
-      <div style="max-width: 600px; margin: 0 auto; height: 400px;">
-        <canvas id="chartRPVD"></canvas>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartMedidas0034"></canvas>
       </div>
-      <div id="infoRPVD"
-        style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas CONC RTEC:</strong> <span id="totalNotasRTEC">0</span> |
-        <strong>Notas com RPVD:</strong> <span id="totalNotasRPVD">0</span> |
-        <strong>Percentual:</strong> <span id="percentualRPVD">0%</span>
+      <div id="infoMedidas0034"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalMedidas0034">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034" style="color: #2e7d32;">0</span>
+        |
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABERMedidas0034" style="color: #66bb6a;">0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráfico de Intervalos de Prazo (Início Planejado x Conclusão) -->
-    <div id="graficoPrazoIntervalos"
+  <!-- Gráfico Medidas 0034 (Cópia) -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoMedidas0034Clone"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div
+        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+        <strong>Regras para geração deste gráfico:</strong><br>
+        - Considera apenas notas com <b>código de medidas 0034</b>.<br>
+        - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
+        - Notas filtradas por descrição, conforme seleção dos filtros acima.<br>
+        - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
+      </div>
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM por Texto de Medidas - Código 0034
+        </h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="filtroMesMedidas0034Clone" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+              mês:</label>
+            <select id="filtroMesMedidas0034Clone" onchange="filtrarGraficoMedidas0034ClonePorMes()"
+              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <option value="todos">Todos os meses</option>
+            </select>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleDescricoesMedidas0034Clone"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por descrição</span>
+            </button>
+            <div id="containerCheckboxesDescricoesMedidas0034Clone"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartMedidas0034Clone"></canvas>
+      </div>
+      <div id="infoMedidas0034Clone"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas:</strong> <span id="totalMedidas0034Clone">0</span> |
+        <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034Clone"
+          style="color: #2e7d32;">0</span> |
+        <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABERMedidas0034Clone"
+          style="color: #66bb6a;">0</span>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Gráfico Prazo Médio Medidas 0034 -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoPrazoMedio0034"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Notas atendidas por intervalo (Início Planejado x Conclusão)</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+        <h2 style="color: #2e7d32; margin: 0;">📈 Prazo Médio Mensal - Código 0034</h2>
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
           <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoPrazoIntervalos" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            <label for="filtroAnoPrazo0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
               ano:</label>
-            <select id="filtroAnoPrazoIntervalos"
+            <select id="filtroAnoPrazo0034" onchange="aplicarFiltroAnoPrazo0034()"
               style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
               <option value="todos">Todos</option>
             </select>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleMesesPrazoIntervalos"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por mês</span>
-            </button>
-            <div id="containerCheckboxesMesesPrazoIntervalos"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoIntervalos"
+            <button id="botaoToggleDescricoesPrazo0034"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
-            <div id="containerCheckboxesDescricoesPrazoIntervalos"
+            <div id="containerCheckboxesDescricoesPrazo0034"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
         </div>
       </div>
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <canvas id="chartPrazoMedio0034"></canvas>
+      </div>
+      <div id="infoPrazoMedio0034"
+        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas0034">0</span> |
+        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral0034">0</span> dias
+      </div>
+    </div>
+    <!-- Novo gráfico: Intervalo Notas 0034 Concluídas - Analisar Carga Acessante Mini Geração -->
+    <div id="graficoIntervaloNotas0034MiniGeracao"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoIntervaloNotas0034MiniGeracao"
+            style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+          <select id="filtroAnoIntervaloNotas0034MiniGeracao" onchange="aplicarFiltroAnoIntervaloNotas0034MiniGeracao()"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por mês</span>
+          </button>
+          <div id="containerCheckboxesMesesIntervaloNotas0034MiniGeracao"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+      <div
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+        <h2 style="color: #2e7d32; margin: 0;">📊 Notas 0034 Concluídas - Intervalo (Início Planejado x
+          Conclusão)<br><span style="font-size:14px;color:#666">Analisar Carga Acessante Mini Geração</span></h2>
+      </div>
       <div
         style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e0e0e0;">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-          <span style="font-weight: 600; color: #2e7d32; font-size: 14px;">⚙️ Configurar Intervalos:</span>
-        </div>
         <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
-            <input type="number" id="intervalo1Max" value="15" min="1" max="999"
+            <input type="number" id="intervalo1MaxNotas0034MiniGeracao" value="15" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 2: até</label>
-            <input type="number" id="intervalo2Max" value="20" min="1" max="999"
+            <input type="number" id="intervalo2MaxNotas0034MiniGeracao" value="20" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <label style="font-size: 13px; color: #666;">Intervalo 3: até</label>
-            <input type="number" id="intervalo3Max" value="35" min="1" max="999"
+            <input type="number" id="intervalo3MaxNotas0034MiniGeracao" value="35" min="1" max="999"
               style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
             <span style="font-size: 13px; color: #666;">dias</span>
           </div>
-          <button id="btnResetarIntervalos"
-            style="padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
-            Resetar padrão
-          </button>
-          <button id="btnGerarGraficoPrazoIntervalos"
+          <button id="btnGerarGraficoIntervaloNotas0034MiniGeracao"
             style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
             📊 Gerar Gráfico
           </button>
         </div>
       </div>
+      <script>
+        // Exibe o gráfico apenas ao clicar no botão MEDIDAS 0034
+        function exibirGraficoIntervaloNotas0034MiniGeracao() {
+          document.getElementById('graficoIntervaloNotas0034MiniGeracao').style.display = 'block';
+          popularFiltroAnoIntervaloNotas0034MiniGeracao(dadosGlobais);
+          popularFiltroMesIntervaloNotas0034MiniGeracao(dadosGlobais);
+          gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+        }
+
+        // Popular filtro de ano (select)
+        function popularFiltroAnoIntervaloNotas0034MiniGeracao(dados) {
+          const anosSet = new Set();
+          dados.forEach(item => {
+            if (item.codigo_medidas === '0034' && item.inicio_planejado) {
+              const partes = item.inicio_planejado.split('.');
+              if (partes.length === 3) anosSet.add(partes[2]);
+            }
+          });
+          const selectAno = document.getElementById('filtroAnoIntervaloNotas0034MiniGeracao');
+          if (!selectAno) return;
+          selectAno.innerHTML = '<option value="todos">Todos</option>';
+          const anoVigente = new Date().getFullYear().toString();
+          Array.from(anosSet).sort((a, b) => parseInt(b, 10) - parseInt(a, 10)).forEach(ano => {
+            const option = document.createElement('option');
+            option.value = ano;
+            option.textContent = ano;
+            if (ano === anoVigente) option.selected = true;
+            selectAno.appendChild(option);
+          });
+        }
+
+        // Popular filtro de mês (dropdown checkboxes)
+        function popularFiltroMesIntervaloNotas0034MiniGeracao(dados) {
+          const mesesDisponiveis = [
+            { value: '01', label: 'Janeiro' },
+            { value: '02', label: 'Fevereiro' },
+            { value: '03', label: 'Março' },
+            { value: '04', label: 'Abril' },
+            { value: '05', label: 'Maio' },
+            { value: '06', label: 'Junho' },
+            { value: '07', label: 'Julho' },
+            { value: '08', label: 'Agosto' },
+            { value: '09', label: 'Setembro' },
+            { value: '10', label: 'Outubro' },
+            { value: '11', label: 'Novembro' },
+            { value: '12', label: 'Dezembro' }
+          ];
+          const mesesSet = new Set();
+          dados.forEach(item => {
+            if (item.codigo_medidas === '0034' && item.inicio_planejado) {
+              const partes = item.inicio_planejado.split('.');
+              if (partes.length >= 2) mesesSet.add(partes[1]);
+            }
+          });
+          const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
+          if (!container) return;
+          container.innerHTML = '';
+          // Botões Marcar/Desmarcar todos
+          const botoesContainer = document.createElement('div');
+          botoesContainer.style.display = 'flex';
+          botoesContainer.style.gap = '8px';
+          botoesContainer.style.marginBottom = '12px';
+          botoesContainer.style.paddingBottom = '8px';
+          botoesContainer.style.borderBottom = '1px solid #ddd';
+          const btnMarcarTodos = document.createElement('button');
+          btnMarcarTodos.textContent = 'Marcar todos';
+          btnMarcarTodos.style.padding = '6px 12px';
+          btnMarcarTodos.style.background = '#4caf50';
+          btnMarcarTodos.style.color = 'white';
+          btnMarcarTodos.style.border = 'none';
+          btnMarcarTodos.style.borderRadius = '4px';
+          btnMarcarTodos.style.cursor = 'pointer';
+          btnMarcarTodos.style.fontSize = '12px';
+          btnMarcarTodos.style.fontWeight = '600';
+          btnMarcarTodos.onclick = () => {
+            document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = true);
+            gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+          };
+          const btnDesmarcarTodos = document.createElement('button');
+          btnDesmarcarTodos.textContent = 'Desmarcar todos';
+          btnDesmarcarTodos.style.padding = '6px 12px';
+          btnDesmarcarTodos.style.background = '#f44336';
+          btnDesmarcarTodos.style.color = 'white';
+          btnDesmarcarTodos.style.border = 'none';
+          btnDesmarcarTodos.style.borderRadius = '4px';
+          btnDesmarcarTodos.style.cursor = 'pointer';
+          btnDesmarcarTodos.style.fontSize = '12px';
+          btnDesmarcarTodos.style.fontWeight = '600';
+          btnDesmarcarTodos.onclick = () => {
+            document.querySelectorAll('.filtro-mes-intervalo-notas0034-checkbox').forEach(cb => cb.checked = false);
+            gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+          };
+          botoesContainer.appendChild(btnMarcarTodos);
+          botoesContainer.appendChild(btnDesmarcarTodos);
+          container.appendChild(botoesContainer);
+          mesesDisponiveis.forEach(mes => {
+            if (!mesesSet.has(mes.value)) return;
+            const label = document.createElement('label');
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '6px';
+            label.style.cursor = 'pointer';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = mes.value;
+            checkbox.checked = true;
+            checkbox.className = 'filtro-mes-intervalo-notas0034-checkbox';
+            checkbox.onchange = () => gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(mes.label));
+            container.appendChild(label);
+          });
+        }
+
+        // Dropdown meses
+        function toggleDropdownMesesIntervaloNotas0034MiniGeracao() {
+          const container = document.getElementById('containerCheckboxesMesesIntervaloNotas0034MiniGeracao');
+          if (container) {
+            container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+          }
+        }
+
+        // Filtro ano
+        function aplicarFiltroAnoIntervaloNotas0034MiniGeracao() {
+          gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+        }
+
+        function bindIntervaloNotas0034MiniGeracaoButtons() {
+          var btnMedidas = document.getElementById('btnMedidas0034');
+          if (btnMedidas) {
+            btnMedidas.addEventListener('click', exibirGraficoIntervaloNotas0034MiniGeracao);
+          }
+          // Oculta o gráfico ao clicar em outros botões principais
+          var outrosBotoes = [
+            'btnPrazoMedio0034',
+            'btnTextoMedidas',
+            'btnSemGeracoes',
+            'btnMiniGeracao',
+            'btnOutrosTipos',
+            'btnFimPlanejado',
+            'btnNotasConcluidasPorMes',
+            'btnNotasSemContrato'
+          ];
+          outrosBotoes.forEach(function (id) {
+            var btn = document.getElementById(id);
+            if (btn) {
+              btn.addEventListener('click', function () {
+                var graficoIntervalo = document.getElementById('graficoIntervaloNotas0034MiniGeracao');
+                if (graficoIntervalo) {
+                  graficoIntervalo.style.display = 'none';
+                }
+              });
+            }
+          });
+
+          var botaoToggleMeses = document.getElementById('botaoToggleMesesIntervaloNotas0034MiniGeracao');
+          if (botaoToggleMeses) {
+            botaoToggleMeses.addEventListener('click', toggleDropdownMesesIntervaloNotas0034MiniGeracao);
+          }
+
+          var btnGerarGrafico = document.getElementById('btnGerarGraficoIntervaloNotas0034MiniGeracao');
+          if (btnGerarGrafico) {
+            btnGerarGrafico.addEventListener('click', function () {
+              gerarGraficoIntervaloNotas0034MiniGeracao(dadosGlobais);
+            });
+          }
+        }
+      </script>
       <div
         style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
         <strong>Regras para geração do gráfico:</strong><br>
         <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
-          <li>Notas consideradas apenas com <b>status concluído</b> (CONC CTEC ou CONC RTEC).</li>
-          <li>Notas com status <b>ABER</b> ou <b>ANDM</b> são <b>excluídas</b> do gráfico.</li>
-          <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.</li>
+          <li>Notas consideradas apenas com <b>código de medidas 0034</b>.</li>
+          <li>Descrição deve conter <b>"analisar carga acessante mini geração"</b>.</li>
+          <li>Status do usuário pode ser <b>CONC CTEC</b>, <b>CONC RTEC</b>, (concluídas).</li>
+          <li>Notas com status <b>ANDM</b> e <b>ABER</b> são <b>excluídas</b> deste gráfico.</li>
+          <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.<br></li>
           <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
           <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
           <li>Intervalos são agrupados conforme os valores definidos nos campos acima.</li>
         </ul>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartPrazoIntervalos"></canvas>
+        <canvas id="chartIntervaloNotas0034MiniGeracao"></canvas>
       </div>
-      <div id="infoPrazoIntervalos"
+      <div id="infoIntervaloNotas0034MiniGeracao"
         style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas consideradas:</strong> <span id="totalNotasPrazoIntervalos">0</span>
+        <strong>Total de notas consideradas:</strong> <span id="totalNotasIntervaloNotas0034MiniGeracao">0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráfico de Prazo Médio Mensal -->
-    <div id="graficoPrazoMedioGeral"
+  <!-- Modal para exibir notas detalhadas -->
+  <div id="modalNotas"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow: auto;">
+    <div
+      style="background: white; margin: 50px auto; max-width: 90%; max-height: 85vh; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+      <div
+        style="background: #2e7d32; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;" id="modalTitulo">Notas Detalhadas</h3>
+        <button id="btnFecharModalNotas"
+          style="background: transparent; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+      </div>
+      <div style="padding: 20px 20px 40px 20px; max-height: calc(85vh - 80px); overflow-y: auto;">
+        <div id="modalConteudo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico Quantidade de notas ABER e ANDM - Carga -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoSemGeracoes"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal Geral(GD e Carga)</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoPrazoMedio" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-              ano:</label>
-            <select id="filtroAnoPrazoMedio" onchange="aplicarFiltroAnoPrazoMedio()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazo"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por descrição</span>
-            </button>
-            <div id="containerCheckboxesDescricoesPrazo"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazo"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidasPrazo"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
+        <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasSemGeracoes"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasSemGeracoes"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
           </div>
         </div>
       </div>
-      <div
-        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-        <strong>Regras para geração do gráfico:</strong><br>
-        <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
-          <li>Considera todas as notas com datas válidas de início planejado e conclusão.</li>
-          <li>Notas de GD e Carga são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
-          <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
-          <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
-          <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
-          <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
-          <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
-        </ul>
-      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartPrazoMedio"></canvas>
+        <canvas id="chartSemGeracoes"></canvas>
       </div>
-      <div id="infoPrazoMedio"
-        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas">0</span> |
-        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral">0</span> dias
+      <div id="infoSemGeracoes"
+        style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
+        <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráfico de Prazo Médio Mensal - Todos exceto Mini/Micro Geração -->
-    <div id="graficoPrazoMedioCarga"
+  <!-- Gráfico Quantidade de notas ABER e ANDM - GD -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <div id="graficoMiniGeracao"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Carga</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoPrazoMedioExceto" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-              ano:</label>
-            <select id="filtroAnoPrazoMedioExceto" onchange="aplicarFiltroAnoPrazoMedioExceto()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoExceto"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por descrição</span>
-            </button>
-            <div id="containerCheckboxesDescricoesPrazoExceto"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoExceto"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidasPrazoExceto"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
+        <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasMiniGeracao"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasMiniGeracao"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
           </div>
         </div>
       </div>
-      <div
-        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-        <strong>Regras para geração do gráfico:</strong><br>
-        <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
-          <li>Considera notas de <b>Carga</b> (exclui Mini/Micro Geração) com datas válidas de início planejado e
-            conclusão.</li>
-          <li>As notas são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
-          <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
-          <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
-          <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
-          <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
-          <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
-        </ul>
-      </div>
       <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartPrazoMedioExceto"></canvas>
+        <canvas id="chartMiniGeracao"></canvas>
       </div>
-      <div id="infoPrazoMedioExceto"
-        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasExceto">0</span> |
-        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralExceto">0</span> dias
+      <div id="infoMiniGeracao"
+        style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráfico de Prazo Médio Mensal - Somente Mini/Micro Geração -->
-    <div id="graficoPrazoMedioGD"
+  <!-- ...existing code... -->
+
+
+
+  <!-- Gráfico de Notas Concluídas por Mês -->
+  <div id="graficoNotasConcluidasPorMes"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+      <h2 style="color: #2e7d32; margin: 0;">📅 Notas Concluídas por Mês</h2>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
+          por ano:</label>
+        <select id="filtroAnoNotasConcluidasPorMes"
+          style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+          <option value="todos">Todos</option>
+        </select>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleMesesNotasConcluidasPorMes"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por mês</span>
+          </button>
+          <div id="containerCheckboxesMesesNotasConcluidasPorMes"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <button id="btnExportarNotasConcluidasPorMes"
+          style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+          <span>📥</span>
+          <span>Exportar Excel</span>
+        </button>
+      </div>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartNotasConcluidasPorMes"></canvas>
+    </div>
+    <div id="infoNotasConcluidasPorMes"
+      style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorMes">0</span>
+    </div>
+  </div>
+
+  <!-- Gráfico de Notas Concluídas (CONC CTEC e CONC RTEC) -->
+
+  <div id="graficoConcluidas"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">✅ Notas Concluídas por Data de Conclusão</h2>
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroMesConcluidas" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            mês:</label>
+          <select id="filtroMesConcluidas"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDiasConcluidas"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por dia</span>
+          </button>
+          <div id="containerCheckboxesDiasConcluidas"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasConcluidas"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasConcluidas"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartConcluidas"></canvas>
+    </div>
+    <div id="infoConcluidas"
+      style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+      <strong>Total de notas concluídas:</strong> <span id="totalConcluidas">0</span> |
+      <strong style="color: #388e3c;">CONC CTEC:</strong> <span id="totalCONC_CTEC" style="color: #388e3c;">0</span> |
+      <strong style="color: #81c784;">CONC RTEC:</strong> <span id="totalCONC_RTEC" style="color: #81c784;">0</span> |
+      <strong style="color: #388e3c;">% Aprovação CONC CTEC:</strong> <span id="percentualAprovacao"
+        style="color: #388e3c; font-weight: bold;">0%</span>
+    </div>
+  </div>
+
+  <!-- Container para os gráficos de Notas sem contrato -->
+  <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
+    <!-- Gráfico de Notas sem contrato (Código 0555) -->
+    <div id="graficoNotasSemContrato"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - GD</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoPrazoMedioMiniMicro" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
-              por ano:</label>
-            <select id="filtroAnoPrazoMedioMiniMicro" onchange="aplicarFiltroAnoPrazoMedioMiniMicro()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
-              <option value="todos">Todos</option>
-            </select>
-          </div>
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <h2 style="color: #2e7d32; margin: 0;">🧾 Notas com medida 0555 concluídas</h2>
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
+          <button id="btnExportarNotasSemContrato"
+            style="padding: 10px 16px; background: Quantidade de Notas ABER E ANDM Carga e GD; background: #4caf50;color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+            <span>📊</span>
+            <span>Exportar Excel</span>
+          </button>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazoMiniMicro"
+            <button id="botaoToggleAnoNotasSemContrato"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por descrição</span>
+              <span>Filtrar por ano</span>
             </button>
-            <div id="containerCheckboxesDescricoesPrazoMiniMicro"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesAnoNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasPrazoMiniMicro"
+            <button id="botaoToggleMesNotasSemContrato"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
+              <span>Filtrar por mês</span>
             </button>
-            <div id="containerCheckboxesCodigoMedidasPrazoMiniMicro"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesMesNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
-        <strong>Regras para geração do gráfico:</strong><br>
-        <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
-          <li>Considera apenas notas de <b>Mini/Micro Geração (GD)</b> com datas válidas de início planejado e
-            conclusão.</li>
-          <li>As notas são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
-          <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
-          <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
-          <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
-          <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
-          <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
-        </ul>
-      </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartPrazoMedioMiniMicro"></canvas>
-      </div>
-      <div id="infoPrazoMedioMiniMicro"
-        style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
-        <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasMiniMicro">0</span> |
-        <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralMiniMicro">0</span> dias
-      </div>
-    </div>
-
-
-
-
-
-    <!-- Gráfico: Notas Concluídas por Usuário -->
-    <div id="graficoNotasPorUsuario"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #d32f2f; margin: 0;">👥 Notas Concluídas por Usuário</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroMesNotasPorUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
-              mês (Concluída em):</label>
-            <select id="filtroMesNotasPorUsuario" onchange="aplicarFiltroMesNotasPorUsuario()"
-              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
-              <option value="todos">Todos os meses</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDiasNotasPorUsuario"
+            <button id="botaoToggleDiasNotasSemContrato"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por dia</span>
             </button>
-            <div id="containerCheckboxesDiasNotasPorUsuario"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesDiasNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesNotasPorUsuario"
+            <button id="botaoToggleStatusNotasSemContrato"
               style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por descrição</span>
+              <span>Filtrar por status</span>
             </button>
-            <div id="containerCheckboxesDescricoesNotasPorUsuario"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasNotasPorUsuario"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidasNotasPorUsuario"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesStatusNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
         </div>
       </div>
       <div style="max-width: 1000px; margin: 0 auto;">
-        <canvas id="chartNotasPorUsuario"></canvas>
+        <canvas id="chartNotasSemContrato"></canvas>
       </div>
-      <div id="infoNotasPorUsuario"
-        style="margin-top: 16px; padding: 12px; background: #ffebee; border-radius: 8px; color: #c62828;">
-        <strong>Total de notas concluídas:</strong> <span id="totalNotasPorUsuario">0</span>
+      <div id="infoNotasSemContrato" style="padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+        <strong>Total de notas:</strong> <span id="totalNotasSemContrato">0</span>
       </div>
     </div>
 
-    <!-- Gráfico: Percentual de Aprovação/Reprovação por Usuário -->
-    <div id="graficoAprovacaoReprovacaoPorUsuario"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+    <!-- Gráfico de Notas sem contrato SEM DATA DE CONCLUSÃO (Código 0555) -->
+    <div id="graficoNotasSemDataNotasSemContrato"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Percentual de Aprovação e Reprovação por Usuário</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <h2 style="color: #d32f2f; margin: 0;">⏳ Notas com medida 0555 ABER ou ANDM sem data de conclusão</h2>
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; justify-content: flex-end;">
+          <button id="btnExportarNotasSemDataSemContrato"
+            style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+            <span>📊</span>
+            <span>Exportar Excel</span>
+          </button>
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroMesAprovacaoReprovacao" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
-              por
-              mês (Concluída em):</label>
-            <select id="filtroMesAprovacaoReprovacao" onchange="aplicarFiltroMesAprovacaoReprovacao()"
-              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
-              <option value="todos">Todos os meses</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesAprovacaoReprovacao"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <button id="botaoToggleStatusNotasSemDataNotasSemContrato"
+              style="padding: 10px 16px; background: #d32f2f; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
-              <span>Filtrar por descrição</span>
+              <span>Filtrar por status</span>
             </button>
-            <div id="containerCheckboxesDescricoesAprovacaoReprovacao"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidasAprovacaoReprovacao"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Código Medidas</span>
-            </button>
-            <div id="containerCheckboxesCodigoMedidasAprovacaoReprovacao"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <div id="containerCheckboxesStatusNotasSemDataNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
         </div>
       </div>
-      <div style="max-width: 1400px; margin: 0 auto;">
-        <canvas id="chartAprovacaoReprovacaoPorUsuario"></canvas>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartNotasSemDataNotasSemContrato"></canvas>
       </div>
-      <div id="infoAprovacaoReprovacaoPorUsuario"
-        style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
-        <strong>Total de notas concluídas:</strong> <span id="totalNotasAprovacaoReprovacao">0</span>
+      <div id="infoNotasSemDataNotasSemContrato"
+        style="padding: 12px; background: #ffebee; border-radius: 8px; color: #d32f2f;">
+        <strong>Total de notas sem data de conclusão:</strong> <span id="totalNotasSemDataNotasSemContrato">0</span>
       </div>
     </div>
 
-    <!-- Gráfico: Notas Concluídas por Dia por Usuário -->
-    <div id="graficoNotasConcluidasPorDiaUsuario"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #1976d2; margin: 0;">📅 Notas Concluídas por Dia por Usuário</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroDiaNotasConcluidasPorDiaUsuario"
-              style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por dia:</label>
-            <select id="filtroDiaNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroDiaNotasConcluidasPorDiaUsuario()"
-              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
-              <option value="todos">Todos os dias</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <label for="filtroMesNotasConcluidasPorDiaUsuario"
-              style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês (Concluída em):</label>
-            <select id="filtroMesNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroMesNotasConcluidasPorDiaUsuario()"
-              style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
-              <option value="todos">Todos os meses</option>
-            </select>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleUsuariosNotasConcluidasPorDia"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-              <span>▼</span>
-              <span>Filtrar por Usuário</span>
-            </button>
-            <div id="containerCheckboxesUsuariosNotasConcluidasPorDia"
-              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-height: 300px; overflow-y: auto;">
-              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-        </div>
+    <!-- Gráfico de Comparação: Notas Carga vinculadas a 0555 -->
+    <div id="graficoComparacaoNotasCarga0555"
+      style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-top: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <div style="margin-bottom: 16px;">
+        <h2 style="color: #1976d2; margin: 0;">🔍 Notas com med 0040 sem contrato assinado (sem med 0555 concluída)
+        </h2>
+        <p style="color: #666; font-size: 13px; margin: 8px 0 0 0;">
+          Exibe notas com código 0040, 0041, 0042, 0045 (status ABER/ANDM) que:<br>
+          - Estão vinculadas a pelo menos uma nota 0555 (com status ANDM, ABER ou ANDM ENVI) de mesmo número;<br>
+          - São agrupadas por mês de fim planejado (ou "Sem data" se não houver data);<br>
+          - Não exibem notas cuja descrição contenha "Consumidor de BT".<br>
+          <br>
+          <strong>Filtros aplicados:</strong><br>
+          • Apenas notas Carga (0040/41/42/45) com status ABER ou ANDM;<br>
+          • Apenas notas vinculadas a notas 0555 com status ANDM, ABER ou ANDM ENVI;<br>
+          • Notas com "Descrição Consumidor de BT" são excluídas.<br>
+        </p>
       </div>
-      <div style="max-width: 1400px; margin: 0 auto;">
-        <canvas id="chartNotasConcluidasPorDiaUsuario"></canvas>
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <canvas id="chartComparacaoNotasCarga0555"></canvas>
       </div>
-      <div id="infoNotasConcluidasPorDiaUsuario"
+      <div id="infoComparacaoNotasCarga0555"
         style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1565c0;">
-        <strong>Total de notas concluídas:</strong> <span id="totalNotasConcluidasPorDiaUsuario">0</span>
+        <strong>Total de notas Carga vinculadas:</strong> <span id="totalComparacaoNotasCarga0555">0</span>
       </div>
     </div>
+  </div>
+  <!-- Fim do container para os gráficos de Notas sem contrato -->
 
-    <!-- Tabela de Dados -->
-    <div id="secaoDadosCadastrados"
-      style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Dados Cadastrados</h2>
-      <button id="botaoExportarTabela"
-        style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
-        📥 Exportar para Excel
-      </button>
-      <div id="tabelaContainer" style="overflow-x: auto;">
-        <table id="tabelaIndices" style="width: 100%; border-collapse: collapse; min-width: 1200px;">
-          <thead>
-            <tr style="background: #f5f5f5;">
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Nota</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Área
-                Operacional</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Cidade
-              </th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Código
-                Medidas</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Descrição
-              </th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Texto
-                Medidas</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Status
-                Usuário</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Início
-                Planejado</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Fim
-                Planejado</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluído
-                Por</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluída
-                Em</th>
-              <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">
-                Modificado Por</th>
-              <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd; white-space: nowrap;">Ações
-              </th>
-            </tr>
-          </thead>
-          <tbody id="tabelaBody">
-            <tr>
-              <td colspan="13" style="text-align: center; padding: 20px; color: #999;">
-                Nenhum dado cadastrado. Faça upload de um arquivo Excel para começar.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <!-- Gráfico de Concluídas por Tipo Demais -->
+  <div id="graficoConcluidasPorTipoDemais"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+      <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Carga</h2>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
+          <input type="checkbox" id="ocultarBarrasDemais" style="cursor: pointer;">
+          <span>Ocultar barras</span>
+        </label>
+        <label for="filtroAnoConcluidasPorTipoDemais" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
+          por ano:</label>
+        <select id="filtroAnoConcluidasPorTipoDemais"
+          style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+          <option value="todos">Todos</option>
+        </select>
       </div>
     </div>
+    <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
+      <canvas id="chartConcluidasPorTipoDemais"></canvas>
+    </div>
+    <div id="infoConcluidasPorTipoDemais"
+      style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoDemais">0</span> |
+      <strong>Critério:</strong> Demais Tipos de Solicitação (CONC CTEC e CONC RTEC)
+    </div>
+  </div>
+
+  <!-- Gráfico de Concluídas por Tipo de Solicitação (Mini/Micro vs Demais) -->
+  <div id="graficoConcluidasPorTipoSolicitacao"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+      <h2 style="color: #2e7d32; margin: 0;">📊 Concluídas por Tipo - Mini/Micro Geração</h2>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #666; cursor: pointer;">
+          <input type="checkbox" id="ocultarBarrasMini" style="cursor: pointer;">
+          <span>Ocultar barras</span>
+        </label>
+        <label for="filtroAnoConcluidasPorTipoSolicitacao"
+          style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+        <select id="filtroAnoConcluidasPorTipoSolicitacao"
+          style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+          <option value="todos">Todos</option>
+        </select>
+      </div>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto; height: 400px;">
+      <canvas id="chartConcluidasPorTipoSolicitacao"></canvas>
+    </div>
+    <div id="infoConcluidasPorTipoSolicitacao"
+      style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorTipoMini">0</span> |
+      <strong>Critério:</strong> Mini/Micro Geração (CONC CTEC e CONC RTEC)
+    </div>
+  </div>
+
+  <!-- Gráfico RPVD (Recondução por Vencimento de Documentação) -->
+  <div id="graficoRPVD"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+      <h2 style="color: #2e7d32; margin: 0;">📊 RPVD - Notas Reprovada por Motivos Não Técnicos</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroMesRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês:</label>
+          <select id="filtroMesRPVD"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoRPVD" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+          <select id="filtroAnoRPVD"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesRPVD"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesRPVD"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 600px; margin: 0 auto; height: 400px;">
+      <canvas id="chartRPVD"></canvas>
+    </div>
+    <div id="infoRPVD"
+      style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas CONC RTEC:</strong> <span id="totalNotasRTEC">0</span> |
+      <strong>Notas com RPVD:</strong> <span id="totalNotasRPVD">0</span> |
+      <strong>Percentual:</strong> <span id="percentualRPVD">0%</span>
+    </div>
+  </div>
+
+  <!-- Gráfico de Intervalos de Prazo (Início Planejado x Conclusão) -->
+  <div id="graficoPrazoIntervalos"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📊 Notas atendidas por intervalo (Início Planejado x Conclusão)</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoPrazoIntervalos" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            ano:</label>
+          <select id="filtroAnoPrazoIntervalos"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleMesesPrazoIntervalos"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por mês</span>
+          </button>
+          <div id="containerCheckboxesMesesPrazoIntervalos"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesPrazoIntervalos"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesPrazoIntervalos"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e0e0e0;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <span style="font-weight: 600; color: #2e7d32; font-size: 14px;">⚙️ Configurar Intervalos:</span>
+      </div>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
+          <input type="number" id="intervalo1Max" value="15" min="1" max="999"
+            style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+          <span style="font-size: 13px; color: #666;">dias</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 13px; color: #666;">Intervalo 2: até</label>
+          <input type="number" id="intervalo2Max" value="20" min="1" max="999"
+            style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+          <span style="font-size: 13px; color: #666;">dias</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 13px; color: #666;">Intervalo 3: até</label>
+          <input type="number" id="intervalo3Max" value="35" min="1" max="999"
+            style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+          <span style="font-size: 13px; color: #666;">dias</span>
+        </div>
+        <button id="btnResetarIntervalos"
+          style="padding: 8px 16px; background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+          Resetar padrão
+        </button>
+        <button id="btnGerarGraficoPrazoIntervalos"
+          style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+          📊 Gerar Gráfico
+        </button>
+      </div>
+    </div>
+    <div
+      style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <strong>Regras para geração do gráfico:</strong><br>
+      <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+        <li>Notas consideradas apenas com <b>status concluído</b> (CONC CTEC ou CONC RTEC).</li>
+        <li>Notas com status <b>ABER</b> ou <b>ANDM</b> são <b>excluídas</b> do gráfico.</li>
+        <li>Notas devem possuir datas válidas de <b>início planejado</b> e <b>conclusão</b>.</li>
+        <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+        <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+        <li>Intervalos são agrupados conforme os valores definidos nos campos acima.</li>
+      </ul>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartPrazoIntervalos"></canvas>
+    </div>
+    <div id="infoPrazoIntervalos"
+      style="margin-top: 16px; padding: 12px; background: #eef7f0; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas consideradas:</strong> <span id="totalNotasPrazoIntervalos">0</span>
+    </div>
+  </div>
+
+  <!-- Gráfico de Prazo Médio Mensal -->
+  <div id="graficoPrazoMedioGeral"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal Geral(GD e Carga)</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoPrazoMedio" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            ano:</label>
+          <select id="filtroAnoPrazoMedio" onchange="aplicarFiltroAnoPrazoMedio()"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesPrazo"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesPrazo"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasPrazo"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasPrazo"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <strong>Regras para geração do gráfico:</strong><br>
+      <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+        <li>Considera todas as notas com datas válidas de início planejado e conclusão.</li>
+        <li>Notas de GD e Carga são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
+        <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
+        <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+        <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+        <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
+        <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
+      </ul>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartPrazoMedio"></canvas>
+    </div>
+    <div id="infoPrazoMedio"
+      style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas">0</span> |
+      <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral">0</span> dias
+    </div>
+  </div>
+
+  <!-- Gráfico de Prazo Médio Mensal - Todos exceto Mini/Micro Geração -->
+  <div id="graficoPrazoMedioCarga"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - Carga</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoPrazoMedioExceto" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            ano:</label>
+          <select id="filtroAnoPrazoMedioExceto" onchange="aplicarFiltroAnoPrazoMedioExceto()"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesPrazoExceto"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesPrazoExceto"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasPrazoExceto"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasPrazoExceto"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <strong>Regras para geração do gráfico:</strong><br>
+      <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+        <li>Considera notas de <b>Carga</b> (exclui Mini/Micro Geração) com datas válidas de início planejado e
+          conclusão.</li>
+        <li>As notas são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
+        <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
+        <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+        <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+        <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
+        <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
+      </ul>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartPrazoMedioExceto"></canvas>
+    </div>
+    <div id="infoPrazoMedioExceto"
+      style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasExceto">0</span> |
+      <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralExceto">0</span> dias
+    </div>
+  </div>
+
+  <!-- Gráfico de Prazo Médio Mensal - Somente Mini/Micro Geração -->
+  <div id="graficoPrazoMedioGD"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📅 Prazo Médio Mensal - GD</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label for="filtroAnoPrazoMedioMiniMicro" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
+            por ano:</label>
+          <select id="filtroAnoPrazoMedioMiniMicro" onchange="aplicarFiltroAnoPrazoMedioMiniMicro()"
+            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesPrazoMiniMicro"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesPrazoMiniMicro"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasPrazoMiniMicro"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasPrazoMiniMicro"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <strong>Regras para geração do gráfico:</strong><br>
+      <ul style="margin: 8px 0 0 18px; padding: 0; font-size: 14px; color: #333;">
+        <li>Considera apenas notas de <b>Mini/Micro Geração (GD)</b> com datas válidas de início planejado e
+          conclusão.</li>
+        <li>As notas são agrupadas por mês e ano da <b>data de conclusão</b>.</li>
+        <li>O prazo médio é calculado pela diferença em dias entre início planejado e conclusão.</li>
+        <li>Notas com intervalo de <b>conclusão de exatamente 1 dia</b> são <b>excluídas</b>.</li>
+        <li>Notas com intervalo negativo (conclusão antes do início) são excluídas.</li>
+        <li>Notas com status <b>CONC CTEC</b> ou <b>CONC RTEC</b> são consideradas concluídas.</li>
+        <li>Filtros de ano, descrição e código de medidas podem ser aplicados acima.</li>
+      </ul>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartPrazoMedioMiniMicro"></canvas>
+    </div>
+    <div id="infoPrazoMedioMiniMicro"
+      style="margin-top: 16px; padding: 12px; background: #fff3e0; border-radius: 8px; color: #e65100;">
+      <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadasMiniMicro">0</span> |
+      <strong>Prazo médio geral:</strong> <span id="prazoMedioGeralMiniMicro">0</span> dias
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Gráfico: Notas Concluídas por Usuário -->
+  <div id="graficoNotasPorUsuario"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #d32f2f; margin: 0;">👥 Notas Concluídas por Usuário</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="filtroMesNotasPorUsuario" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+            mês (Concluída em):</label>
+          <select id="filtroMesNotasPorUsuario" onchange="aplicarFiltroMesNotasPorUsuario()"
+            style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDiasNotasPorUsuario"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por dia</span>
+          </button>
+          <div id="containerCheckboxesDiasNotasPorUsuario"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesNotasPorUsuario"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesNotasPorUsuario"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasNotasPorUsuario"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasNotasPorUsuario"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <canvas id="chartNotasPorUsuario"></canvas>
+    </div>
+    <div id="infoNotasPorUsuario"
+      style="margin-top: 16px; padding: 12px; background: #ffebee; border-radius: 8px; color: #c62828;">
+      <strong>Total de notas concluídas:</strong> <span id="totalNotasPorUsuario">0</span>
+    </div>
+  </div>
+
+  <!-- Gráfico: Percentual de Aprovação/Reprovação por Usuário -->
+  <div id="graficoAprovacaoReprovacaoPorUsuario"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📊 Percentual de Aprovação e Reprovação por Usuário</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="filtroMesAprovacaoReprovacao" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
+            por
+            mês (Concluída em):</label>
+          <select id="filtroMesAprovacaoReprovacao" onchange="aplicarFiltroMesAprovacaoReprovacao()"
+            style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleDescricoesAprovacaoReprovacao"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por descrição</span>
+          </button>
+          <div id="containerCheckboxesDescricoesAprovacaoReprovacao"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleCodigoMedidasAprovacaoReprovacao"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Código Medidas</span>
+          </button>
+          <div id="containerCheckboxesCodigoMedidasAprovacaoReprovacao"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <canvas id="chartAprovacaoReprovacaoPorUsuario"></canvas>
+    </div>
+    <div id="infoAprovacaoReprovacaoPorUsuario"
+      style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+      <strong>Total de notas concluídas:</strong> <span id="totalNotasAprovacaoReprovacao">0</span>
+    </div>
+  </div>
+
+  <!-- Gráfico: Notas Concluídas por Dia por Usuário -->
+  <div id="graficoNotasConcluidasPorDiaUsuario"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px;">
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
+      <h2 style="color: #1976d2; margin: 0;">📅 Notas Concluídas por Dia por Usuário</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="filtroDiaNotasConcluidasPorDiaUsuario"
+            style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por dia:</label>
+          <select id="filtroDiaNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroDiaNotasConcluidasPorDiaUsuario()"
+            style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+            <option value="todos">Todos os dias</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="filtroMesNotasConcluidasPorDiaUsuario"
+            style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por mês (Concluída em):</label>
+          <select id="filtroMesNotasConcluidasPorDiaUsuario" onchange="aplicarFiltroMesNotasConcluidasPorDiaUsuario()"
+            style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; min-width: 180px;">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="botaoToggleUsuariosNotasConcluidasPorDia"
+            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+            <span>▼</span>
+            <span>Filtrar por Usuário</span>
+          </button>
+          <div id="containerCheckboxesUsuariosNotasConcluidasPorDia"
+            style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-height: 300px; overflow-y: auto;">
+            <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <canvas id="chartNotasConcluidasPorDiaUsuario"></canvas>
+    </div>
+    <div id="infoNotasConcluidasPorDiaUsuario"
+      style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1565c0;">
+      <strong>Total de notas concluídas:</strong> <span id="totalNotasConcluidasPorDiaUsuario">0</span>
+    </div>
+  </div>
+
+  <!-- Tabela de Dados -->
+  <div id="secaoDadosCadastrados"
+    style="display: none; background: #fff; border-radius: 10px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;">
+    <h2 style="color: #2e7d32; margin-bottom: 16px;">📊 Dados Cadastrados</h2>
+    <button id="botaoExportarTabela"
+      style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+      📥 Exportar para Excel
+    </button>
+    <div id="tabelaContainer" style="overflow-x: auto;">
+      <table id="tabelaIndices" style="width: 100%; border-collapse: collapse; min-width: 1200px;">
+        <thead>
+          <tr style="background: #f5f5f5;">
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Nota</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Área
+              Operacional</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Cidade
+            </th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Código
+              Medidas</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Descrição
+            </th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Texto
+              Medidas</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Status
+              Usuário</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Início
+              Planejado</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Fim
+              Planejado</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluído
+              Por</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">Concluída
+              Em</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ddd; white-space: nowrap;">
+              Modificado Por</th>
+            <th style="padding: 12px; text-align: center; border-bottom: 2px solid #ddd; white-space: nowrap;">Ações
+            </th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody">
+          <tr>
+            <td colspan="13" style="text-align: center; padding: 20px; color: #999;">
+              Nenhum dado cadastrado. Faça upload de um arquivo Excel para começar.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 
 
@@ -3729,8 +3731,8 @@
           html += `<td style="padding: 10px;">${nota.cidade || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.area_operacional || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.codigo_medidas || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
-          html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
+          // html += `<td style="padding: 10px;">${nota.texto_medidas || ''}</td>`;
+          // html += `<td style="padding: 10px;">${nota.descricao || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.inicio_planejado || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.status_usuario || ''}</td>`;
           html += `<td style="padding: 10px;">${nota.concluido_por || ''}</td>`;
@@ -7508,6 +7510,7 @@
       }
     };
 
+    // Função para filtrar gráfico ABER/ANDM (fim_planejado) por mês
     window.filtrarGraficoFimPlanejadoPorMes = function () {
       const mesSelecionado = document.getElementById('filtroMesFimPlanejado')?.value || 'todos';
       const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
@@ -8045,21 +8048,21 @@
           borderRadius: 8,
           hoverBackgroundColor: colors.bg,
           hoverBorderColor: colors.border,
-            datalabels: {
-              display: true,
-              anchor: 'end',
-              align: 'top',
-              offset: 12,
-              font: {
-                size: 14,
-                family: 'Roboto',
-                weight: 'bold'
-              },
-              color: '#2e7d32',
-              formatter: function (value) {
-                return value > 0 ? value : '';
-              }
+          datalabels: {
+            display: true,
+            anchor: 'end',
+            align: 'top',
+            offset: 12,
+            font: {
+              size: 14,
+              family: 'Roboto',
+              weight: 'bold'
+            },
+            color: '#2e7d32',
+            formatter: function (value) {
+              return value > 0 ? value : '';
             }
+          }
         };
       });
 
@@ -12463,14 +12466,14 @@
       //-------codigo novo 
 
       let maxBarValue = 0;
-datasets.forEach(ds => {
-  ds.data.forEach(val => {
-    if (val > maxBarValue) maxBarValue = val;
-  });
-});
-let suggestedMax = maxBarValue + 1;
+      datasets.forEach(ds => {
+        ds.data.forEach(val => {
+          if (val > maxBarValue) maxBarValue = val;
+        });
+      });
+      let suggestedMax = maxBarValue + 1;
 
-//-----fim do codigo novo 
+      //-----fim do codigo novo 
 
       const ctx = document.getElementById('chartNotasConcluidasPorDiaUsuario').getContext('2d');
       if (chartNotasConcluidasPorDiaUsuarioInstance) {
