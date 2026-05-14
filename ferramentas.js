@@ -66,6 +66,7 @@ if (document.getElementById('pdfzip')) {
     }
 
     const createZipBtn = document.getElementById("nszip-createZipBtn");
+    const clearBtn = document.getElementById("nszip-clearBtn");
     if (createZipBtn) {
         createZipBtn.addEventListener("click", async () => {
             const nsNumber = document.getElementById("nszip-nsNumber").value.trim();
@@ -97,6 +98,18 @@ if (document.getElementById('pdfzip')) {
             a.download = zipName;
             a.click();
             URL.revokeObjectURL(url);
+        });
+    }
+    if (clearBtn) {
+        clearBtn.addEventListener("click", () => {
+            // Limpa campo texto
+            document.getElementById("nszip-nsNumber").value = "";
+            // Limpa arrays de arquivos
+            nszipFilesProj.length = 0;
+            nszipFilesCoord.length = 0;
+            // Limpa listas visuais
+            document.getElementById("nszip-fileList-proj").innerHTML = "";
+            document.getElementById("nszip-fileList-coord").innerHTML = "";
         });
     }
 }
