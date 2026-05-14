@@ -82,7 +82,23 @@
       <option value="equipamentosaterramento">Equipamentos de Aterramento</option>
       <option value="protecoesdegeracao">Proteções de Geração</option>
       <option value="Gerenciador de Textos de Reprovação">Gerenciador de Textos de Reprovação</option>
+        <option value="pdfzip">Unir PDFs e Criar ZIP</option>
     </select>
+  </div>
+  <!-- Ferramenta PDF/ZIP -->
+  <div id="pdfzip" style="display:none;">
+    <div class="nszip-container">
+      <h2 class="nszip-title">Unir PDFs e Criar ZIP</h2>
+      <div class="nszip-input-group">
+        <label for="nszip-nsNumber">Número da NS:</label>
+        <input id="nszip-nsNumber" type="text" placeholder="Digite o número da NS">
+      </div>
+      <div id="nszip-dropzone-proj" class="nszip-dropzone">Arraste aqui os PDFs do PROJ</div>
+      <ul id="nszip-fileList-proj" class="nszip-file-list"></ul>
+      <div id="nszip-dropzone-coord" class="nszip-dropzone">Arraste aqui os PDFs do COORD</div>
+      <ul id="nszip-fileList-coord" class="nszip-file-list"></ul>
+      <button id="nszip-createZipBtn" class="nszip-button">Criar ZIP</button>
+    </div>
   </div>
 
 
@@ -355,6 +371,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="ferramentas.js"></script>
 
   <script>
@@ -373,6 +391,12 @@
       }
     });
   </script>
+
+
+  
+
+
+
 
 
 </body>

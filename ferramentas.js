@@ -1,22 +1,141 @@
 let valor = "conversorCoordenadas"; // Valor padrão
 
 
+
 document.getElementById('ferramentaSelector').addEventListener('change', function () {
-    valor = this.value;
-    console.log("Valor selecionado 1:", valor); // Adicione este log para depuração
-    document.getElementById('conversorCoordenadas').style.display = valor === 'conversorCoordenadas' ? 'block' : 'none';
-    document.getElementById('PesquisarRTs').style.display = valor === 'PesquisarRTs' ? 'block' : 'none';
-    document.getElementById('equipamentosaterramento').style.display = valor === 'equipamentosaterramento' ? 'block' : 'none';
-    document.getElementById('protecoesdegeracao').style.display = valor === 'protecoesdegeracao' ? 'block' : 'none';
-    document.getElementById('Gerenciador de Textos de Reprovação').style.display = valor === 'Gerenciador de Textos de Reprovação' ? 'block' : 'none';
+        valor = this.value;
+        document.getElementById('conversorCoordenadas').style.display = valor === 'conversorCoordenadas' ? 'block' : 'none';
+        document.getElementById('PesquisarRTs').style.display = valor === 'PesquisarRTs' ? 'block' : 'none';
+        document.getElementById('equipamentosaterramento').style.display = valor === 'equipamentosaterramento' ? 'block' : 'none';
+        document.getElementById('protecoesdegeracao').style.display = valor === 'protecoesdegeracao' ? 'block' : 'none';
+        document.getElementById('Gerenciador de Textos de Reprovação').style.display = valor === 'Gerenciador de Textos de Reprovação' ? 'block' : 'none';
+        document.getElementById('pdfzip').style.display = valor === 'pdfzip' ? 'block' : 'none';
 });
+
+// --- PDF/ZIP TOOL ---
+if (document.getElementById('pdfzip')) {
+    // Namespace exclusivo: nszip-
+    let nszipFilesProj = [];
+    let nszipFilesCoord = [];
+
+    function nszipSetupDropzone(dropzoneId, fileListId, targetArray) {
+        const dropzone = document.getElementById(dropzoneId);
+        const fileList = document.getElementById(fileListId);
+        if (!dropzone) return;
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            const newFiles = Array.from(e.dataTransfer.files).filter(file => file.type === "application/pdf");
+            targetArray.push(...newFiles);
+            fileList.innerHTML = "";
+            targetArray.forEach(file => {
+                const li = document.createElement("li");
+                li.textContent = file.name;
+                fileList.appendChild(li);
+            });
+        });
+    }
+
+    nszipSetupDropzone("nszip-dropzone-proj", "nszip-fileList-proj", nszipFilesProj);
+    nszipSetupDropzone("nszip-dropzone-coord", "nszip-fileList-coord", nszipFilesCoord);
+
+    function nszipGetCurrentDateFormatted() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        return `${day}${month}${year}`;
+    }
+
+    async function nszipMergePDFs(files) {
+        const mergedPdf = await PDFLib.PDFDocument.create();
+        for (const file of files) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach(page => mergedPdf.addPage(page));
+        }
+        return await mergedPdf.save();
+    }
+
+    const createZipBtn = document.getElementById("nszip-createZipBtn");
+    if (createZipBtn) {
+        createZipBtn.addEventListener("click", async () => {
+            const nsNumber = document.getElementById("nszip-nsNumber").value.trim();
+            if (!nsNumber) {
+                alert("Digite o número da NS!");
+                return;
+            }
+            const currentDate = nszipGetCurrentDateFormatted();
+            const projName = `${nsNumber}_PROJ_APVD_${currentDate}.pdf`;
+            const coordName = `${nsNumber}_COORD_APVD_${currentDate}.pdf`;
+            const zipName = `${nsNumber}_PROJ_APVD_${currentDate}.zip`;
+            if (nszipFilesProj.length === 0 && nszipFilesCoord.length === 0) {
+                alert("Arraste arquivos em pelo menos um dos campos!");
+                return;
+            }
+            const zip = new JSZip();
+            if (nszipFilesProj.length > 0) {
+                const projPdfBytes = await nszipMergePDFs(nszipFilesProj);
+                zip.file(projName, projPdfBytes);
+            }
+            if (nszipFilesCoord.length > 0) {
+                const coordPdfBytes = await nszipMergePDFs(nszipFilesCoord);
+                zip.file(coordName, coordPdfBytes);
+            }
+            const content = await zip.generateAsync({ type: "blob" });
+            const url = URL.createObjectURL(content);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = zipName;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+    }
+}
+
 
 
 
 let map = L.map('map').setView([-17.5, -45.5], 5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap contributors',
+        detectRetina: true,
+        maxZoom: 19,
+        tileSize: 256,
+        zoomOffset: 0
 }).addTo(map);
+
+// Corrige o problema de exibição do mapa ao trocar de ferramenta ou ao carregar
+function fixLeafletMap() {
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 300);
+}
+
+// Chama ao exibir a ferramenta de coordenadas
+const ferramentaSelector = document.getElementById('ferramentaSelector');
+if (ferramentaSelector) {
+    ferramentaSelector.addEventListener('change', function () {
+        if (this.value === 'conversorCoordenadas') {
+            fixLeafletMap();
+        }
+    });
+}
+
+// Também corrige ao carregar a página se já estiver visível
+window.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('conversorCoordenadas').style.display !== 'none') {
+        fixLeafletMap();
+    }
+});
 
 let marker1, marker2, line;
 
