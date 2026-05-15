@@ -93,9 +93,13 @@
         <label for="nszip-nsNumber">Número da NS:</label>
         <input id="nszip-nsNumber" type="text" placeholder="Digite o número da NS">
       </div>
-      <div id="nszip-dropzone-proj" class="nszip-dropzone">Arraste aqui os PDFs do PROJ</div>
+      <div id="nszip-dropzone-proj" class="nszip-dropzone">Arraste aqui os PDFs do PROJ<br><small style="font-size:0.78em;font-weight:400;opacity:0.8;">ou clique no botão abaixo</small></div>
+      <input type="file" id="nszip-fileInput-proj" accept=".pdf" multiple style="display:none;">
+      <button class="nszip-btn-select" onclick="document.getElementById('nszip-fileInput-proj').click()">📁 Selecionar arquivos PROJ</button>
       <ul id="nszip-fileList-proj" class="nszip-file-list"></ul>
-      <div id="nszip-dropzone-coord" class="nszip-dropzone">Arraste aqui os PDFs do COORD</div>
+      <div id="nszip-dropzone-coord" class="nszip-dropzone">Arraste aqui os PDFs do COORD<br><small style="font-size:0.78em;font-weight:400;opacity:0.8;">ou clique no botão abaixo</small></div>
+      <input type="file" id="nszip-fileInput-coord" accept=".pdf" multiple style="display:none;">
+      <button class="nszip-btn-select" onclick="document.getElementById('nszip-fileInput-coord').click()">📁 Selecionar arquivos COORD</button>
       <ul id="nszip-fileList-coord" class="nszip-file-list"></ul>
       <div style="display:flex; gap:12px; justify-content:center; margin-top:10px;">
         <button id="nszip-createZipBtn" class="nszip-button">Criar ZIP</button>

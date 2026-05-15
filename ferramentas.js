@@ -18,9 +18,19 @@ if (document.getElementById('pdfzip')) {
     let nszipFilesProj = [];
     let nszipFilesCoord = [];
 
-    function nszipSetupDropzone(dropzoneId, fileListId, targetArray) {
+    function nszipRenderFileList(fileList, targetArray) {
+        fileList.innerHTML = "";
+        targetArray.forEach(file => {
+            const li = document.createElement("li");
+            li.textContent = file.name;
+            fileList.appendChild(li);
+        });
+    }
+
+    function nszipSetupDropzone(dropzoneId, fileListId, fileInputId, targetArray) {
         const dropzone = document.getElementById(dropzoneId);
         const fileList = document.getElementById(fileListId);
+        const fileInput = document.getElementById(fileInputId);
         if (!dropzone) return;
         dropzone.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -34,17 +44,20 @@ if (document.getElementById('pdfzip')) {
             dropzone.classList.remove('dragover');
             const newFiles = Array.from(e.dataTransfer.files).filter(file => file.type === "application/pdf");
             targetArray.push(...newFiles);
-            fileList.innerHTML = "";
-            targetArray.forEach(file => {
-                const li = document.createElement("li");
-                li.textContent = file.name;
-                fileList.appendChild(li);
-            });
+            nszipRenderFileList(fileList, targetArray);
         });
+        if (fileInput) {
+            fileInput.addEventListener('change', () => {
+                const newFiles = Array.from(fileInput.files).filter(file => file.type === "application/pdf");
+                targetArray.push(...newFiles);
+                nszipRenderFileList(fileList, targetArray);
+                fileInput.value = "";
+            });
+        }
     }
 
-    nszipSetupDropzone("nszip-dropzone-proj", "nszip-fileList-proj", nszipFilesProj);
-    nszipSetupDropzone("nszip-dropzone-coord", "nszip-fileList-coord", nszipFilesCoord);
+    nszipSetupDropzone("nszip-dropzone-proj", "nszip-fileList-proj", "nszip-fileInput-proj", nszipFilesProj);
+    nszipSetupDropzone("nszip-dropzone-coord", "nszip-fileList-coord", "nszip-fileInput-coord", nszipFilesCoord);
 
     function nszipGetCurrentDateFormatted() {
         const now = new Date();
