@@ -8,6 +8,7 @@ function ativarBotaoCabecalho() {
     'index.html': 'btn-home',
     'checklist.html': 'btn-checklist',
     'indices.html': 'btn-indices',
+    'seloprojeto.html': 'btn-seloprojeto',
     'fluxos.html': 'btn-fluxos',
     'calendario.html': 'btn-calendario',
     'links.html': 'btn-links',

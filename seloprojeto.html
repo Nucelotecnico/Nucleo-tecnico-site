@@ -1,0 +1,1578 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Núcleo-Técnico</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="fluxos.css">
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    @keyframes titleShine {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    #titulo {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      z-index: 2;
+    }
+
+    #titulo::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
+      animation: titleShine 3s infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+/* Namespace exclusivo: nszip- */
+    .nszip-body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 24px 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .nszip-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 650px;
+      margin: 0 auto;
+    }
+
+    .nszip-title {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .nszip-dropzone {
+      width: 100%;
+      height: 150px;
+      border: 2px dashed #0078d7;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #0078d7;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background-color: #f9fbfd;
+    }
+
+    .nszip-dropzone.dragover {
+      background-color: #e6f2ff;
+      border-color: #005a9e;
+      color: #005a9e;
+    }
+
+    .nszip-button {
+      background: #0078d7;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .nszip-button:hover {
+      background: #005a9e;
+    }
+
+    .nszip-action-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .nszip-file-list {
+      text-align: left;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #444;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .nszip-file-list li {
+      margin: 5px 0;
+    }
+
+    .nszip-file-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 8px;
+      border: 1px solid #e3eaf2;
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 6px;
+    }
+
+    .nszip-file-list-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .nszip-file-remove-btn {
+      background: transparent;
+      color: #b42318;
+      border: 1px solid #f5c2bd;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .nszip-file-remove-btn:hover {
+      background: #fff4f3;
+    }
+
+    .nszip-select-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nszip-secondary-button {
+      background: #ffffff;
+      color: #0078d7;
+      border: 1px solid #0078d7;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nszip-secondary-button:hover {
+      background: #eaf4ff;
+      border-color: #005a9e;
+      color: #005a9e;
+    }
+
+    .nszip-input-group {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .nszip-input-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    .nszip-input-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .nszip-seal-config {
+      margin: 18px 0;
+      text-align: left;
+      border: 1px solid #dbe5ef;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+
+    .nszip-seal-config legend {
+      color: #123b64;
+      font-weight: 600;
+      padding: 0 6px;
+    }
+
+    .nszip-config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 14px;
+      align-items: end;
+    }
+
+    .nszip-config-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nszip-config-field input[type="color"] {
+      width: 100%;
+      height: 36px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      padding: 2px;
+    }
+
+    .nszip-config-field input[type="number"],
+    .nszip-config-field input[type="text"],
+    .nszip-config-field input[type="range"] {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .nszip-config-field textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 14px;
+      background: #fff;
+      min-height: 150px;
+      resize: vertical;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    .nszip-checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+
+    .nszip-opacity-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nszip-opacity-value {
+      font-size: 13px;
+      color: #555;
+      min-width: 35px;
+      text-align: right;
+    }
+
+    .nszip-optional-section {
+      margin-top: 16px;
+      text-align: left;
+      border: 1px solid #dbe5ef;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+
+    .nszip-optional-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nszip-optional-title {
+      margin: 0;
+      color: #123b64;
+      font-size: 16px;
+    }
+
+    .nszip-optional-group {
+      border: 1px solid #dbe5ef;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      background: #ffffff;
+    }
+
+    .nszip-optional-group-header {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .nszip-optional-group-header .nszip-config-field {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .nszip-optional-seal-flag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #123b64;
+      white-space: nowrap;
+      margin-bottom: 6px;
+    }
+
+    .nszip-sheet-preview {
+      margin-top: 16px;
+      text-align: left;
+      border: 1px solid #dbe5ef;
+      border-radius: 10px;
+      padding: 12px;
+      background: #f8fbff;
+    }
+
+    .nszip-sheet-preview h3 {
+      margin: 0 0 10px 0;
+      color: #123b64;
+      font-size: 16px;
+    }
+
+    .nszip-letter-preview {
+      border: 1px solid #c9dfd0;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    }
+
+    .nszip-letter-preview-header {
+      padding: 14px 18px;
+      background: linear-gradient(180deg, #f2fbf4 0%, #e9f8ed 100%);
+      border-bottom: 1px solid #c9dfd0;
+      color: #00803a;
+    }
+
+    .nszip-letter-preview-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+      text-align: center;
+      letter-spacing: 0.2px;
+    }
+
+    .nszip-letter-preview-meta {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0d5f2d;
+    }
+
+    .nszip-letter-preview-body {
+      padding: 18px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      color: #222;
+      text-align: justify;
+      text-justify: inter-word;
+      white-space: pre-wrap;
+      min-height: 260px;
+    }
+
+    .nszip-letter-preview-paragraph {
+      margin: 0 0 10px 0;
+    }
+
+    .nszip-letter-preview-empty {
+      color: #6c7a72;
+      font-style: italic;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    @media (max-width: 720px) {
+      .nszip-body {
+        padding: 16px 0;
+      }
+
+      .nszip-container {
+        width: calc(100% - 24px);
+        padding: 20px;
+      }
+
+      .nszip-config-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .nszip-container {
+      width: min(980px, 96%);
+      margin-bottom: 28px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
+    <h1 id="titulo"
+      style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
+      PORTAL NÚCLEO TÉCNICO
+    </h1>
+  </div>
+  <br>
+
+  <div class="menu-container">
+    <button id="btn-relatorios" class="menu-btn" onclick="location.href='relatorios-tecnicos.html'">Relatórios<br>Técnicos</button>
+    <button id="btn-checklist" class="menu-btn" onclick="location.href='checklist.html'">Checklist</button>
+    <button id="btn-indices" class="menu-btn" onclick="location.href='indices.html'">Índices</button>
+    <button id="btn-seloprojeto" class="menu-btn" style="background:#2e7d32; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.15);" onclick="location.href='seloprojeto.html'">Selo Projeto</button>
+    <button id="btn-fluxos" class="menu-btn" onclick="location.href='fluxos.html'">Fluxos</button>
+    <button id="btn-calendario" class="menu-btn" onclick="location.href='calendario.html'">Calendário</button>
+    <button id="btn-links" class="menu-btn" onclick="location.href='links.html'">Links</button>
+    <button id="btn-modulos" class="menu-btn" onclick="location.href='modulos.html'">Módulos
+      <br>Homologados</button>
+    <button id="btn-ferramentas" class="menu-btn"
+      onclick="location.href='ferramentas.html'">Ferramentas</button>
+    <button id="btn-controlens" class="menu-btn" onclick="location.href='controlens.html'">Controle<br>Análises</button>
+    <button id="btn-engenharia" class="menu-btn" onclick="location.href='engenharia.html'">Engenharia</button>
+    <button id="btn-configuracoes" class="menu-btn" onclick="location.href='configuracoes.html'">Configurações</button>
+    <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="menu.js"></script>
+
+  <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">SELO PROJETO</h1>
+
+<div class="nszip-container">
+    <h2 class="nszip-title"></h2>
+
+    <div class="nszip-input-group">
+      <label for="nszip-matricula">Matrícula:</label>
+      <input id="nszip-matricula" type="text" placeholder="Digite sua matrícula">
+    </div>
+
+    <div class="nszip-input-group">
+      <label for="nszip-nsNumber">Número da NS:</label>
+      <input id="nszip-nsNumber" type="text" placeholder="Digite o número da NS">
+    </div>
+
+    <fieldset id="nszip-sealConfigSection" class="nszip-seal-config">
+      <legend>Configuração do Selo</legend>
+
+      <label class="nszip-checkbox-field" for="nszip-enableSeal">
+        <input id="nszip-enableSeal" type="checkbox" checked>
+        Aplicar selo de aprovação em todas as páginas
+      </label>
+
+      <div class="nszip-config-grid">
+        <div class="nszip-config-field">
+          <label for="nszip-approvalText">Texto principal</label>
+          <input id="nszip-approvalText" type="text" value="APROVADO">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-cemigText">Texto sequencial</label>
+          <input id="nszip-cemigText" type="text" value="CEMIG">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-approvalColor">Cor do texto principal</label>
+          <input id="nszip-approvalColor" type="color" value="#00a651">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-bandColor">Cor da faixa</label>
+          <input id="nszip-bandColor" type="color" value="#ffd400">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-cemigColor">Cor do texto sequencial</label>
+          <input id="nszip-cemigColor" type="color" value="#007a3d">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-sealAngle">Ângulo da faixa (graus)</label>
+          <input id="nszip-sealAngle" type="number" value="-35" min="-89" max="89" step="1">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-bandHeight">Altura da faixa (px)</label>
+          <input id="nszip-bandHeight" type="number" value="70" min="20" max="200" step="1">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-approvalSize">Tamanho texto principal (px)</label>
+          <input id="nszip-approvalSize" type="number" value="46" min="12" max="180" step="1">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-cemigSize">Tamanho texto sequencial (px)</label>
+          <input id="nszip-cemigSize" type="number" value="20" min="8" max="100" step="1">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-bandOpacity">Opacidade da faixa</label>
+          <div class="nszip-opacity-wrapper">
+            <input id="nszip-bandOpacity" type="range" min="0.05" max="1" value="0.10" step="0.01">
+            <span id="nszip-bandOpacityValue" class="nszip-opacity-value">0.10</span>
+          </div>
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-approvalOpacity">Opacidade texto APROVADO</label>
+          <div class="nszip-opacity-wrapper">
+            <input id="nszip-approvalOpacity" type="range" min="0.05" max="1" value="0.25" step="0.01">
+            <span id="nszip-approvalOpacityValue" class="nszip-opacity-value">0.25</span>
+          </div>
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-cemigOpacity">Opacidade texto CEMIG</label>
+          <div class="nszip-opacity-wrapper">
+            <input id="nszip-cemigOpacity" type="range" min="0.05" max="1" value="0.20" step="0.01">
+            <span id="nszip-cemigOpacityValue" class="nszip-opacity-value">0.20</span>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div id="nszip-dropzone-proj" class="nszip-dropzone">Arraste aqui os PDFs do PROJ</div>
+    <label class="nszip-checkbox-field" for="nszip-enableProjSeal" style="margin: 10px 0 0;">
+      <input id="nszip-enableProjSeal" type="checkbox" checked>
+      Aplicar selo nos PDFs do PROJ
+    </label>
+    <div class="nszip-select-actions">
+      <button id="nszip-pickFiles-proj" type="button" class="nszip-secondary-button">Selecionar PDFs (PROJ)</button>
+    </div>
+    <input id="nszip-fileInput-proj" type="file" accept=".pdf,application/pdf" multiple hidden>
+    <ul id="nszip-fileList-proj" class="nszip-file-list"></ul>
+
+    <div id="nszip-dropzone-coord" class="nszip-dropzone">Arraste aqui os PDFs do COORD</div>
+    <label class="nszip-checkbox-field" for="nszip-enableCoordSeal" style="margin: 10px 0 0;">
+      <input id="nszip-enableCoordSeal" type="checkbox" checked>
+      Aplicar selo nos PDFs do COORD
+    </label>
+    <div class="nszip-select-actions">
+      <button id="nszip-pickFiles-coord" type="button" class="nszip-secondary-button">Selecionar PDFs (COORD)</button>
+    </div>
+    <input id="nszip-fileInput-coord" type="file" accept=".pdf,application/pdf" multiple hidden>
+    <ul id="nszip-fileList-coord" class="nszip-file-list"></ul>
+
+    <section class="nszip-optional-section">
+      <div class="nszip-optional-header">
+        <h3 class="nszip-optional-title">Arquivos Opcionais</h3>
+        <button id="nszip-addOptionalBtn" type="button" class="nszip-secondary-button">Adicionar Opcional</button>
+      </div>
+      <div id="nszip-optionalGroups"></div>
+    </section>
+
+    <section id="nszip-sheetPreviewSection" class="nszip-sheet-preview">
+      <h3>Carta de Aprovação</h3>
+      <div class="nszip-config-field">
+        <label for="nszip-extraSheetText">Texto do PDF adicional</label>
+        <textarea id="nszip-extraSheetText">
+
+"Antes de solicitar a ligação, esta instalação deve ser submetida a uma vistoria pela CEMIG."
+- Esta análise não isenta o responsável técnico da obra quanto à observância das normas CEMIG, ABNT e AMBIENTAIS.
+- Caso não seja executado no prazo de 12 meses, este projeto deverá ser submetido novamente à CEMIG para análise.
+- Excepcionalmente nos atendimentos com obras no sistema da CEMIG para conexão de cargas ou de usina geradora, a validade do projeto elétrico aprovado pela CEMIG será até o término da obra.
+- A ligação ao sistema elétrico da CEMIG está condicionada à análise de viabilidade técnica e comercial, podendo haver custos ao interessado.</textarea>
+      </div>
+  <div id="nszip-letterPreview" class="nszip-letter-preview" aria-live="polite"></div>
+    </section>
+
+    <div class="nszip-action-buttons">
+      <button id="nszip-createZipBtn" class="nszip-button">Criar ZIP</button>
+      <button id="nszip-clearBtn" type="button" class="nszip-secondary-button">Limpar NS e Arquivos</button>
+    </div>
+  </div>
+
+  <script>
+// Namespace exclusivo: nszip-
+    let nszipFilesProj = [];
+    let nszipFilesCoord = [];
+    let nszipOptionalGroups = [];
+    let nszipOptionalCounter = 0;
+    const nszipPreferencesKey = "nszip-user-preferences";
+    let nszipLastLetterPreviewState = null;
+
+    function nszipRenderFileList(fileList, targetArray) {
+      fileList.innerHTML = "";
+      targetArray.forEach((file, index) => {
+        const li = document.createElement("li");
+        li.className = "nszip-file-list-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "nszip-file-list-name";
+        nameSpan.textContent = file.name;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "nszip-file-remove-btn";
+        removeBtn.textContent = "Remover";
+        removeBtn.addEventListener("click", () => {
+          targetArray.splice(index, 1);
+          nszipRenderFileList(fileList, targetArray);
+        });
+
+        li.appendChild(nameSpan);
+        li.appendChild(removeBtn);
+        fileList.appendChild(li);
+      });
+    }
+
+    function nszipGetFileSignature(file) {
+      return `${file.name}__${file.size}__${file.lastModified}`;
+    }
+
+    function nszipAddPdfFiles(files, targetArray, fileList) {
+      const existingSignatures = new Set(targetArray.map(nszipGetFileSignature));
+      const newFiles = Array.from(files).filter(file => {
+        const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+        if (!isPdf) {
+          return false;
+        }
+
+        const signature = nszipGetFileSignature(file);
+        if (existingSignatures.has(signature)) {
+          return false;
+        }
+
+        existingSignatures.add(signature);
+        return true;
+      });
+
+      targetArray.push(...newFiles);
+      nszipRenderFileList(fileList, targetArray);
+    }
+
+    function nszipSetupDropzone(dropzoneId, fileListId, targetArray) {
+      const dropzone = document.getElementById(dropzoneId);
+      const fileList = document.getElementById(fileListId);
+
+      nszipSetupDropzoneElements(dropzone, fileList, targetArray);
+    }
+
+    function nszipSetupDropzoneElements(dropzone, fileList, targetArray) {
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        nszipAddPdfFiles(e.dataTransfer.files, targetArray, fileList);
+      });
+    }
+
+    function nszipSetupPickers(fileInputId, pickFilesBtnId, fileListId, targetArray) {
+      const fileInput = document.getElementById(fileInputId);
+      const pickFilesBtn = document.getElementById(pickFilesBtnId);
+      const fileList = document.getElementById(fileListId);
+
+      nszipSetupPickerElements(fileInput, pickFilesBtn, fileList, targetArray);
+    }
+
+    function nszipSetupPickerElements(fileInput, pickFilesBtn, fileList, targetArray) {
+
+      pickFilesBtn.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", (e) => {
+        nszipAddPdfFiles(e.target.files, targetArray, fileList);
+        fileInput.value = "";
+      });
+    }
+
+    function nszipSanitizeTitle(value) {
+      return String(value || "")
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase();
+    }
+
+    function nszipGetStoredPreferences() {
+      try {
+        const rawValue = localStorage.getItem(nszipPreferencesKey);
+        return rawValue ? JSON.parse(rawValue) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function nszipSavePreferences() {
+      const preferenceIds = [
+        "nszip-matricula",
+        "nszip-approvalText",
+        "nszip-cemigText",
+        "nszip-approvalColor",
+        "nszip-bandColor",
+        "nszip-cemigColor",
+        "nszip-sealAngle",
+        "nszip-bandHeight",
+        "nszip-approvalSize",
+        "nszip-cemigSize",
+        "nszip-bandOpacity",
+        "nszip-approvalOpacity",
+        "nszip-cemigOpacity",
+        "nszip-enableSeal",
+        "nszip-extraSheetText"
+      ];
+
+      const preferences = {};
+      for (const id of preferenceIds) {
+        const element = document.getElementById(id);
+        if (!element) {
+          continue;
+        }
+
+        preferences[id] = element.type === "checkbox" ? element.checked : element.value;
+      }
+
+      try {
+        localStorage.setItem(nszipPreferencesKey, JSON.stringify(preferences));
+      } catch {
+        // Ignore storage failures and keep the app functional.
+      }
+    }
+
+    function nszipApplyStoredPreferences() {
+      const preferences = nszipGetStoredPreferences();
+      Object.entries(preferences).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (!element) {
+          return;
+        }
+
+        if (element.type === "checkbox") {
+          element.checked = Boolean(value);
+        } else {
+          element.value = value;
+        }
+      });
+    }
+
+    function nszipApplyUserCategoryRestrictions() {
+      const userCategoria = sessionStorage.getItem('userCategoria');
+      if (userCategoria !== 'usuario') {
+        return;
+      }
+
+      const sealConfigSection = document.getElementById('nszip-sealConfigSection');
+      const sheetPreviewSection = document.getElementById('nszip-sheetPreviewSection');
+
+      if (sealConfigSection) {
+        sealConfigSection.style.display = 'none';
+      }
+
+      if (sheetPreviewSection) {
+        sheetPreviewSection.style.display = 'none';
+      }
+    }
+
+    function nszipBuildExtraSheetPreviewText(nsNumber, currentDate, currentTime, rawText) {
+      return nszipBuildExtraSheetText(nsNumber, currentDate, currentTime, rawText)
+        .replace(/\n{3,}/g, "\n\n");
+    }
+
+    function nszipBuildExtraSheetModel(nsNumber, matricula, currentDateTime, rawText) {
+      const currentDate = currentDateTime.date;
+      const currentTime = currentDateTime.time;
+      const bodyText = nszipBuildExtraSheetPreviewText(nsNumber, currentDate, currentTime, rawText);
+      const paragraphs = bodyText.split(/\n\s*\n/).map(block => block.trim()).filter(Boolean);
+
+      return {
+        nsNumber,
+        matricula: matricula || "________",
+        currentDateTime,
+        currentDate,
+        currentTime,
+        title: `NS: ${nsNumber} APROVADA ${currentDate} ${currentTime}`,
+        paragraphs
+      };
+    }
+
+    function nszipRenderExtraSheetPreview() {
+      const previewRoot = document.getElementById("nszip-letterPreview");
+      const nsNumber = document.getElementById("nszip-nsNumber").value.trim() || "________";
+      const matricula = document.getElementById("nszip-matricula").value.trim() || "________";
+      const currentDateTime = nszipGetCurrentDateTimeFormatted();
+      const rawText = document.getElementById("nszip-extraSheetText").value;
+      const previewModel = nszipBuildExtraSheetModel(nsNumber, matricula, currentDateTime, rawText);
+      nszipLastLetterPreviewState = previewModel;
+
+      previewRoot.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.className = "nszip-letter-preview-header";
+
+      const titleElement = document.createElement("p");
+      titleElement.className = "nszip-letter-preview-title";
+      titleElement.textContent = previewModel.title;
+
+      const metaElement = document.createElement("div");
+      metaElement.className = "nszip-letter-preview-meta";
+
+      const matriculaSpan = document.createElement("span");
+      matriculaSpan.textContent = `Matrícula: ${previewModel.matricula}`;
+
+      const dateSpan = document.createElement("span");
+      dateSpan.textContent = `Data: ${previewModel.currentDate}`;
+
+      const timeSpan = document.createElement("span");
+      timeSpan.textContent = `Hora: ${previewModel.currentTime}`;
+
+      metaElement.appendChild(matriculaSpan);
+      metaElement.appendChild(dateSpan);
+      metaElement.appendChild(timeSpan);
+
+      header.appendChild(titleElement);
+      header.appendChild(metaElement);
+
+      const bodyElement = document.createElement("div");
+      bodyElement.className = "nszip-letter-preview-body";
+
+      previewRoot.appendChild(header);
+      previewRoot.appendChild(bodyElement);
+
+      const bodyRoot = bodyElement;
+      if (!previewModel.paragraphs.length) {
+        const emptyElement = document.createElement("div");
+        emptyElement.className = "nszip-letter-preview-empty";
+        emptyElement.textContent = "Nenhum texto informado para a carta de aprovação.";
+        bodyRoot.appendChild(emptyElement);
+        return previewModel;
+      }
+
+      previewModel.paragraphs.forEach(paragraph => {
+        const paragraphElement = document.createElement("div");
+        paragraphElement.className = "nszip-letter-preview-paragraph";
+        paragraphElement.textContent = paragraph;
+        bodyRoot.appendChild(paragraphElement);
+      });
+
+      return previewModel;
+    }
+
+    function nszipCreateOptionalGroup() {
+      nszipOptionalCounter += 1;
+      const groupId = nszipOptionalCounter;
+      const files = [];
+
+      const group = document.createElement("div");
+      group.className = "nszip-optional-group";
+
+      const header = document.createElement("div");
+      header.className = "nszip-optional-group-header";
+
+      const titleField = document.createElement("div");
+      titleField.className = "nszip-config-field";
+      const titleLabel = document.createElement("label");
+      titleLabel.textContent = `Titulo do arquivo opcional ${groupId}`;
+      const titleInput = document.createElement("input");
+      titleInput.type = "text";
+      titleInput.placeholder = "Ex.: MEMORIAL, DESENHO, ANEXO TECNICO";
+      titleField.appendChild(titleLabel);
+      titleField.appendChild(titleInput);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "nszip-secondary-button";
+      removeBtn.textContent = "Remover opcional";
+
+      const sealFlagLabel = document.createElement("label");
+      sealFlagLabel.className = "nszip-optional-seal-flag";
+      const sealFlagInput = document.createElement("input");
+      sealFlagInput.type = "checkbox";
+      sealFlagInput.checked = true;
+      sealFlagLabel.appendChild(sealFlagInput);
+      sealFlagLabel.appendChild(document.createTextNode("Aplicar selo neste opcional"));
+
+      header.appendChild(titleField);
+      header.appendChild(sealFlagLabel);
+      header.appendChild(removeBtn);
+
+      const dropzone = document.createElement("div");
+      dropzone.className = "nszip-dropzone";
+      dropzone.textContent = `Arraste aqui os PDFs do opcional ${groupId}`;
+
+      const actions = document.createElement("div");
+      actions.className = "nszip-select-actions";
+      const pickBtn = document.createElement("button");
+      pickBtn.type = "button";
+      pickBtn.className = "nszip-secondary-button";
+      pickBtn.textContent = "Selecionar PDFs";
+      actions.appendChild(pickBtn);
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".pdf,application/pdf";
+      input.multiple = true;
+      input.hidden = true;
+
+      const fileList = document.createElement("ul");
+      fileList.className = "nszip-file-list";
+
+      group.appendChild(header);
+      group.appendChild(dropzone);
+      group.appendChild(actions);
+      group.appendChild(input);
+      group.appendChild(fileList);
+
+      const container = document.getElementById("nszip-optionalGroups");
+      container.appendChild(group);
+
+      nszipSetupDropzoneElements(dropzone, fileList, files);
+      nszipSetupPickerElements(input, pickBtn, fileList, files);
+
+      const groupData = {
+        id: groupId,
+        files,
+        titleInput,
+        applySealInput: sealFlagInput,
+        fileInput: input,
+        fileList,
+        root: group
+      };
+
+      removeBtn.addEventListener("click", () => {
+        nszipOptionalGroups = nszipOptionalGroups.filter(item => item.id !== groupId);
+        group.remove();
+      });
+
+      nszipOptionalGroups.push(groupData);
+    }
+
+    function nszipClearNsAndFiles() {
+      document.getElementById("nszip-nsNumber").value = "";
+
+      nszipFilesProj.length = 0;
+      nszipFilesCoord.length = 0;
+
+      nszipRenderFileList(document.getElementById("nszip-fileList-proj"), nszipFilesProj);
+      nszipRenderFileList(document.getElementById("nszip-fileList-coord"), nszipFilesCoord);
+
+      document.getElementById("nszip-fileInput-proj").value = "";
+      document.getElementById("nszip-fileInput-coord").value = "";
+
+      document.getElementById("nszip-extraSheetText").value = `NS: "Numero da NS" APROVADA + data + hora.
+
+    "Antes de solicitar a ligação, esta instalação deve ser submetida a uma vistoria pela CEMIG."
+    - Esta análise não isenta o responsável técnico da obra quanto à observância das normas CEMIG, ABNT e AMBIENTAIS.
+    - Caso não seja executado no prazo de 12 meses, este projeto deverá ser submetido novamente à CEMIG para análise.
+    - Excepcionalmente nos atendimentos com obras no sistema da CEMIG para conexão de cargas ou de usina geradora, a validade do projeto elétrico aprovado pela CEMIG será até o término da obra.
+    - A ligação ao sistema elétrico da CEMIG está condicionada à análise de viabilidade técnica e comercial, podendo haver custos ao interessado.`;
+
+      nszipOptionalGroups.forEach(group => {
+        group.files.length = 0;
+        group.fileInput.value = "";
+        nszipRenderFileList(group.fileList, group.files);
+      });
+    }
+
+    function nszipHexToRgb(hexColor) {
+      const hex = String(hexColor || "").replace("#", "");
+      if (!/^[0-9a-fA-F]{6}$/.test(hex)) {
+        return PDFLib.rgb(0, 0, 0);
+      }
+
+      const r = parseInt(hex.slice(0, 2), 16) / 255;
+      const g = parseInt(hex.slice(2, 4), 16) / 255;
+      const b = parseInt(hex.slice(4, 6), 16) / 255;
+      return PDFLib.rgb(r, g, b);
+    }
+
+    function nszipBuildRepeatedTokens(text, font, fontSize, targetWidth, minGap = 10) {
+      const safeText = (text || "CEMIG").trim() || "CEMIG";
+      const tokenWidth = font.widthOfTextAtSize(safeText, fontSize);
+      const gap = Math.max(4, minGap);
+
+      if (tokenWidth <= 0) {
+        return { text: safeText, count: 1, gap, tokenWidth, totalWidth: 0 };
+      }
+
+      const count = Math.max(1, Math.floor((targetWidth + gap) / (tokenWidth + gap)));
+      const totalWidth = (count * tokenWidth) + ((count - 1) * gap);
+
+      return { text: safeText, count, gap, tokenWidth, totalWidth };
+    }
+
+    function nszipFitFontSizeToWidth(text, font, startSize, maxWidth, minSize = 6) {
+      let size = startSize;
+      while (size > minSize && font.widthOfTextAtSize(text, size) > maxWidth) {
+        size -= 0.5;
+      }
+      return Math.max(minSize, size);
+    }
+
+    function nszipDrawRepeatedCenteredLine({
+      page,
+      repeatData,
+      font,
+      size,
+      color,
+      opacity,
+      centerX,
+      centerY,
+      dirX,
+      dirY,
+      rotation,
+      textHeight
+    }) {
+      const startX = centerX - ((repeatData.totalWidth / 2) * dirX);
+      const startY = centerY - ((repeatData.totalWidth / 2) * dirY) - (textHeight / 2);
+
+      for (let i = 0; i < repeatData.count; i++) {
+        const offset = i * (repeatData.tokenWidth + repeatData.gap);
+        page.drawText(repeatData.text, {
+          x: startX + (offset * dirX),
+          y: startY + (offset * dirY),
+          size,
+          font,
+          color,
+          opacity,
+          rotate: rotation
+        });
+      }
+    }
+
+    function nszipGetSealConfig() {
+      const getNumber = (id, fallback) => {
+        const value = Number(document.getElementById(id).value);
+        return Number.isFinite(value) ? value : fallback;
+      };
+
+      const getText = (id, fallback) => {
+        const value = String(document.getElementById(id).value || "").trim();
+        return value || fallback;
+      };
+
+      return {
+        enabled: document.getElementById("nszip-enableSeal").checked,
+        approvalText: getText("nszip-approvalText", "APROVADO"),
+        matricula: getText("nszip-matricula", ""),
+        cemigText: getText("nszip-cemigText", "CEMIG"),
+        projEnabled: document.getElementById("nszip-enableProjSeal").checked,
+        coordEnabled: document.getElementById("nszip-enableCoordSeal").checked,
+        approvalColor: document.getElementById("nszip-approvalColor").value,
+        bandColor: document.getElementById("nszip-bandColor").value,
+        cemigColor: document.getElementById("nszip-cemigColor").value,
+        angle: Math.max(-89, Math.min(89, getNumber("nszip-sealAngle", -35))),
+        bandHeight: Math.max(20, Math.min(200, getNumber("nszip-bandHeight", 70))),
+        approvalSize: Math.max(12, Math.min(180, getNumber("nszip-approvalSize", 46))),
+        cemigSize: Math.max(8, Math.min(100, getNumber("nszip-cemigSize", 20))),
+        bandOpacity: Math.max(0.05, Math.min(1, getNumber("nszip-bandOpacity", 0.10))),
+        approvalOpacity: Math.max(0.05, Math.min(1, getNumber("nszip-approvalOpacity", 0.25))),
+        cemigOpacity: Math.max(0.05, Math.min(1, getNumber("nszip-cemigOpacity", 0.20)))
+      };
+    }
+
+    function nszipBuildSectionSealConfig(sealConfig, sectionEnabled) {
+      return {
+        ...sealConfig,
+        enabled: Boolean(sealConfig.enabled && sectionEnabled)
+      };
+    }
+
+    async function nszipApplySealToPdf(pdfDoc, sealConfig) {
+      if (!sealConfig.enabled) {
+        return;
+      }
+
+      const sealDate = sealConfig.currentDateTime?.date || "";
+      const sealTime = sealConfig.currentDateTime?.time || "";
+      const matriculaSegment = sealConfig.matricula ? ` POR:${sealConfig.matricula}` : "";
+      const approvalSealText = `${sealConfig.approvalText}${matriculaSegment} NS:${sealConfig.nsNumber || ""} ${sealDate} ${sealTime}`
+        .replace(/\s+/g, " ")
+        .trim();
+
+      const boldFont = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+      const regularFont = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const bandColor = nszipHexToRgb(sealConfig.bandColor);
+      const approvalColor = nszipHexToRgb(sealConfig.approvalColor);
+      const cemigColor = nszipHexToRgb(sealConfig.cemigColor);
+
+      for (const page of pdfDoc.getPages()) {
+        const { width, height } = page.getSize();
+        const diagonalLength = Math.sqrt((width * width) + (height * height));
+        const drawFromTopLeft = sealConfig.angle >= 0;
+        const start = drawFromTopLeft ? { x: 0, y: height } : { x: 0, y: 0 };
+        const end = drawFromTopLeft ? { x: width, y: 0 } : { x: width, y: height };
+        const diagonalAngle = Math.atan2(end.y - start.y, end.x - start.x);
+        const dirX = Math.cos(diagonalAngle);
+        const dirY = Math.sin(diagonalAngle);
+        const normalX = -dirY;
+        const normalY = dirX;
+        const requestedBandHeight = Math.min(Math.max(sealConfig.bandHeight, 20), Math.max(20, height * 0.75));
+        const previewApprovalSize = Math.min(sealConfig.approvalSize, requestedBandHeight * 0.72);
+        const previewCemigSize = Math.min(sealConfig.cemigSize, requestedBandHeight * 0.36);
+        const previewGap = Math.max(6, requestedBandHeight * 0.1);
+        const previewApprovalHeight = boldFont.heightAtSize(previewApprovalSize);
+        const previewCemigHeight = regularFont.heightAtSize(previewCemigSize);
+        const previewNeededHeight = (previewCemigHeight * 2) + previewApprovalHeight + (previewGap * 2);
+        const targetBandHeight = previewNeededHeight + Math.max(12, requestedBandHeight * 0.2);
+        const bandHeight = Math.min(Math.max(requestedBandHeight, targetBandHeight), Math.max(30, height * 0.75));
+
+        page.drawLine({
+          start,
+          end,
+          thickness: bandHeight,
+          color: bandColor,
+          opacity: sealConfig.bandOpacity
+        });
+
+        const innerPaddingX = Math.max(18, bandHeight * 0.25);
+        const innerWidth = Math.max(40, diagonalLength - (innerPaddingX * 2));
+        const verticalPadding = Math.max(6, bandHeight * 0.1);
+
+        const baseApprovalSize = Math.min(sealConfig.approvalSize, bandHeight * 0.72);
+        const baseCemigSize = Math.min(sealConfig.cemigSize, bandHeight * 0.36);
+        const baseGap = Math.max(6, bandHeight * 0.09);
+        const approvalTokenGap = Math.max(8, bandHeight * 0.13);
+        const cemigTokenGap = Math.max(8, bandHeight * 0.11);
+
+        const baseApprovalHeight = boldFont.heightAtSize(baseApprovalSize);
+        const baseCemigHeight = regularFont.heightAtSize(baseCemigSize);
+        const availableHeight = Math.max(20, bandHeight - (verticalPadding * 2));
+        const neededHeight = (baseCemigHeight * 2) + baseApprovalHeight + (baseGap * 2);
+        const heightScale = neededHeight > availableHeight ? (availableHeight / neededHeight) : 1;
+
+        let approvalFontSize = baseApprovalSize * heightScale;
+        let cemigFontSize = baseCemigSize * heightScale;
+        let lineGap = baseGap * heightScale;
+
+        approvalFontSize = Math.max(8, approvalFontSize);
+        cemigFontSize = Math.max(6, cemigFontSize);
+
+        const previewApproval = approvalSealText || "APROVADO";
+        const previewCemig = (sealConfig.cemigText || "CEMIG").trim() || "CEMIG";
+        approvalFontSize = nszipFitFontSizeToWidth(previewApproval, boldFont, approvalFontSize, innerWidth);
+        cemigFontSize = nszipFitFontSizeToWidth(previewCemig, regularFont, cemigFontSize, innerWidth);
+
+        const approvalRepeat = nszipBuildRepeatedTokens(approvalSealText, boldFont, approvalFontSize, innerWidth, approvalTokenGap);
+        const cemigRepeat = nszipBuildRepeatedTokens(sealConfig.cemigText, regularFont, cemigFontSize, innerWidth, cemigTokenGap);
+
+        const approvalHeight = boldFont.heightAtSize(approvalFontSize);
+        const cemigHeight = regularFont.heightAtSize(cemigFontSize);
+        const centerGap = ((approvalHeight + cemigHeight) / 2) + lineGap;
+        const baseCenterX = (start.x + end.x) / 2;
+        const baseCenterY = (start.y + end.y) / 2;
+        const approvalOffset = 0;
+        const cemigTopOffset = centerGap;
+        const cemigBottomOffset = -centerGap;
+
+        const approvalCenterX = baseCenterX + (normalX * approvalOffset);
+        const approvalCenterY = baseCenterY + (normalY * approvalOffset);
+        const cemigTopCenterX = baseCenterX + (normalX * cemigTopOffset);
+        const cemigTopCenterY = baseCenterY + (normalY * cemigTopOffset);
+        const cemigBottomCenterX = baseCenterX + (normalX * cemigBottomOffset);
+        const cemigBottomCenterY = baseCenterY + (normalY * cemigBottomOffset);
+
+        const rotation = PDFLib.degrees(diagonalAngle * (180 / Math.PI));
+
+        nszipDrawRepeatedCenteredLine({
+          page,
+          repeatData: approvalRepeat,
+          font: boldFont,
+          size: approvalFontSize,
+          color: approvalColor,
+          opacity: sealConfig.approvalOpacity,
+          centerX: approvalCenterX,
+          centerY: approvalCenterY,
+          dirX,
+          dirY,
+          rotation,
+          textHeight: approvalHeight
+        });
+
+        nszipDrawRepeatedCenteredLine({
+          page,
+          repeatData: cemigRepeat,
+          font: regularFont,
+          size: cemigFontSize,
+          color: cemigColor,
+          opacity: sealConfig.cemigOpacity,
+          centerX: cemigTopCenterX,
+          centerY: cemigTopCenterY,
+          dirX,
+          dirY,
+          rotation,
+          textHeight: cemigHeight
+        });
+
+        nszipDrawRepeatedCenteredLine({
+          page,
+          repeatData: cemigRepeat,
+          font: regularFont,
+          size: cemigFontSize,
+          color: cemigColor,
+          opacity: sealConfig.cemigOpacity,
+          centerX: cemigBottomCenterX,
+          centerY: cemigBottomCenterY,
+          dirX,
+          dirY,
+          rotation,
+          textHeight: cemigHeight
+        });
+      }
+    }
+
+    nszipSetupDropzone("nszip-dropzone-proj", "nszip-fileList-proj", nszipFilesProj);
+    nszipSetupDropzone("nszip-dropzone-coord", "nszip-fileList-coord", nszipFilesCoord);
+    nszipSetupPickers("nszip-fileInput-proj", "nszip-pickFiles-proj", "nszip-fileList-proj", nszipFilesProj);
+    nszipSetupPickers("nszip-fileInput-coord", "nszip-pickFiles-coord", "nszip-fileList-coord", nszipFilesCoord);
+
+    function nszipBindOpacityControl(inputId, valueId) {
+      const input = document.getElementById(inputId);
+      const value = document.getElementById(valueId);
+      value.textContent = Number(input.value).toFixed(2);
+      input.addEventListener("input", () => {
+        value.textContent = Number(input.value).toFixed(2);
+        nszipSavePreferences();
+      });
+    }
+
+    function nszipBindPreferencePersistence(elementId, eventName = "input") {
+      const element = document.getElementById(elementId);
+      if (!element) {
+        return;
+      }
+
+      element.addEventListener(eventName, () => {
+        nszipSavePreferences();
+      });
+    }
+
+    nszipApplyStoredPreferences();
+    nszipApplyUserCategoryRestrictions();
+
+    ["nszip-nsNumber", "nszip-matricula", "nszip-extraSheetText"].forEach(elementId => {
+      const element = document.getElementById(elementId);
+      element.addEventListener("input", () => {
+        nszipRenderExtraSheetPreview();
+      });
+      element.addEventListener("change", () => {
+        nszipRenderExtraSheetPreview();
+      });
+    });
+
+    nszipBindOpacityControl("nszip-bandOpacity", "nszip-bandOpacityValue");
+    nszipBindOpacityControl("nszip-approvalOpacity", "nszip-approvalOpacityValue");
+    nszipBindOpacityControl("nszip-cemigOpacity", "nszip-cemigOpacityValue");
+
+    [
+      "nszip-matricula",
+      "nszip-approvalText",
+      "nszip-cemigText",
+      "nszip-approvalColor",
+      "nszip-bandColor",
+      "nszip-cemigColor",
+      "nszip-sealAngle",
+      "nszip-bandHeight",
+      "nszip-approvalSize",
+      "nszip-cemigSize",
+      "nszip-enableSeal",
+      "nszip-extraSheetText"
+    ].forEach(elementId => {
+      const eventName = elementId === "nszip-enableSeal" ? "change" : "input";
+      nszipBindPreferencePersistence(elementId, eventName);
+    });
+
+    nszipSavePreferences();
+    nszipRenderExtraSheetPreview();
+
+    document.getElementById("nszip-addOptionalBtn").addEventListener("click", () => {
+      nszipCreateOptionalGroup();
+    });
+
+    nszipCreateOptionalGroup();
+
+    document.getElementById("nszip-clearBtn").addEventListener("click", () => {
+      nszipClearNsAndFiles();
+    });
+
+    function nszipGetCurrentDateFormatted() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      return `${day}${month}${year}`;
+    }
+
+    function nszipGetCurrentDateTimeFormatted() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      return {
+        date: `${day}/${month}/${year}`,
+        time: `${hours}:${minutes}`
+      };
+    }
+
+    function nszipBuildExtraSheetText(nsNumber, currentDate, currentTime, rawText) {
+      const defaultText = 
+
+`"Antes de solicitar a ligação, esta instalação deve ser submetida a uma vistoria pela CEMIG."
+- Esta análise não isenta o responsável técnico da obra quanto à observância das normas CEMIG, ABNT e AMBIENTAIS.
+- Caso não seja executado no prazo de 12 meses, este projeto deverá ser submetido novamente à CEMIG para análise.
+- Excepcionalmente nos atendimentos com obras no sistema da CEMIG para conexão de cargas ou de usina geradora, a validade do projeto elétrico aprovado pela CEMIG será até o término da obra.
+- A ligação ao sistema elétrico da CEMIG está condicionada à análise de viabilidade técnica e comercial, podendo haver custos ao interessado.`;
+      const sourceText = String(rawText || defaultText).trim() || defaultText;
+      const normalizedText = sourceText
+        .replace(/\bNumero da NS\b/g, nsNumber)
+        .replace(/\bdata\b/g, currentDate)
+        .replace(/\bhora\b/g, currentTime);
+
+      return normalizedText
+        .split(/\r?\n/)
+        .map(paragraph => paragraph.trim())
+        .filter(Boolean)
+        .join("\n\n");
+    }
+
+    async function nszipCreateExtraSheetPdf(nsNumber, currentDate, currentTime, sealConfig) {
+      const pdfDoc = await PDFLib.PDFDocument.create();
+      const page = pdfDoc.addPage([595.28, 841.89]);
+      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const fontBold = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+      const greenColor = PDFLib.rgb(0.0, 0.58, 0.25);
+
+      const marginX = 45;
+      const contentWidth = 505;
+      let cursorY = 790;
+      const lineHeight = 16;
+      const content = nszipBuildExtraSheetText(nsNumber, currentDate, currentTime, document.getElementById("nszip-extraSheetText").value);
+
+      const title = `NS: ${nsNumber} APROVADA ${currentDate} ${currentTime}`;
+      const matriculaValue = document.getElementById("nszip-matricula").value.trim() || "________";
+      const metaLine = `Matrícula: ${matriculaValue}    Data: ${currentDate}    Hora: ${currentTime}`;
+      const titleSize = 18;
+      const metaSize = 12;
+      const titleWidth = fontBold.widthOfTextAtSize(title, titleSize);
+      const titleX = (595.28 - titleWidth) / 2;
+      const metaWidth = font.widthOfTextAtSize(metaLine, metaSize);
+      const metaX = (595.28 - metaWidth) / 2;
+
+      page.drawRectangle({
+        x: 35,
+        y: 742,
+        width: 525,
+        height: 64,
+        color: PDFLib.rgb(0.96, 0.99, 0.96),
+        borderColor: greenColor,
+        borderWidth: 1,
+        opacity: 1
+      });
+
+      page.drawText(title, {
+        x: titleX,
+        y: 784,
+        size: titleSize,
+        font: fontBold,
+        color: greenColor
+      });
+
+      page.drawText(metaLine, {
+        x: metaX,
+        y: 766,
+        size: metaSize,
+        font: fontBold,
+        color: greenColor
+      });
+
+      page.drawLine({
+        start: { x: 70, y: 760 },
+        end: { x: 525, y: 760 },
+        thickness: 1.2,
+        color: greenColor,
+        opacity: 0.9
+      });
+
+      cursorY -= 82;
+
+      const paragraphs = content.split(/\r?\n\s*\n/).map(block => block.trim()).filter(Boolean);
+
+      const drawJustifiedLine = (line, y, justifyWidth, isLastLine) => {
+        const safeLine = line.trim();
+        if (!safeLine) {
+          return;
+        }
+
+        const words = safeLine.split(/\s+/);
+        const lineWidth = font.widthOfTextAtSize(safeLine, 11.5);
+        const needsJustify = !isLastLine && words.length > 1;
+        const wordSpacing = needsJustify ? Math.max(0, (justifyWidth - lineWidth) / (words.length - 1)) : 0;
+
+        page.drawText(safeLine, {
+          x: marginX,
+          y,
+          size: 11.5,
+          font,
+          color: PDFLib.rgb(0, 0, 0),
+          wordSpacing
+        });
+      };
+
+      for (const paragraph of paragraphs) {
+        const safeParagraph = paragraph.trim();
+        if (!safeParagraph) {
+          cursorY -= 8;
+          continue;
+        }
+
+        const words = safeParagraph.split(/\s+/);
+        let currentLine = "";
+        const lines = [];
+
+        const flushLine = (line) => {
+          if (!line) {
+            return;
+          }
+          lines.push(line);
+        };
+
+        for (const word of words) {
+          const testLine = currentLine ? `${currentLine} ${word}` : word;
+          if (font.widthOfTextAtSize(testLine, 11.5) > contentWidth) {
+            flushLine(currentLine);
+            currentLine = word;
+          } else {
+            currentLine = testLine;
+          }
+        }
+
+        flushLine(currentLine);
+
+        lines.forEach((line, index) => {
+          drawJustifiedLine(line, cursorY, contentWidth, index === lines.length - 1);
+          cursorY -= lineHeight;
+        });
+
+        cursorY -= 4;
+      }
+
+      await nszipApplySealToPdf(pdfDoc, sealConfig);
+      return await pdfDoc.save();
+    }
+
+    async function nszipMergePDFs(files, sealConfig) {
+      const mergedPdf = await PDFLib.PDFDocument.create();
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach(page => mergedPdf.addPage(page));
+      }
+
+      await nszipApplySealToPdf(mergedPdf, sealConfig);
+      return await mergedPdf.save();
+    }
+
+    document.getElementById("nszip-createZipBtn").addEventListener("click", async () => {
+      const nsNumber = document.getElementById("nszip-nsNumber").value.trim();
+      if (!nsNumber) {
+        alert("Digite o número da NS!");
+        return;
+      }
+
+      const currentDate = nszipGetCurrentDateFormatted();
+      const currentDateTime = nszipRenderExtraSheetPreview()?.currentDateTime || nszipGetCurrentDateTimeFormatted();
+
+      const projName = `${nsNumber}_PROJ_APVD_${currentDate}.pdf`;
+      const coordName = `${nsNumber}_COORD_APVD_${currentDate}.pdf`;
+      const zipName = `${nsNumber}_APROVACAO_${currentDate}.zip`;
+      const sealConfig = nszipGetSealConfig();
+      sealConfig.nsNumber = nsNumber;
+      sealConfig.currentDateTime = currentDateTime;
+      const optionalGroupsWithFiles = nszipOptionalGroups.filter(group => group.files.length > 0);
+
+      if (nszipFilesProj.length === 0 && nszipFilesCoord.length === 0 && optionalGroupsWithFiles.length === 0) {
+        alert("Adicione arquivos em pelo menos um dos campos (arrastar ou selecionar)!");
+        return;
+      }
+
+      for (const group of optionalGroupsWithFiles) {
+        const rawTitle = group.titleInput.value;
+        const sanitized = nszipSanitizeTitle(rawTitle);
+        if (!sanitized) {
+          alert(`Preencha o titulo do arquivo opcional ${group.id} para continuar.`);
+          return;
+        }
+      }
+
+      const zip = new JSZip();
+
+      if (nszipFilesProj.length > 0) {
+        const projSealConfig = nszipBuildSectionSealConfig(sealConfig, sealConfig.projEnabled);
+        const projPdfBytes = await nszipMergePDFs(nszipFilesProj, projSealConfig);
+        zip.file(projName, projPdfBytes);
+      }
+
+      if (nszipFilesCoord.length > 0) {
+        const coordSealConfig = nszipBuildSectionSealConfig(sealConfig, sealConfig.coordEnabled);
+        const coordPdfBytes = await nszipMergePDFs(nszipFilesCoord, coordSealConfig);
+        zip.file(coordName, coordPdfBytes);
+      }
+
+      const extraSheetPdfBytes = await nszipCreateExtraSheetPdf(nsNumber, currentDateTime.date, currentDateTime.time, sealConfig);
+      zip.file(`${nsNumber}_CARTA_APROVACAO_${currentDate}.pdf`, extraSheetPdfBytes);
+
+      for (let i = 0; i < optionalGroupsWithFiles.length; i++) {
+        const group = optionalGroupsWithFiles[i];
+        const customTitle = nszipSanitizeTitle(group.titleInput.value);
+        const optionalName = `${nsNumber}_${customTitle}_APVD_${currentDate}.pdf`;
+        const optionalSealConfig = {
+          ...sealConfig,
+          enabled: sealConfig.enabled && group.applySealInput.checked
+        };
+        const optionalPdfBytes = await nszipMergePDFs(group.files, optionalSealConfig);
+        zip.file(optionalName, optionalPdfBytes);
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(content);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = zipName;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+
+</html>
