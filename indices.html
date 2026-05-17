@@ -612,6 +612,18 @@
                 <option value="todos">Todos os meses</option>
               </select>
             </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="filtroDataInicioFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Data
+                início:</label>
+              <input type="date" id="filtroDataInicioFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
+                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="filtroDataFimFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Data
+                fim:</label>
+              <input type="date" id="filtroDataFimFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
+                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            </div>
           
 
           <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -3477,6 +3489,10 @@
           : dadosGlobais;
 
         if (dados && dados.length > 0) {
+          if (typeof window.aplicarResetPadraoIntervalosPrazo === 'function') {
+            window.aplicarResetPadraoIntervalosPrazo();
+          }
+
           popularFiltroAnoPrazoMedio(dados);
           gerarGraficoPrazoMedio(dados);
           popularFiltroAnoPrazoIntervalos(dados);
@@ -3921,11 +3937,17 @@
 
         popularFiltroAnoPrazoMedio(dadosCodigosPadrao);
         gerarGraficoPrazoMedio(dadosCodigosPadrao);
-        gerarGraficoPrazoIntervalos(dadosCodigosPadrao);
+
         popularFiltroAnoPrazoIntervalos(dadosCodigosPadrao);
         popularFiltroMesPrazoIntervalos(dadosCodigosPadrao);
-        popularFiltroDescricoesPrazo(dadosCodigosPadrao);
+        popularFiltroDescricoesPrazoIntervalos(dadosCodigosPadrao);
         popularFiltroCodigoMedidasPrazo(dadosCodigosPadrao);
+
+        if (typeof window.aplicarResetPadraoIntervalosPrazo === 'function') {
+          window.aplicarResetPadraoIntervalosPrazo();
+        }
+
+        gerarGraficoPrazoIntervalos(dadosCodigosPadrao);
 
         popularFiltroAnoPrazoMedioExceto(dadosCodigosPadrao);
         gerarGraficoPrazoMedioExceto(dadosCodigosPadrao);
@@ -4215,11 +4237,16 @@
         popularFiltroStatusFimPlanejado(dadosFimPlanejado);
 
         gerarGraficoPrazoMedio(dadosFiltrados);
-        gerarGraficoPrazoIntervalos(dadosFiltrados);
         popularFiltroAnoPrazoIntervalos(dadosFiltrados);
         popularFiltroMesPrazoIntervalos(dadosFiltrados);
-        popularFiltroDescricoesPrazo(dadosFiltrados);
+        popularFiltroDescricoesPrazoIntervalos(dadosFiltrados);
         popularFiltroCodigoMedidasPrazo(dadosFiltrados);
+
+        if (typeof window.aplicarResetPadraoIntervalosPrazo === 'function') {
+          window.aplicarResetPadraoIntervalosPrazo();
+        }
+
+        gerarGraficoPrazoIntervalos(dadosFiltrados);
 
         gerarGraficoPrazoMedioExceto(dadosFiltrados);
         popularFiltroDescricoesPrazoExceto(dadosFiltrados);
@@ -5484,10 +5511,16 @@
     };
 
     window.resetarIntervalos = function () {
+      if (typeof window.aplicarResetPadraoIntervalosPrazo === 'function') {
+        window.aplicarResetPadraoIntervalosPrazo();
+      }
+      gerarGraficoPrazoIntervalos(dadosGlobais);
+    };
+
+    window.aplicarResetPadraoIntervalosPrazo = function () {
       document.getElementById('intervalo1Max').value = 15;
       document.getElementById('intervalo2Max').value = 20;
       document.getElementById('intervalo3Max').value = 35;
-      gerarGraficoPrazoIntervalos(dadosGlobais);
     };
 
     window.toggleDropdownMesesPrazoIntervalos = function () {
@@ -7694,7 +7727,22 @@
 
     window.exportarNotasFimPlanejadoExcel = function () {
       const mesSelecionado = document.getElementById('filtroMesFimPlanejado')?.value || 'todos';
+      const dataInicioSelecionada = document.getElementById('filtroDataInicioFimPlanejado')?.value || '';
+      const dataFimSelecionada = document.getElementById('filtroDataFimFimPlanejado')?.value || '';
       const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+
+      const parseDataBR = function (valor) {
+        const partes = (valor || '').split('.');
+        if (partes.length < 3) return null;
+        const dia = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const ano = parseInt(partes[2], 10);
+        if (!dia || !mes || !ano) return null;
+        return new Date(ano, mes - 1, dia);
+      };
+
+      const dataInicio = dataInicioSelecionada ? new Date(dataInicioSelecionada + 'T00:00:00') : null;
+      const dataFim = dataFimSelecionada ? new Date(dataFimSelecionada + 'T23:59:59') : null;
 
       // Obter descrições selecionadas
       const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoes input[type="checkbox"]');
@@ -7758,6 +7806,17 @@
           }
         }
 
+        let periodoOk = true;
+        if (dataInicio || dataFim) {
+          const dataFimPlanejado = parseDataBR(fimPlanejado);
+          if (!dataFimPlanejado) {
+            periodoOk = false;
+          } else {
+            if (dataInicio && dataFimPlanejado < dataInicio) periodoOk = false;
+            if (dataFim && dataFimPlanejado > dataFim) periodoOk = false;
+          }
+        }
+
         const statusOk = nenhumStatusMarcado
           ? (statusBase === 'ABER' || statusBase === 'ANDM')
           : (todosStatusMarcados || statusChecados.size === 0)
@@ -7766,7 +7825,7 @@
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
         const codigoOk = todosCodigosMarcados || codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
 
-        return statusOk && descricaoOk && codigoOk && mesOk;
+        return statusOk && descricaoOk && codigoOk && mesOk && periodoOk;
       });
 
       if (dadosFiltrados.length === 0) {
@@ -7902,6 +7961,21 @@
       }
 
       const mesSelecionado = mesFiltro ?? (document.getElementById('filtroMesFimPlanejado')?.value || 'todos');
+      const dataInicioSelecionada = document.getElementById('filtroDataInicioFimPlanejado')?.value || '';
+      const dataFimSelecionada = document.getElementById('filtroDataFimFimPlanejado')?.value || '';
+
+      const parseDataBR = function (valor) {
+        const partes = (valor || '').split('.');
+        if (partes.length < 3) return null;
+        const dia = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const ano = parseInt(partes[2], 10);
+        if (!dia || !mes || !ano) return null;
+        return new Date(ano, mes - 1, dia);
+      };
+
+      const dataInicio = dataInicioSelecionada ? new Date(dataInicioSelecionada + 'T00:00:00') : null;
+      const dataFim = dataFimSelecionada ? new Date(dataFimSelecionada + 'T23:59:59') : null;
 
       const normalizarStatusBase = function (status) {
         const statusNormalizado = (status || '').trim().toUpperCase();
@@ -7972,6 +8046,17 @@
           }
         }
 
+        let periodoOk = true;
+        if (dataInicio || dataFim) {
+          const dataFimPlanejado = parseDataBR(fimPlanejado);
+          if (!dataFimPlanejado) {
+            periodoOk = false;
+          } else {
+            if (dataInicio && dataFimPlanejado < dataInicio) periodoOk = false;
+            if (dataFim && dataFimPlanejado > dataFim) periodoOk = false;
+          }
+        }
+
         const statusOk = nenhumStatusMarcado
           ? (statusBase === 'ABER' || statusBase === 'ANDM')
           : (todosStatusMarcados || statusChecados.size === 0)
@@ -7984,7 +8069,7 @@
         if (!descricaoOk) rejeitadosPorDescricao++;
         if (!codigoOk) rejeitadosPorCodigo++;
 
-        return statusOk && descricaoOk && codigoOk && mesOk;
+        return statusOk && descricaoOk && codigoOk && mesOk && periodoOk;
       });
 
       // Agrupar dados por fim_planejado e status
@@ -13000,6 +13085,7 @@
 
       // Criar gráfico
       const ctx = document.getElementById('chartConcluidasPorTipoSolicitacao').getContext('2d');
+      const ocultarBarrasInicialMini = document.getElementById('ocultarBarrasMini')?.checked === true;
       chartConcluidasPorTipoSolicitacaoInstance = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -13014,6 +13100,7 @@
               borderRadius: 8,
               hoverBackgroundColor: 'rgba(255, 167, 38, 0.8)',
               hoverBorderColor: 'rgba(255, 167, 38, 1)',
+              hidden: ocultarBarrasInicialMini,
               yAxisID: 'y',
               datalabels: {
                 color: '#333',
@@ -13039,6 +13126,7 @@
               borderRadius: 8,
               hoverBackgroundColor: 'rgba(244, 67, 54, 0.8)',
               hoverBorderColor: 'rgba(244, 67, 54, 1)',
+              hidden: ocultarBarrasInicialMini,
               yAxisID: 'y',
               datalabels: {
                 color: '#333',
@@ -13071,7 +13159,7 @@
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
               fill: false,
-              hidden: true,
+              hidden: false,
               tension: 0.4,
               yAxisID: 'y1',
               datalabels: {
@@ -13362,6 +13450,7 @@
 
       // Criar gráfico
       const ctx = document.getElementById('chartConcluidasPorTipoDemais').getContext('2d');
+      const ocultarBarrasInicialDemais = document.getElementById('ocultarBarrasDemais')?.checked === true;
       chartConcluidasPorTipoDemaisInstance = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -13376,6 +13465,7 @@
               borderRadius: 8,
               hoverBackgroundColor: 'rgba(67, 160, 71, 0.8)',
               hoverBorderColor: 'rgba(67, 160, 71, 1)',
+              hidden: ocultarBarrasInicialDemais,
               yAxisID: 'y',
               datalabels: {
                 color: '#333',
@@ -13401,6 +13491,7 @@
               borderRadius: 8,
               hoverBackgroundColor: 'rgba(244, 67, 54, 0.8)',
               hoverBorderColor: 'rgba(244, 67, 54, 1)',
+              hidden: ocultarBarrasInicialDemais,
               yAxisID: 'y',
               datalabels: {
                 color: '#333',
@@ -13433,7 +13524,7 @@
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
               fill: false,
-              hidden: true,
+              hidden: false,
               tension: 0.4,
               yAxisID: 'y1',
               datalabels: {

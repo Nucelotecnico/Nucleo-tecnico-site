@@ -86,6 +86,47 @@
             <input type="text" id="nomeProjeto" required>
           </div>
           <div class="campo">
+            <label for="tipoSubestacao">Tipo de Subestacao</label>
+            <select id="tipoSubestacao">
+              <option value="">Selecione</option>
+              <option value="N04">N°04</option>
+              <option value="N08">N°08</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="modeloProjeto">Modelo</label>
+            <input type="text" id="modeloProjeto" placeholder="Digite o modelo">
+          </div>
+          <div class="campo">
+            <label for="nivelTensao">Nivel de Tensao</label>
+            <select id="nivelTensao">
+              <option value="">Selecione</option>
+              <option value="13.8kv">13.8 kv</option>
+              <option value="22kv">22 kv</option>
+              <option value="34.5kv">34.5 kv</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="modalidadeProjeto">Modalidade</label>
+            <select id="modalidadeProjeto">
+              <option value="">Selecione</option>
+              <option value="individual">Individual</option>
+              <option value="compartilhada">Compartilhada</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="aplicacaoProjeto">Aplicacao</label>
+            <select id="aplicacaoProjeto">
+              <option value="">Selecione</option>
+              <option value="interno">Interno</option>
+              <option value="externo">Externo</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="versaoProjeto">Versao</label>
+            <input type="text" id="versaoProjeto" placeholder="Digite a versao">
+          </div>
+          <div class="campo">
             <label for="arquivoPDF">Arquivo PDF</label>
             <input type="file" id="arquivoPDF" accept="application/pdf" required>
           </div>
@@ -97,8 +138,54 @@
 
       <div class="modulos-card">
         <h2>Buscar Projeto</h2>
+        <div class="busca-campos">
+          <div class="campo">
+            <label for="buscaProjeto">Nome do Projeto</label>
+            <input type="text" id="buscaProjeto" placeholder="Digite o nome do projeto ou * para listar todos">
+          </div>
+          <div class="campo">
+            <label for="buscaTipoSubestacao">Tipo de Subestacao</label>
+            <select id="buscaTipoSubestacao">
+              <option value="">Todos</option>
+              <option value="N04">N°04</option>
+              <option value="N08">N°08</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="buscaModeloProjeto">Modelo</label>
+            <input type="text" id="buscaModeloProjeto" placeholder="Modelo">
+          </div>
+          <div class="campo">
+            <label for="buscaNivelTensao">Nivel de Tensao</label>
+            <select id="buscaNivelTensao">
+              <option value="">Todos</option>
+              <option value="13.8kv">13.8 kv</option>
+              <option value="22kv">22 kv</option>
+              <option value="34.5kv">34.5 kv</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="buscaModalidadeProjeto">Modalidade</label>
+            <select id="buscaModalidadeProjeto">
+              <option value="">Todas</option>
+              <option value="individual">Individual</option>
+              <option value="compartilhada">Compartilhada</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="buscaAplicacaoProjeto">Aplicacao</label>
+            <select id="buscaAplicacaoProjeto">
+              <option value="">Todas</option>
+              <option value="interno">Interno</option>
+              <option value="externo">Externo</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="buscaVersaoProjeto">Versao</label>
+            <input type="text" id="buscaVersaoProjeto" placeholder="Versao">
+          </div>
+        </div>
         <div class="busca-modulos">
-          <input type="text" id="buscaProjeto" placeholder="Digite o nome do projeto ou * para listar todos">
           <button id="btnBuscar" class="btn-primario">Buscar</button>
         </div>
         <p class="ajuda-busca">Use * para listar todos os projetos.</p>

@@ -140,6 +140,7 @@ button {
 
 
 #resultado {
+    display: none;
     background: #fff;
     padding: 16px;
     border-radius: 6px;
@@ -200,12 +201,20 @@ button {
 
 .campo input[type="text"],
 .campo input[type="file"],
+.campo select,
 .busca-modulos input {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #dcdcdc;
     border-radius: 6px;
     box-sizing: border-box;
+}
+
+.busca-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
 }
 
 .acoes-form {

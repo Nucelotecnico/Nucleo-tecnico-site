@@ -3,6 +3,9 @@ const supabaseClient = supabase.createClient(
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k'
 );
 
+const getUserCategoria = () => sessionStorage.getItem('userCategoria');
+const isUsuarioCategoria = () => getUserCategoria() === 'usuario';
+
 // Funções de controle da barra de carregamento circular
 window.showLoadingBar = function () {
     const overlay = document.getElementById('loadingOverlay');
@@ -63,10 +66,18 @@ async function loadUsersAndRenderList() {
         userList.innerHTML = '';
         users.forEach(user => {
             const li = document.createElement('li');
-            li.innerHTML = `
-              <span style="color:${user.color}; font-weight:bold;">${user.name}</span>
-              <button class="btn-delete-user" data-id="${user.id}">Excluir</button>
-            `;
+                        const nameSpan = document.createElement('span');
+                        nameSpan.style.color = user.color;
+                        nameSpan.style.fontWeight = 'bold';
+                        nameSpan.textContent = user.name;
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'btn-delete-user';
+                        deleteButton.dataset.id = user.id;
+                        deleteButton.textContent = 'Excluir';
+
+                        li.appendChild(nameSpan);
+                        li.appendChild(deleteButton);
             userList.appendChild(li);
         });
 
@@ -83,6 +94,11 @@ async function loadUsersAndRenderList() {
 // Delegação de eventos para exclusão de usuários
 document.addEventListener('click', async function(e) {
     if (e.target && e.target.classList.contains('btn-delete-user')) {
+        if (isUsuarioCategoria()) {
+            alert('Usuários não têm permissão para excluir usuários.');
+            return;
+        }
+
         const userId = e.target.getAttribute('data-id');
         
         // Verificar se usuário tem eventos associados
@@ -124,9 +140,8 @@ document.addEventListener('click', async function(e) {
                 alert('Erro ao excluir usuário: ' + error.message);
             } else {
                 await loadUsersAndRenderList();
-                // Atualizar calendário após exclusão
-                if (typeof calendar !== 'undefined') {
-                    calendar.refetchEvents();
+                if (typeof window.refreshCalendarViews === 'function') {
+                    await window.refreshCalendarViews();
                 }
             }
         }
@@ -135,13 +150,26 @@ document.addEventListener('click', async function(e) {
 
 document.getElementById('user-form').addEventListener('submit', async function (e) {
     e.preventDefault();
+    if (isUsuarioCategoria()) {
+        alert('Usuários não têm permissão para cadastrar usuários.');
+        return;
+    }
+
     const name = document.getElementById('user-name').value;
     const color = document.getElementById('user-color').value;
 
     if (name && color) {
-        await supabaseClient.from('users').insert([{ name, color }]);
+        const { error } = await supabaseClient.from('users').insert([{ name, color }]);
+        if (error) {
+            console.error('Erro ao cadastrar usuário:', error);
+            alert('Erro ao cadastrar usuário: ' + error.message);
+            return;
+        }
         document.getElementById('user-form').reset();
         await loadUsersAndRenderList();
+        if (typeof window.refreshCalendarViews === 'function') {
+            await window.refreshCalendarViews();
+        }
     }
 });
 
@@ -152,13 +180,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             const { data: eventos, error } = await supabaseClient
                 .from('events')
                 .select('id,title,type,start_date,end_date,users(name,color)');
-            if (error) return;
+            if (error) {
+                console.error('Erro ao carregar aniversários:', error);
+                return;
+            }
 
             // Data atual (timezone local)
             const hoje = new Date();
             const mesDiaHoje = ('0' + (hoje.getMonth() + 1)).slice(-2) + '-' + ('0' + hoje.getDate()).slice(-2);
-                const form = document.getElementById('event-form');
-// ...existing code...
 
             // Função para remover acentos
             const removeAccents = str => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
@@ -182,14 +211,20 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
 
-            // Montar mensagem personalizada para aniversários de hoje
-            let msg = '';
-            aniversariosHoje.forEach((aniv, idx) => {
-                msg += `🎉 <b>${aniv.users?.name || 'Usuário'}</b> faz aniversário hoje!`;
-                if (idx < aniversariosHoje.length - 1) msg += '<br>';
-            });
             const alerta = document.getElementById('alerta-aniversario');
-            alerta.innerHTML = msg;
+            alerta.innerHTML = '';
+            aniversariosHoje.forEach((aniv, idx) => {
+                const line = document.createElement('div');
+                line.appendChild(document.createTextNode('🎉 '));
+                const strong = document.createElement('b');
+                strong.textContent = aniv.users?.name || 'Usuário';
+                line.appendChild(strong);
+                line.appendChild(document.createTextNode(' faz aniversário hoje!'));
+                alerta.appendChild(line);
+                if (idx < aniversariosHoje.length - 1) {
+                    alerta.appendChild(document.createElement('br'));
+                }
+            });
             alerta.style.display = 'block';
             // Esconde o alerta após 5 segundos
             setTimeout(() => {
@@ -239,23 +274,52 @@ document.addEventListener('DOMContentLoaded', async function () {
                 endDate = adjustedEnd.toLocaleDateString('pt-BR');
             }
 
-            tooltip.innerHTML = `
-                <div style="border-bottom: 2px solid ${info.event.backgroundColor}; padding-bottom: 8px; margin-bottom: 8px;">
-                    <strong style="color: ${info.event.backgroundColor}; font-size: 16px;">${eventData.eventTitle || info.event.title}</strong>
-                </div>
-                <div style="margin-bottom: 6px;">
-                    <strong>Tipo:</strong> ${eventData.eventType || 'Não especificado'}
-                </div>
-                <div style="margin-bottom: 6px;">
-                    <strong>Usuário:</strong> <span style="color: ${info.event.backgroundColor};">${eventData.userName || 'Não especificado'}</span>
-                </div>
-                <div style="margin-bottom: 6px;">
-                    <strong>Início:</strong> ${startDate}
-                </div>
-                <div>
-                    <strong>Fim:</strong> ${endDate}
-                </div>
-            `;
+            const header = document.createElement('div');
+            header.style.borderBottom = `2px solid ${info.event.backgroundColor}`;
+            header.style.paddingBottom = '8px';
+            header.style.marginBottom = '8px';
+            const titleStrong = document.createElement('strong');
+            titleStrong.style.color = info.event.backgroundColor;
+            titleStrong.style.fontSize = '16px';
+            titleStrong.textContent = eventData.eventTitle || info.event.title;
+            header.appendChild(titleStrong);
+
+            const lineTipo = document.createElement('div');
+            lineTipo.style.marginBottom = '6px';
+            const tipoStrong = document.createElement('strong');
+            tipoStrong.textContent = 'Tipo:';
+            lineTipo.appendChild(tipoStrong);
+            lineTipo.appendChild(document.createTextNode(` ${eventData.eventType || 'Não especificado'}`));
+
+            const lineUsuario = document.createElement('div');
+            lineUsuario.style.marginBottom = '6px';
+            const usuarioStrong = document.createElement('strong');
+            usuarioStrong.textContent = 'Usuário:';
+            lineUsuario.appendChild(usuarioStrong);
+            lineUsuario.appendChild(document.createTextNode(' '));
+            const userSpan = document.createElement('span');
+            userSpan.style.color = info.event.backgroundColor;
+            userSpan.textContent = eventData.userName || 'Não especificado';
+            lineUsuario.appendChild(userSpan);
+
+            const lineInicio = document.createElement('div');
+            lineInicio.style.marginBottom = '6px';
+            const inicioStrong = document.createElement('strong');
+            inicioStrong.textContent = 'Início:';
+            lineInicio.appendChild(inicioStrong);
+            lineInicio.appendChild(document.createTextNode(` ${startDate}`));
+
+            const lineFim = document.createElement('div');
+            const fimStrong = document.createElement('strong');
+            fimStrong.textContent = 'Fim:';
+            lineFim.appendChild(fimStrong);
+            lineFim.appendChild(document.createTextNode(` ${endDate}`));
+
+            tooltip.appendChild(header);
+            tooltip.appendChild(lineTipo);
+            tooltip.appendChild(lineUsuario);
+            tooltip.appendChild(lineInicio);
+            tooltip.appendChild(lineFim);
 
             document.body.appendChild(tooltip);
 
@@ -287,8 +351,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
             if (confirm('Deseja excluir este evento?')) {
-                await supabaseClient.from('events').delete().eq('id', info.event.id);
-                calendar.refetchEvents();
+                const { error } = await supabaseClient.from('events').delete().eq('id', info.event.id);
+                if (error) {
+                    console.error('Erro ao excluir evento:', error);
+                    alert('Erro ao excluir evento: ' + error.message);
+                    return;
+                }
+                if (typeof window.refreshCalendarViews === 'function') {
+                    await window.refreshCalendarViews();
+                }
             }
         },
 
@@ -327,11 +398,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     calendar.render();
     await renderFutureEventsReport();
 
+    window.refreshCalendarViews = async function () {
+        calendar.refetchEvents();
+        await renderFutureEventsReport();
+        await exibirAlertaAniversario();
+    };
+
     supabaseClient
         .channel('events')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async payload => {
-            calendar.refetchEvents();
-            await exibirAlertaAniversario();
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async () => {
+            if (typeof window.refreshCalendarViews === 'function') {
+                await window.refreshCalendarViews();
+            }
         })
         .subscribe();
 
@@ -365,6 +443,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     form.addEventListener('submit', async function (e) {
     e.preventDefault(); // Impede envio padrão sempre
 
+    if (isUsuarioCategoria()) {
+        alert('Usuários não têm permissão para cadastrar eventos.');
+        return;
+    }
+
     const title = document.getElementById('title').value;
     const type = document.getElementById('type').value;
     const user_id = document.getElementById('user').value;
@@ -396,15 +479,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         const adjustedEnd = new Date(end);
         adjustedEnd.setDate(adjustedEnd.getDate() + 1);
 
-        await supabaseClient.from('events').insert([{
+        const { error } = await supabaseClient.from('events').insert([{
             title,
             type,
             user_id,
             start_date: start,
             end_date: adjustedEnd.toISOString().split('T')[0]
         }]);
+
+        if (error) {
+            console.error('Erro ao cadastrar evento:', error);
+            alert('Erro ao cadastrar evento: ' + error.message);
+            return;
+        }
+
         form.reset();
-        calendar.refetchEvents();
+        if (typeof window.refreshCalendarViews === 'function') {
+            await window.refreshCalendarViews();
+        }
     }
 });
 
@@ -438,7 +530,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             list.innerHTML = '';
 
             if (data.length === 0) {
-                list.innerHTML = '<li>Nenhum evento futuro ou vigente encontrado.</li>';
+                const emptyItem = document.createElement('li');
+                emptyItem.textContent = 'Nenhum evento futuro ou vigente encontrado.';
+                list.appendChild(emptyItem);
                 hideLoadingBar();
                 return;
             }
@@ -461,11 +555,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             data.forEach(ev => {
                 const li = document.createElement('li');
-                li.innerHTML = `
-            <strong style="color:${ev.users?.color || '#333'}">${ev.title}</strong>
-            (${ev.type}) - ${ev.users?.name || 'Usuário'}<br>
-            De ${formatDateOnly(ev.start_date)} até ${getAdjustedEndDate(ev.end_date)}
-        `;
+
+                const titleStrong = document.createElement('strong');
+                titleStrong.style.color = ev.users?.color || '#333';
+                titleStrong.textContent = ev.title;
+                li.appendChild(titleStrong);
+
+                li.appendChild(document.createTextNode(` (${ev.type}) - ${ev.users?.name || 'Usuário'}`));
+                li.appendChild(document.createElement('br'));
+                li.appendChild(document.createTextNode(`De ${formatDateOnly(ev.start_date)} até ${getAdjustedEndDate(ev.end_date)}`));
+
                 list.appendChild(li);
             });
 
