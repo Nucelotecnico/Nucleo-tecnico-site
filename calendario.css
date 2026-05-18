@@ -1,4 +1,4 @@
-body {
+﻿body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
     background-attachment: fixed;
@@ -11,7 +11,7 @@ body {
     margin: 0;
 }
 
-/* Container dos botões */
+/* Container dos botÃµes */
 .menu-container {
     display: flex;
     gap: 10px;
@@ -28,7 +28,7 @@ body {
     background: linear-gradient(145deg, #2e7d32, #43a047);
     color: #fff;
     padding: 12px 24px;
-    border-radius: 25px;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     font-family: Roboto;
@@ -295,7 +295,7 @@ li {
     transform: translateY(0);
 }
 
-/* Estilos para botões de formulário */
+/* Estilos para botÃµes de formulÃ¡rio */
 #event-form button[type="submit"],
 #user-form button[type="submit"],
 #toggle-users-btn {
@@ -326,7 +326,7 @@ li {
     transform: translateY(0);
 }
 
-/* Títulos dos formulários */
+/* TÃ­tulos dos formulÃ¡rios */
 #form-container h3,
 #user-container h3 {
     color: #66bb6a;
@@ -372,7 +372,7 @@ li {
 }
 
 
-/* Estilo para o relatório de eventos futuros */
+/* Estilo para o relatÃ³rio de eventos futuros */
 #future-events-report {
     margin: 30px auto;
     padding: 30px;
@@ -419,3 +419,5 @@ li {
 html {
     overflow-y: scroll;
 }
+
+

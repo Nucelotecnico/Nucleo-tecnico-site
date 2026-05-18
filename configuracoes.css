@@ -1,4 +1,4 @@
-body {
+﻿body {
     font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
     background-attachment: fixed;
@@ -15,7 +15,7 @@ html {
     overflow-y: scroll;
 }
 
-/* Container dos botões */
+/* Container dos botÃµes */
 .menu-container {
     display: flex;
     gap: 10px;
@@ -32,7 +32,7 @@ html {
     background: linear-gradient(145deg, #2e7d32, #43a047);
     color: #fff;
     padding: 12px 24px;
-    border-radius: 25px;
+    border-radius: 10px;
     border: none;
     cursor: pointer;
     font-family: Roboto;
@@ -136,3 +136,6 @@ table th {
 table tr:hover {
     background-color: #f9f9f9;
 }
+
+
+

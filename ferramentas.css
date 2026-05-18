@@ -1,4 +1,4 @@
-/* Estilos para a ferramenta PDF/ZIP */
+﻿/* Estilos para a ferramenta PDF/ZIP */
 
 /* PDF/ZIP Tool - Estilo Profissional Integrado */
 .nszip-container {
@@ -158,7 +158,7 @@ html {
   overflow-y: scroll;
 }
 
-/* Container dos botões */
+/* Container dos botÃµes */
 .menu-container {
   display: flex;
   gap: 10px;
@@ -172,28 +172,28 @@ html {
 }
 
 .menu-btn {
-  background: linear-gradient(145deg, #2e7d32, #43a047);
-  color: #fff;
-  padding: 12px 24px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  font-family: Roboto;
-  font-weight: 600;
-  font-size: 0.95em;
-  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  box-sizing: border-box;
-  min-width: 120px;
-  min-height: 52px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 1.1;
+    background: linear-gradient(145deg, #2e7d32, #43a047);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: Roboto;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    box-sizing: border-box;
+    min-width: 120px;
+    min-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
 }
 
 .menu-btn::before {
@@ -591,7 +591,7 @@ select:focus {
     } 
 
 
-    /*estilos para o formulario de proteções de geração*/
+    /*estilos para o formulario de proteÃ§Ãµes de geraÃ§Ã£o*/
 
           /* body {
             font-family: Arial, sans-serif;
@@ -703,7 +703,7 @@ select:focus {
           justify-content: flex-start;
         }
 
-/*ESTILOS PARA ITENS DE REPROVAÇÃO */
+/*ESTILOS PARA ITENS DE REPROVAÃ‡ÃƒO */
 
 
         .reprovador-container, #cadastro-panel {
@@ -860,4 +860,6 @@ select:focus {
             text-align: right;
         }
 
-        /* Fim dos estilos para itens de reprovação */
+        /* Fim dos estilos para itens de reprovaÃ§Ã£o */
+
+
