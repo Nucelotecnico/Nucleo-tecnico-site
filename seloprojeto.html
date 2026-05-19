@@ -479,7 +479,11 @@
       <input id="nszip-nsNumber" type="text" placeholder="Digite o número da NS">
     </div>
 
-    <fieldset id="nszip-sealConfigSection" class="nszip-seal-config">
+    <div class="nszip-select-actions">
+      <button id="nszip-toggleSealConfigBtn" type="button" class="nszip-secondary-button">Mostrar Configuração do Selo</button>
+    </div>
+
+    <fieldset id="nszip-sealConfigSection" class="nszip-seal-config" hidden>
       <legend>Configuração do Selo</legend>
 
       <label class="nszip-checkbox-field" for="nszip-enableSeal">
@@ -589,7 +593,11 @@
       <div id="nszip-optionalGroups"></div>
     </section>
 
-    <section id="nszip-sheetPreviewSection" class="nszip-sheet-preview">
+    <div class="nszip-select-actions">
+      <button id="nszip-toggleSheetPreviewBtn" type="button" class="nszip-secondary-button">Mostrar Configuração de Carta de Aprovação</button>
+    </div>
+
+    <section id="nszip-sheetPreviewSection" class="nszip-sheet-preview" hidden>
       <h3>Carta de Aprovação</h3>
       <div class="nszip-config-field">
         <label for="nszip-extraSheetText">Texto do PDF adicional</label>
@@ -788,17 +796,46 @@
       if (userCategoria !== 'usuario') {
         return;
       }
+    }
 
-      const sealConfigSection = document.getElementById('nszip-sealConfigSection');
-      const sheetPreviewSection = document.getElementById('nszip-sheetPreviewSection');
-
-      if (sealConfigSection) {
-        sealConfigSection.style.display = 'none';
+    function nszipSetupSealConfigToggle() {
+      const toggleButton = document.getElementById("nszip-toggleSealConfigBtn");
+      const sealConfigSection = document.getElementById("nszip-sealConfigSection");
+      if (!toggleButton || !sealConfigSection) {
+        return;
       }
 
-      if (sheetPreviewSection) {
-        sheetPreviewSection.style.display = 'none';
+      const updateButtonLabel = () => {
+        toggleButton.textContent = sealConfigSection.hidden
+          ? "Mostrar Configuração do Selo"
+          : "Ocultar Configuração do Selo";
+      };
+
+      updateButtonLabel();
+      toggleButton.addEventListener("click", () => {
+        sealConfigSection.hidden = !sealConfigSection.hidden;
+        updateButtonLabel();
+      });
+    }
+
+    function nszipSetupSheetPreviewToggle() {
+      const toggleButton = document.getElementById("nszip-toggleSheetPreviewBtn");
+      const sheetPreviewSection = document.getElementById("nszip-sheetPreviewSection");
+      if (!toggleButton || !sheetPreviewSection) {
+        return;
       }
+
+      const updateButtonLabel = () => {
+        toggleButton.textContent = sheetPreviewSection.hidden
+          ? "Mostrar Configuração de Carta de Aprovação"
+          : "Ocultar Configuração de Carta de Aprovação";
+      };
+
+      updateButtonLabel();
+      toggleButton.addEventListener("click", () => {
+        sheetPreviewSection.hidden = !sheetPreviewSection.hidden;
+        updateButtonLabel();
+      });
     }
 
     function nszipBuildExtraSheetPreviewText(nsNumber, currentDate, currentTime, rawText) {
@@ -1276,6 +1313,8 @@
 
     nszipApplyStoredPreferences();
     nszipApplyUserCategoryRestrictions();
+    nszipSetupSealConfigToggle();
+    nszipSetupSheetPreviewToggle();
 
     ["nszip-nsNumber", "nszip-matricula", "nszip-extraSheetText"].forEach(elementId => {
       const element = document.getElementById(elementId);
