@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Núcleo-Técnico - Índices</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -42,6 +43,497 @@
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(46, 125, 50, 0.1), transparent);
       animation: titleShine 3s infinite;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px !important;
+      }
+
+      #titulo {
+        font-size: 1.7em !important;
+        letter-spacing: 1px !important;
+        padding: 6px 8px !important;
+      }
+
+      .menu-container {
+        justify-content: flex-start !important;
+        gap: 6px !important;
+        padding: 0 4px !important;
+      }
+
+      .menu-btn {
+        min-width: 92px !important;
+        min-height: 44px !important;
+        padding: 8px 6px !important;
+        font-size: 0.78em !important;
+        border-radius: 7px !important;
+      }
+
+      h2 {
+        font-size: 1.2em !important;
+        line-height: 1.3;
+      }
+
+      div[style*="max-width: 1400px; width: 100%; margin: 0 auto;"] {
+        padding: 0 4px !important;
+      }
+
+      #secaoUpload,
+      [id^="grafico"] {
+        padding: 12px !important;
+        border-radius: 8px !important;
+      }
+
+      #secaoUpload > div[style*="display: flex; gap: 12px; align-items: center;"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+
+      #secaoUpload input[type="file"],
+      #secaoUpload button {
+        width: 100% !important;
+      }
+
+      div[style*="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;"] {
+        flex-wrap: wrap !important;
+      }
+
+      #btnMedidas0034,
+      #btnNotasSemContrato,
+      #btnNotasAndamento,
+      #btnNotasConcluidas,
+      #btnPrazosAnalise,
+      #btnProdutividade,
+      #btnExibirTabelaNotas {
+        flex: 1 1 calc(50% - 8px) !important;
+        min-width: 0 !important;
+        white-space: normal !important;
+        line-height: 1.2;
+        text-align: center;
+      }
+
+      [id^="grafico"] div[style*="display: flex"][style*="gap: 12px"] {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+
+      [id^="grafico"] div[style*="display: flex"][style*="gap: 10px"] {
+        flex-wrap: wrap !important;
+      }
+
+      [id^="grafico"] select,
+      [id^="grafico"] input[type="date"],
+      [id^="grafico"] button {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      [id^="grafico"] label {
+        font-size: 13px !important;
+      }
+
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      #loadingOverlay > div {
+        width: min(92vw, 360px) !important;
+        padding: 22px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #btnMedidas0034,
+      #btnNotasSemContrato,
+      #btnNotasAndamento,
+      #btnNotasConcluidas,
+      #btnPrazosAnalise,
+      #btnProdutividade,
+      #btnExibirTabelaNotas {
+        flex: 1 1 100% !important;
+      }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    [id^="grafico"] {
+      border: 1px solid #edf2ee;
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    [id^="grafico"]:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08) !important;
+      transform: translateY(-1px);
+    }
+
+    [id^="containerCheckboxes"] {
+      max-height: 240px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #b9d6bb #eef6ef;
+    }
+
+    [id^="containerCheckboxes"]::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    [id^="containerCheckboxes"]::-webkit-scrollbar-track {
+      background: #eef6ef;
+      border-radius: 999px;
+    }
+
+    [id^="containerCheckboxes"]::-webkit-scrollbar-thumb {
+      background: #b9d6bb;
+      border-radius: 999px;
+    }
+
+    #btnVoltarTopo {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9998;
+      background: linear-gradient(145deg, #2e7d32, #43a047);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      width: 46px;
+      height: 46px;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 700;
+      box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    #btnVoltarTopo.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    button[data-busy="true"] {
+      opacity: 0.75;
+      cursor: wait !important;
+    }
+
+    .nt-surface-card {
+      background: #fff !important;
+      border: 1px solid #e7efe8 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 14px rgba(24, 77, 39, 0.08) !important;
+    }
+
+    .nt-main-action-btn {
+      border-radius: 8px !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      letter-spacing: 0.3px;
+      min-height: 42px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.22) !important;
+    }
+
+    .nt-main-action-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .nt-filter-control {
+      border: 1px solid #cfd8d2 !important;
+      border-radius: 8px !important;
+      min-height: 38px;
+      background: #fff !important;
+      color: #1f2a21;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.03);
+    }
+
+    .nt-filter-control:focus {
+      outline: none;
+      border-color: #66a76b !important;
+      box-shadow: 0 0 0 3px rgba(102, 167, 107, 0.18);
+    }
+
+    .nt-filter-toggle-btn {
+      background: linear-gradient(145deg, #2e7d32, #3c9851) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 8px !important;
+      min-height: 40px;
+      box-shadow: 0 4px 10px rgba(46, 125, 50, 0.22);
+    }
+
+    .nt-filter-toggle-btn:hover {
+      filter: brightness(1.03);
+    }
+
+    .nt-export-btn {
+      background: linear-gradient(145deg, #1e88e5, #42a5f5) !important;
+      border: none !important;
+      border-radius: 8px !important;
+      color: #fff !important;
+      min-height: 40px;
+      box-shadow: 0 4px 10px rgba(30, 136, 229, 0.24);
+    }
+
+    .nt-export-btn:hover {
+      filter: brightness(1.03);
+    }
+
+    .nt-filter-panel {
+      border: 1px solid #dfe9e1 !important;
+      border-radius: 8px !important;
+      background: #f8fbf9 !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .nt-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .nt-chart-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .nt-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nt-filter-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 220px;
+    }
+
+    .nt-filter-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .nt-chart-title {
+      color: #2e7d32;
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .nt-chart-canvas-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    .nt-info-panel {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      color: #333;
+    }
+
+    .nt-info-panel-blue {
+      margin-top: 16px;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      color: #1976d2;
+    }
+
+    .nt-info-panel-blue-soft {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f0f4f8;
+      border-radius: 8px;
+      color: #1976d2;
+    }
+
+    .nt-info-panel-green-soft {
+      margin-top: 16px;
+      padding: 12px;
+      background: #eef7f0;
+      border-radius: 8px;
+      color: #2e7d32;
+    }
+
+    .nt-info-panel-purple-soft {
+      margin-top: 16px;
+      padding: 12px;
+      background: #f3e5f5;
+      border-radius: 8px;
+      color: #7b1fa2;
+    }
+
+    .nt-rules-box {
+      margin-bottom: 16px;
+      background: #fffde7;
+      border-radius: 8px;
+      border: 1px solid #ffe082;
+      padding: 14px;
+      color: #7b1fa2;
+      font-size: 15px;
+    }
+
+    .nt-chart-canvas-wrap-wide {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    .nt-control-panel {
+      background: #f5f5f5;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .nt-control-panel-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nt-control-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nt-text-label-sm {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .nt-input-sm {
+      width: 60px;
+      padding: 6px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    .nt-primary-btn-sm {
+      padding: 8px 16px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .nt-main-action-btn,
+    .nt-filter-toggle-btn,
+    .nt-export-btn,
+    .nt-primary-btn-sm {
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nt-upload-dropzone {
+      margin-top: 12px;
+      border: 2px dashed #9ac6a0;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      color: #2f5f35;
+      background: #f8fcf9;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .nt-upload-dropzone.drag-over {
+      border-color: #2e7d32;
+      background: #eaf6ed;
+      transform: translateY(-1px);
+    }
+
+    .nt-upload-selected-file {
+      margin-top: 8px;
+      color: #1f5f2a;
+      font-weight: 600;
+      font-size: 0.88rem;
+      word-break: break-word;
+    }
+
+    .nt-info-panel,
+    .nt-info-panel-blue,
+    .nt-info-panel-blue-soft,
+    .nt-info-panel-green-soft,
+    .nt-info-panel-purple-soft {
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    #barraAcoesPrincipais {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid #e4ebe6;
+      border-radius: 10px;
+      padding: 10px;
+      backdrop-filter: blur(2px);
+    }
+
+    @media (max-width: 768px) {
+      #barraAcoesPrincipais {
+        padding: 8px;
+      }
+
+      .nt-main-action-btn {
+        min-height: 44px;
+      }
+
+      .nt-chart-header {
+        flex-direction: column;
+      }
+
+      .nt-chart-toolbar {
+        width: 100%;
+        justify-content: stretch;
+        gap: 10px;
+      }
+
+      .nt-filter-row,
+      .nt-filter-stack {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .nt-chart-toolbar > * {
+        flex: 1 1 100%;
+      }
+
+      .nt-chart-title {
+        font-size: 1.05rem;
+      }
+
+      .nt-filter-label {
+        font-size: 13px;
+      }
+
+      .nt-info-panel,
+      .nt-info-panel-blue,
+      .nt-info-panel-blue-soft,
+      .nt-info-panel-green-soft,
+      .nt-info-panel-purple-soft {
+        font-size: 0.9rem;
+      }
     }
   </style>
   <script>
@@ -206,15 +698,131 @@
       button.classList.add('active-button');
     }
 
+    function scrollToSection(sectionId) {
+      if (!sectionId) return;
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+
+      const isVisible = section.offsetParent !== null && section.style.display !== 'none';
+      if (!isVisible) return;
+
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function fecharDropdownsAbertos(alvo) {
+      const clicouNoToggle = alvo && alvo.closest('[id^="botaoToggle"]');
+      const clicouNoContainer = alvo && alvo.closest('[id^="containerCheckboxes"]');
+      if (clicouNoToggle || clicouNoContainer) return;
+
+      document.querySelectorAll('[id^="containerCheckboxes"]').forEach(container => {
+        const display = window.getComputedStyle(container).display;
+        if (display !== 'none') {
+          container.style.display = 'none';
+        }
+      });
+    }
+
+    function aplicarEstadoExportacaoTemporario(botao) {
+      if (!botao || botao.dataset.busy === 'true') return;
+      const textoOriginal = botao.textContent;
+      botao.dataset.busy = 'true';
+      botao.disabled = true;
+      botao.textContent = 'Exportando...';
+
+      setTimeout(() => {
+        botao.disabled = false;
+        botao.textContent = textoOriginal;
+        botao.dataset.busy = 'false';
+      }, 1200);
+    }
+
+    function setupBackToTopButton() {
+      let botaoTopo = document.getElementById('btnVoltarTopo');
+      if (!botaoTopo) {
+        botaoTopo = document.createElement('button');
+        botaoTopo.id = 'btnVoltarTopo';
+        botaoTopo.title = 'Voltar ao topo';
+        botaoTopo.setAttribute('aria-label', 'Voltar ao topo');
+        botaoTopo.textContent = '↑';
+        document.body.appendChild(botaoTopo);
+      }
+
+      botaoTopo.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      const atualizarVisibilidade = () => {
+        if (window.scrollY > 380) {
+          botaoTopo.classList.add('visible');
+        } else {
+          botaoTopo.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('scroll', atualizarVisibilidade, { passive: true });
+      atualizarVisibilidade();
+    }
+
+    function setupGlobalUXEnhancements() {
+      document.addEventListener('click', function (event) {
+        fecharDropdownsAbertos(event.target);
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          fecharDropdownsAbertos(null);
+        }
+      });
+
+      setupBackToTopButton();
+    }
+
+    function setupVisualNormalization() {
+      const mainActionButtonIds = [
+        'btnMedidas0034',
+        'btnNotasSemContrato',
+        'btnNotasAndamento',
+        'btnNotasConcluidas',
+        'btnPrazosAnalise',
+        'btnProdutividade',
+        'btnExibirTabelaNotas'
+      ];
+
+      mainActionButtonIds.forEach((id) => {
+        const button = document.getElementById(id);
+        if (button) button.classList.add('nt-main-action-btn');
+      });
+
+      document.querySelectorAll('[id^="grafico"], #secaoDadosCadastrados, #secaoUpload').forEach((el) => {
+        el.classList.add('nt-surface-card');
+      });
+
+      document.querySelectorAll('[id^="botaoToggle"]').forEach((button) => {
+        button.classList.add('nt-filter-toggle-btn');
+      });
+
+      document.querySelectorAll('#botaoExportarTabela, [id^="btnExportar"]').forEach((button) => {
+        button.classList.add('nt-export-btn');
+      });
+
+      document.querySelectorAll('select[id^="filtro"], input[id^="filtro"][type="date"]').forEach((control) => {
+        control.classList.add('nt-filter-control');
+      });
+
+      document.querySelectorAll('[id^="containerCheckboxes"]').forEach((panel) => {
+        panel.classList.add('nt-filter-panel');
+      });
+    }
+
     function bindMainActionButtons() {
       const buttonActionMap = [
-        { id: 'btnMedidas0034', action: 'exibirMedidas0034' },
-        { id: 'btnNotasSemContrato', action: 'exibirNotasSemContrato' },
-        { id: 'btnNotasAndamento', action: 'exibirNotasAndamento' },
-        { id: 'btnNotasConcluidas', action: 'exibirNotasConcluidas' },
-        { id: 'btnPrazosAnalise', action: 'exibirPrazosAnalise' },
-        { id: 'btnProdutividade', action: 'exibirProdutividade' },
-        { id: 'btnExibirTabelaNotas', action: 'exibirTabelaNotas' }
+        { id: 'btnMedidas0034', action: 'exibirMedidas0034', targetId: 'graficoMedidas0034' },
+        { id: 'btnNotasSemContrato', action: 'exibirNotasSemContrato', targetId: 'graficoNotasSemContrato' },
+        { id: 'btnNotasAndamento', action: 'exibirNotasAndamento', targetId: 'graficoFimPlanejado' },
+        { id: 'btnNotasConcluidas', action: 'exibirNotasConcluidas', targetId: 'graficoConcluidas' },
+        { id: 'btnPrazosAnalise', action: 'exibirPrazosAnalise', targetId: 'graficoPrazoMedioGeral' },
+        { id: 'btnProdutividade', action: 'exibirProdutividade', targetId: 'graficoConcluidasPorTipoDemais' },
+        { id: 'btnExibirTabelaNotas', action: 'exibirTabelaNotas', targetId: 'secaoDadosCadastrados' }
       ];
 
       const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -246,13 +854,14 @@
         }
       };
 
-      buttonActionMap.forEach(({ id, action }) => {
+      buttonActionMap.forEach(({ id, action, targetId }) => {
         const button = document.getElementById(id);
         if (!button) return;
 
         button.addEventListener('click', async function () {
           setActiveButton(button);
           await executeWithLoading(action);
+          setTimeout(() => scrollToSection(targetId), 80);
         });
 
         button.addEventListener('mouseover', function () {
@@ -324,10 +933,82 @@
       }
     }
 
+    function setupUploadDragAndDrop() {
+      const dropzone = document.getElementById('uploadDropzoneExcel');
+      const fileInput = document.getElementById('fileInput');
+      const arquivoSelecionado = document.getElementById('uploadArquivoSelecionado');
+      if (!dropzone || !fileInput || !arquivoSelecionado) return;
+
+      const textoPadrao = 'Nenhum arquivo selecionado.';
+      const atualizarNomeArquivo = function (file) {
+        arquivoSelecionado.textContent = file
+          ? `Arquivo selecionado: ${file.name}`
+          : textoPadrao;
+      };
+
+      const arquivoExcelValido = function (file) {
+        if (!file || !file.name) return false;
+        const nome = file.name.toLowerCase();
+        return nome.endsWith('.xlsx') || nome.endsWith('.xls');
+      };
+
+      const aplicarArquivoNoInput = function (file) {
+        if (!arquivoExcelValido(file)) {
+          alert('Formato inválido. Selecione um arquivo .xlsx ou .xls.');
+          return;
+        }
+
+        try {
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          fileInput.files = dataTransfer.files;
+          window.__excelDroppedFile = null;
+        } catch (error) {
+          window.__excelDroppedFile = file;
+        }
+
+        fileInput.dispatchEvent(new Event('change'));
+      };
+
+      fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0] || window.__excelDroppedFile || null;
+        atualizarNomeArquivo(file);
+      });
+
+      dropzone.addEventListener('click', function () {
+        fileInput.click();
+      });
+
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        dropzone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          dropzone.classList.add('drag-over');
+        });
+      });
+
+      ['dragleave', 'dragend', 'drop'].forEach((eventName) => {
+        dropzone.addEventListener(eventName, function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          dropzone.classList.remove('drag-over');
+        });
+      });
+
+      dropzone.addEventListener('drop', function (event) {
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) return;
+        aplicarArquivoNoInput(files[0]);
+      });
+
+      atualizarNomeArquivo(fileInput.files[0] || null);
+    }
+
     function bindExportActionButtons() {
       const btnExportarFimPlanejado = document.getElementById('btnExportarFimPlanejado');
       if (btnExportarFimPlanejado) {
         btnExportarFimPlanejado.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarFimPlanejado);
           if (typeof window.exportarNotasFimPlanejadoExcel === 'function') {
             window.exportarNotasFimPlanejadoExcel();
           }
@@ -337,6 +1018,7 @@
       const btnExportarConcluidasMes = document.getElementById('btnExportarNotasConcluidasPorMes');
       if (btnExportarConcluidasMes) {
         btnExportarConcluidasMes.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarConcluidasMes);
           if (typeof window.exportarNotasConcluidasPorMesExcel === 'function') {
             window.exportarNotasConcluidasPorMesExcel();
           }
@@ -346,6 +1028,7 @@
       const btnExportarTabela = document.getElementById('botaoExportarTabela');
       if (btnExportarTabela) {
         btnExportarTabela.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarTabela);
           if (typeof window.exportarTabelaParaExcel === 'function') {
             window.exportarTabelaParaExcel();
           }
@@ -355,6 +1038,7 @@
       const btnExportarNotasSemContrato = document.getElementById('btnExportarNotasSemContrato');
       if (btnExportarNotasSemContrato) {
         btnExportarNotasSemContrato.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarNotasSemContrato);
           if (typeof window.exportarNotasSemContratoExcel === 'function') {
             window.exportarNotasSemContratoExcel();
           }
@@ -372,6 +1056,7 @@
       const btnExportarNotasSemDataSemContrato = document.getElementById('btnExportarNotasSemDataSemContrato');
       if (btnExportarNotasSemDataSemContrato) {
         btnExportarNotasSemDataSemContrato.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarNotasSemDataSemContrato);
           if (typeof window.exportarNotasSemDataNotasSemContratoExcel === 'function') {
             window.exportarNotasSemDataNotasSemContratoExcel();
           }
@@ -548,6 +1233,10 @@
           Limpar Tabela
         </button>
       </div>
+      <div id="uploadDropzoneExcel" class="nt-upload-dropzone">
+        Arraste e solte aqui seu arquivo Excel (.xlsx ou .xls) ou clique para selecionar.
+      </div>
+      <div id="uploadArquivoSelecionado" class="nt-upload-selected-file">Nenhum arquivo selecionado.</div>
       <p style="color: #666; font-size: 0.9em; margin-top: 8px;">
         ℹ️ O arquivo Excel deve conter as colunas: Nota, Área operacional, Cidade, Código medidas, Descrição, Texto
         medidas, Status usuário, Início planejado, Fim planejado, Concluído por, Concluída em, Modificado por
@@ -564,33 +1253,33 @@
     <br>
 
     <!-- Botões do Gráfico de Quantidade notas ABER e ANDM por tipo -->
-    <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
-      <button id="btnMedidas0034"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+    <div id="barraAcoesPrincipais" style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: center;">
+      <button id="btnMedidas0034" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         MEDIDAS 0034
       </button>
-      <button id="btnNotasSemContrato"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnNotasSemContrato" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         NOTAS SEM CONTRATO
       </button>
-      <button id="btnNotasAndamento"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnNotasAndamento" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         NOTAS EM ANDAMENTO
       </button>
-      <button id="btnNotasConcluidas"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnNotasConcluidas" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         NOTAS CONCLUÍDAS
       </button>
-      <button id="btnPrazosAnalise"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnPrazosAnalise" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         PRAZOS DE ANÁLISE
       </button>
-      <button id="btnProdutividade"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnProdutividade" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         PRODUTIVIDADE
       </button>
-      <button id="btnExibirTabelaNotas"
-        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
+      <button id="btnExibirTabelaNotas" class="nt-main-action-btn"
+        style="padding: 10px 16px; background: #2e7d32; color: white; border: none; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.3s ease; white-space: nowrap;">
         EXIBIR TABELA DE NOTAS
       </button>
     </div>
@@ -599,36 +1288,32 @@
     <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
       <div id="graficoFimPlanejado"
         style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-        <div
-          style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-          <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
+        <div class="nt-chart-header">
+          <h2 class="nt-chart-title">📊 Quantidade de Notas ABER E ANDM Carga e GD</h2>
 
-          <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroMesFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+          <div class="nt-chart-toolbar">
+            <div class="nt-filter-row">
+              <label for="filtroMesFimPlanejado" class="nt-filter-label">Filtrar por
                 mês:</label>
-              <select id="filtroMesFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <select id="filtroMesFimPlanejado" class="nt-filter-control" onchange="filtrarGraficoFimPlanejadoPorMes()">
                 <option value="todos">Todos os meses</option>
               </select>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroDataInicioFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Data
+            <div class="nt-filter-row">
+              <label for="filtroDataInicioFimPlanejado" class="nt-filter-label">Data
                 início:</label>
-              <input type="date" id="filtroDataInicioFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <input type="date" id="filtroDataInicioFimPlanejado" class="nt-filter-control" onchange="filtrarGraficoFimPlanejadoPorMes()">
             </div>
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label for="filtroDataFimFimPlanejado" style="font-size: 14px; color: #666; font-weight: 500;">Data
+            <div class="nt-filter-row">
+              <label for="filtroDataFimFimPlanejado" class="nt-filter-label">Data
                 fim:</label>
-              <input type="date" id="filtroDataFimFimPlanejado" onchange="filtrarGraficoFimPlanejadoPorMes()"
-                style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+              <input type="date" id="filtroDataFimFimPlanejado" class="nt-filter-control" onchange="filtrarGraficoFimPlanejadoPorMes()">
             </div>
           
 
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoes"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleDescricoes" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
@@ -637,9 +1322,9 @@
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleCodigoMedidas"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleCodigoMedidas" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Código Medidas</span>
             </button>
@@ -648,9 +1333,9 @@
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleStatusFimPlanejado"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleStatusFimPlanejado" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por Status</span>
             </button>
@@ -659,20 +1344,19 @@
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="btnExportarFimPlanejado"
-              style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+          <div class="nt-filter-stack">
+            <button id="btnExportarFimPlanejado" class="nt-export-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
               <span>📥</span>
               <span>Exportar Excel</span>
             </button>
           </div>
         </div>
       </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap">
         <canvas id="chartFimPlanejado"></canvas>
       </div>
-      <div id="infoGeralNotas"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+      <div id="infoGeralNotas" class="nt-info-panel">
         <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
         <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
         <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
@@ -684,12 +1368,11 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoOutrosTipos"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📋 Quantidade notas ABER e ANDM por tipo</h2>
-      <div style="max-width: 1000px; margin: 0 auto;">
+      <h2 class="nt-chart-title" style="margin-bottom: 16px;">📋 Quantidade notas ABER e ANDM por tipo</h2>
+      <div class="nt-chart-canvas-wrap">
         <canvas id="chartOutrosTipos"></canvas>
       </div>
-      <div id="infoOutrosTipos"
-        style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1976d2;">
+      <div id="infoOutrosTipos" class="nt-info-panel-blue">
         <strong>Total de notas:</strong> <span id="totalOutrosTipos">0</span> |
         <strong>Tipos únicos:</strong> <span id="tiposUnicos">0</span>
       </div>
@@ -702,12 +1385,11 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoTextoMedidas"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h2 style="color: #2e7d32; margin-bottom: 16px;">📝 Quantidade de Notas por Texto de Medidas</h2>
-      <div style="max-width: 1200px; margin: 0 auto;">
+      <h2 class="nt-chart-title" style="margin-bottom: 16px;">📝 Quantidade de Notas por Texto de Medidas</h2>
+      <div class="nt-chart-canvas-wrap-wide">
         <canvas id="chartTextoMedidas"></canvas>
       </div>
-      <div id="infoTextoMedidas"
-        style="margin-top: 16px; padding: 12px; background: #f0f4f8; border-radius: 8px; color: #1976d2;">
+      <div id="infoTextoMedidas" class="nt-info-panel-blue-soft">
         <strong>Total de notas:</strong> <span id="totalTextoMedidas">0</span> |
         <strong>Categorias únicas:</strong> <span id="categoriasUnicasTextoMedidas">0</span>
       </div>
@@ -718,8 +1400,7 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoMedidas0034"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <div class="nt-rules-box">
         <strong>Regras para geração deste gráfico:</strong><br>
         - Considera apenas notas com <b>código de medidas 0034</b>.<br>
         - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
@@ -727,21 +1408,19 @@
         - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
         - Outras regras específicas podem ser aplicadas conforme a lógica do sistema.<br>
       </div>
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesMedidas0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
+        <div class="nt-chart-toolbar">
+          <div class="nt-filter-row">
+            <label for="filtroMesMedidas0034" class="nt-filter-label">Filtrar por
               mês:</label>
-            <select id="filtroMesMedidas0034" onchange="filtrarGraficoMedidas0034PorMes()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <select id="filtroMesMedidas0034" class="nt-filter-control" onchange="filtrarGraficoMedidas0034PorMes()">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesMedidas0034"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleDescricoesMedidas0034" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
@@ -752,11 +1431,10 @@
           </div>
         </div>
       </div>
-      <div style="max-width: 1200px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap-wide">
         <canvas id="chartMedidas0034"></canvas>
       </div>
-      <div id="infoMedidas0034"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+      <div id="infoMedidas0034" class="nt-info-panel">
         <strong>Total de notas:</strong> <span id="totalMedidas0034">0</span> |
         <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034" style="color: #2e7d32;">0</span>
         |
@@ -769,30 +1447,27 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoMedidas0034Clone"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="margin-bottom: 16px; background: #fffde7; border-radius: 8px; border: 1px solid #ffe082; padding: 14px; color: #7b1fa2; font-size: 15px;">
+      <div class="nt-rules-box">
         <strong>Regras para geração deste gráfico:</strong><br>
         - Considera apenas notas com <b>código de medidas 0034</b>.<br>
         - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
         - Notas filtradas por descrição, conforme seleção dos filtros acima.<br>
         - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
       </div>
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Quantidade de Notas ABER e ANDM por Texto de Medidas - Código 0034
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">📊 Quantidade de Notas ABER e ANDM por Texto de Medidas - Código 0034
         </h2>
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroMesMedidas0034Clone" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+        <div class="nt-chart-toolbar">
+          <div class="nt-filter-row">
+            <label for="filtroMesMedidas0034Clone" class="nt-filter-label">Filtrar por
               mês:</label>
-            <select id="filtroMesMedidas0034Clone" onchange="filtrarGraficoMedidas0034ClonePorMes()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer;">
+            <select id="filtroMesMedidas0034Clone" class="nt-filter-control" onchange="filtrarGraficoMedidas0034ClonePorMes()">
               <option value="todos">Todos os meses</option>
             </select>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesMedidas0034Clone"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleDescricoesMedidas0034Clone" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
@@ -803,11 +1478,10 @@
           </div>
         </div>
       </div>
-      <div style="max-width: 1200px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap-wide">
         <canvas id="chartMedidas0034Clone"></canvas>
       </div>
-      <div id="infoMedidas0034Clone"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+      <div id="infoMedidas0034Clone" class="nt-info-panel">
         <strong>Total de notas:</strong> <span id="totalMedidas0034Clone">0</span> |
         <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDMMedidas0034Clone"
           style="color: #2e7d32;">0</span> |
@@ -832,21 +1506,20 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoPrazoMedio0034"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📈 Prazo Médio Mensal - Código 0034</h2>
-        <div style="display: flex; gap: 12px; align-items: flex-start;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <label for="filtroAnoPrazo0034" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">📈 Prazo Médio Mensal - Código 0034</h2>
+        <div class="nt-chart-toolbar" style="align-items: flex-start;">
+          <div class="nt-filter-row">
+            <label for="filtroAnoPrazo0034" class="nt-filter-label">Filtrar por
               ano:</label>
             <select id="filtroAnoPrazo0034" onchange="aplicarFiltroAnoPrazo0034()"
-              style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+              class="nt-filter-control" style="min-width: 120px;">
               <option value="todos">Todos</option>
             </select>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <button id="botaoToggleDescricoesPrazo0034"
-              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div class="nt-filter-stack">
+            <button id="botaoToggleDescricoesPrazo0034" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
               <span>▼</span>
               <span>Filtrar por descrição</span>
             </button>
@@ -857,11 +1530,10 @@
           </div>
         </div>
       </div>
-      <div style="max-width: 1200px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap-wide">
         <canvas id="chartPrazoMedio0034"></canvas>
       </div>
-      <div id="infoPrazoMedio0034"
-        style="margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 8px; color: #333;">
+      <div id="infoPrazoMedio0034" class="nt-info-panel">
         <strong>Total de notas analisadas:</strong> <span id="totalNotasAnalisadas0034">0</span> |
         <strong>Prazo médio geral:</strong> <span id="prazoMedioGeral0034">0</span> dias
       </div>
@@ -869,18 +1541,18 @@
     <!-- Novo gráfico: Intervalo Notas 0034 Concluídas - Analisar Carga Acessante Mini Geração -->
     <div id="graficoIntervaloNotas0034MiniGeracao"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="nt-control-panel-row" style="margin-bottom: 16px;">
+        <div class="nt-filter-row">
           <label for="filtroAnoIntervaloNotas0034MiniGeracao"
-            style="font-size: 14px; color: #666; font-weight: 500;">Filtrar por ano:</label>
+            class="nt-filter-label">Filtrar por ano:</label>
           <select id="filtroAnoIntervaloNotas0034MiniGeracao" onchange="aplicarFiltroAnoIntervaloNotas0034MiniGeracao()"
-            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+            class="nt-filter-control" style="min-width: 120px;">
             <option value="todos">Todos</option>
           </select>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao"
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+        <div class="nt-filter-stack">
+          <button id="botaoToggleMesesIntervaloNotas0034MiniGeracao" class="nt-filter-toggle-btn"
+            style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
             <span>▼</span>
             <span>Filtrar por mês</span>
           </button>
@@ -890,34 +1562,31 @@
           </div>
         </div>
       </div>
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">📊 Notas 0034 Concluídas - Intervalo (Início Planejado x
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">📊 Notas 0034 Concluídas - Intervalo (Início Planejado x
           Conclusão)<br><span style="font-size:14px;color:#666">Analisar Carga Acessante Mini Geração</span></h2>
       </div>
-      <div
-        style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e0e0e0;">
-        <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 13px; color: #666;">Intervalo 1: 0 até</label>
+      <div class="nt-control-panel">
+        <div class="nt-control-panel-row">
+          <div class="nt-control-chip">
+            <label class="nt-text-label-sm">Intervalo 1: 0 até</label>
             <input type="number" id="intervalo1MaxNotas0034MiniGeracao" value="15" min="1" max="999"
-              style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-            <span style="font-size: 13px; color: #666;">dias</span>
+              class="nt-input-sm">
+            <span class="nt-text-label-sm">dias</span>
           </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 13px; color: #666;">Intervalo 2: até</label>
+          <div class="nt-control-chip">
+            <label class="nt-text-label-sm">Intervalo 2: até</label>
             <input type="number" id="intervalo2MaxNotas0034MiniGeracao" value="20" min="1" max="999"
-              style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-            <span style="font-size: 13px; color: #666;">dias</span>
+              class="nt-input-sm">
+            <span class="nt-text-label-sm">dias</span>
           </div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <label style="font-size: 13px; color: #666;">Intervalo 3: até</label>
+          <div class="nt-control-chip">
+            <label class="nt-text-label-sm">Intervalo 3: até</label>
             <input type="number" id="intervalo3MaxNotas0034MiniGeracao" value="35" min="1" max="999"
-              style="width: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
-            <span style="font-size: 13px; color: #666;">dias</span>
+              class="nt-input-sm">
+            <span class="nt-text-label-sm">dias</span>
           </div>
-          <button id="btnGerarGraficoIntervaloNotas0034MiniGeracao"
-            style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+          <button id="btnGerarGraficoIntervaloNotas0034MiniGeracao" class="nt-primary-btn-sm">
             📊 Gerar Gráfico
           </button>
         </div>
@@ -1135,12 +1804,11 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoSemGeracoes"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleCodigoMedidasSemGeracoes"
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">🔍 Quantidade de notas ABER e ANDM - Carga</h2>
+        <div class="nt-filter-stack">
+          <button id="botaoToggleCodigoMedidasSemGeracoes" class="nt-filter-toggle-btn"
+            style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
             <span>▼</span>
             <span>Filtrar por Código Medidas</span>
           </button>
@@ -1150,11 +1818,10 @@
           </div>
         </div>
       </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap">
         <canvas id="chartSemGeracoes"></canvas>
       </div>
-      <div id="infoSemGeracoes"
-        style="margin-top: 16px; padding: 12px; background: #f3e5f5; border-radius: 8px; color: #7b1fa2;">
+      <div id="infoSemGeracoes" class="nt-info-panel-purple-soft">
         <strong>Total de notas:</strong> <span id="totalSemGeracoes">0</span>
       </div>
     </div>
@@ -1164,12 +1831,11 @@
   <div style="max-width: 1400px; width: 100%; margin: 0 auto;">
     <div id="graficoMiniGeracao"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div
-        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px;">
-        <h2 style="color: #2e7d32; margin: 0;">⚡ Quantidade de notas ABER e ANDM - GD</h2>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleCodigoMedidasMiniGeracao"
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+      <div class="nt-chart-header">
+        <h2 class="nt-chart-title">⚡ Quantidade de notas ABER e ANDM - GD</h2>
+        <div class="nt-filter-stack">
+          <button id="botaoToggleCodigoMedidasMiniGeracao" class="nt-filter-toggle-btn"
+            style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
             <span>▼</span>
             <span>Filtrar por Código Medidas</span>
           </button>
@@ -1179,11 +1845,10 @@
           </div>
         </div>
       </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
+      <div class="nt-chart-canvas-wrap">
         <canvas id="chartMiniGeracao"></canvas>
       </div>
-      <div id="infoMiniGeracao"
-        style="margin-top: 16px; padding: 12px; background: #f1f8f4; border-radius: 8px; color: #2e7d32;">
+      <div id="infoMiniGeracao" class="nt-info-panel-green-soft">
         <strong>Total de notas:</strong> <span id="totalMiniGeracao">0</span>
       </div>
     </div>
@@ -1196,19 +1861,17 @@
   <!-- Gráfico de Notas Concluídas por Mês -->
   <div id="graficoNotasConcluidasPorMes"
     style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-    <div
-      style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-      <h2 style="color: #2e7d32; margin: 0;">📅 Notas Concluídas por Mês</h2>
-      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <label for="filtroAnoNotasConcluidasPorMes" style="font-size: 14px; color: #666; font-weight: 500;">Filtrar
+    <div class="nt-chart-header" style="align-items: center; flex-wrap: wrap;">
+      <h2 class="nt-chart-title">📅 Notas Concluídas por Mês</h2>
+      <div class="nt-chart-toolbar" style="align-items: center;">
+        <label for="filtroAnoNotasConcluidasPorMes" class="nt-filter-label">Filtrar
           por ano:</label>
-        <select id="filtroAnoNotasConcluidasPorMes"
-          style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; min-width: 120px;">
+        <select id="filtroAnoNotasConcluidasPorMes" class="nt-filter-control" style="min-width: 120px;">
           <option value="todos">Todos</option>
         </select>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <button id="botaoToggleMesesNotasConcluidasPorMes"
-            style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+        <div class="nt-filter-stack">
+          <button id="botaoToggleMesesNotasConcluidasPorMes" class="nt-filter-toggle-btn"
+            style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
             <span>▼</span>
             <span>Filtrar por mês</span>
           </button>
@@ -1217,18 +1880,17 @@
             <!-- Os checkboxes serão inseridos aqui dinamicamente -->
           </div>
         </div>
-        <button id="btnExportarNotasConcluidasPorMes"
-          style="padding: 8px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
+        <button id="btnExportarNotasConcluidasPorMes" class="nt-export-btn"
+          style="padding: 8px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap;">
           <span>📥</span>
           <span>Exportar Excel</span>
         </button>
       </div>
     </div>
-    <div style="max-width: 1000px; margin: 0 auto;">
+    <div class="nt-chart-canvas-wrap">
       <canvas id="chartNotasConcluidasPorMes"></canvas>
     </div>
-    <div id="infoNotasConcluidasPorMes"
-      style="margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 8px; color: #2e7d32;">
+    <div id="infoNotasConcluidasPorMes" class="nt-info-panel-green-soft">
       <strong>Total de notas analisadas:</strong> <span id="totalNotasConcluidasPorMes">0</span>
     </div>
   </div>
@@ -2117,7 +2779,7 @@
 
     window.processarExcel = async function () {
       const fileInput = document.getElementById('fileInput');
-      const file = fileInput.files[0];
+      const file = fileInput.files[0] || window.__excelDroppedFile || null;
 
       if (!file) {
         alert('Por favor, selecione um arquivo Excel.');
@@ -2200,6 +2862,11 @@
 
             alert(`${dadosFormatados.length} registros importados com sucesso!`);
             fileInput.value = '';
+            window.__excelDroppedFile = null;
+            const arquivoSelecionado = document.getElementById('uploadArquivoSelecionado');
+            if (arquivoSelecionado) {
+              arquivoSelecionado.textContent = 'Nenhum arquivo selecionado.';
+            }
             carregarDados();
           }
         } catch (error) {
@@ -7790,8 +8457,8 @@
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
 
-        // Excluir código medidas 0034
-        if (codigoMedidas === '0034') {
+        // Excluir códigos de medidas não considerados neste export
+        if (codigoMedidas === '0034' || codigoMedidas === '0555') {
           return false;
         }
 
@@ -13865,6 +14532,7 @@
       bindMenuActionButtons();
       bindMainActionButtons();
       bindUploadActionButtons();
+      setupUploadDragAndDrop();
       bindExportActionButtons();
       bindModalActionButtons();
       bindDropdownActionButtons();
@@ -13873,6 +14541,8 @@
       if (typeof bindIntervaloNotas0034MiniGeracaoButtons === 'function') {
         bindIntervaloNotas0034MiniGeracaoButtons();
       }
+      setupVisualNormalization();
+      setupGlobalUXEnhancements();
       applyUserCategoryVisibility();
       if (typeof exibirUltimaAtualizacaoRelatorio === 'function') {
         exibirUltimaAtualizacaoRelatorio();
