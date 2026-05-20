@@ -698,6 +698,14 @@
       button.classList.add('active-button');
     }
 
+    function createDebounced(fn, waitMs) {
+      let timeoutId = null;
+      return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), waitMs);
+      };
+    }
+
     function scrollToSection(sectionId) {
       if (!sectionId) return;
       const section = document.getElementById(sectionId);
@@ -859,9 +867,18 @@
         if (!button) return;
 
         button.addEventListener('click', async function () {
+          if (button.dataset.running === 'true') return;
+
+          button.dataset.running = 'true';
+          button.disabled = true;
           setActiveButton(button);
-          await executeWithLoading(action);
-          setTimeout(() => scrollToSection(targetId), 80);
+          try {
+            await executeWithLoading(action);
+            setTimeout(() => scrollToSection(targetId), 80);
+          } finally {
+            button.disabled = false;
+            button.dataset.running = 'false';
+          }
         });
 
         button.addEventListener('mouseover', function () {
@@ -1133,6 +1150,12 @@
 
     function bindPrazoIntervalosActionButtons() {
       const filtroAnoPrazoIntervalos = document.getElementById('filtroAnoPrazoIntervalos');
+      const atualizarIntervalosDebounced = createDebounced(function () {
+        if (typeof window.atualizarGraficoIntervalos === 'function') {
+          window.atualizarGraficoIntervalos();
+        }
+      }, 180);
+
       if (filtroAnoPrazoIntervalos) {
         filtroAnoPrazoIntervalos.addEventListener('change', function () {
           if (typeof window.aplicarFiltroAnoPrazoIntervalos === 'function') {
@@ -1145,11 +1168,8 @@
         const input = document.getElementById(inputId);
         if (!input) return;
 
-        input.addEventListener('change', function () {
-          if (typeof window.atualizarGraficoIntervalos === 'function') {
-            window.atualizarGraficoIntervalos();
-          }
-        });
+        input.addEventListener('input', atualizarIntervalosDebounced);
+        input.addEventListener('change', atualizarIntervalosDebounced);
       });
 
       const btnResetarIntervalos = document.getElementById('btnResetarIntervalos');
@@ -1172,6 +1192,7 @@
     }
 
     function bindFilterActionButtons() {
+      const debouncedActionMap = new Map();
       const selectActionMap = [
         { id: 'filtroAnoNotasConcluidasPorMes', action: 'aplicarFiltroAnoNotasConcluidasPorMes' },
         { id: 'filtroMesConcluidas', action: 'filtrarGraficoConcluidasPorMes' },
@@ -1185,10 +1206,18 @@
         const element = document.getElementById(id);
         if (!element) return;
 
+        if (!debouncedActionMap.has(action)) {
+          debouncedActionMap.set(action, createDebounced(function () {
+            if (typeof window[action] === 'function') {
+              window[action]();
+            }
+          }, 150));
+        }
+
+        const runDebouncedAction = debouncedActionMap.get(action);
+
         element.addEventListener('change', function () {
-          if (typeof window[action] === 'function') {
-            window[action]();
-          }
+          runDebouncedAction();
         });
       });
 
@@ -4676,12 +4705,48 @@
       }
     };
 
+    const cacheCodigosPadrao = new WeakMap();
+    const cacheMesesFimPlanejado = new WeakMap();
+    const cacheStatusBase = new Map();
+
+    function normalizarStatusBaseCached(status) {
+      const statusNormalizado = (status || '').trim().toUpperCase();
+      if (!statusNormalizado) return '';
+
+      const cache = cacheStatusBase.get(statusNormalizado);
+      if (cache !== undefined) {
+        return cache;
+      }
+
+      let statusBase = statusNormalizado;
+      if (statusNormalizado.includes('ABER')) {
+        statusBase = 'ABER';
+      } else if (statusNormalizado.includes('ANDM')) {
+        statusBase = 'ANDM';
+      }
+
+      cacheStatusBase.set(statusNormalizado, statusBase);
+      return statusBase;
+    }
+
     function filtrarDadosCodigosPadrao(dados) {
+      if (!Array.isArray(dados) || dados.length === 0) {
+        return [];
+      }
+
+      const cache = cacheCodigosPadrao.get(dados);
+      if (cache) {
+        return cache;
+      }
+
       const codigosPermitidos = new Set(['0040', '0041', '0042', '0045']);
-      return (dados || []).filter(item => {
+      const filtrados = dados.filter(item => {
         const codigoMedidas = (item.codigo_medidas || '').trim();
         return codigosPermitidos.has(codigoMedidas);
       });
+
+      cacheCodigosPadrao.set(dados, filtrados);
+      return filtrados;
     }
 
     window.exibirDados = function (dados) {
@@ -5728,12 +5793,7 @@
       const statusSet = new Set();
       dados.forEach(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        let statusBase = status;
-        if (statusBase.includes('ABER')) {
-          statusBase = 'ABER';
-        } else if (statusBase.includes('ANDM')) {
-          statusBase = 'ANDM';
-        }
+        const statusBase = normalizarStatusBaseCached(status);
         if (statusBase) {
           statusSet.add(statusBase);
         }
@@ -8168,26 +8228,40 @@
 
     // Função para popular o filtro de meses do gráfico ABER/ANDM (fim_planejado)
     window.popularFiltroMesesFimPlanejado = function (dados) {
-      const mesesSet = new Set();
-
-      dados.forEach(item => {
-        const fimPlanejado = item.fim_planejado || '';
-        if (fimPlanejado) {
-          const partes = fimPlanejado.split('.');
-          if (partes.length >= 3) {
-            const mesAno = partes[1] + '.' + partes[2]; // MM.YYYY
-            mesesSet.add(mesAno);
-          }
+      if (!Array.isArray(dados) || dados.length === 0) {
+        const selectMesVazio = document.getElementById('filtroMesFimPlanejado');
+        if (selectMesVazio) {
+          selectMesVazio.innerHTML = '<option value="todos">Todos os meses</option>';
+          selectMesVazio.value = 'todos';
         }
-      });
+        return;
+      }
 
-      const mesesArray = Array.from(mesesSet).sort((a, b) => {
-        const [mesA, anoA] = a.split('.');
-        const [mesB, anoB] = b.split('.');
-        const dataA = new Date(parseInt(anoA), parseInt(mesA) - 1);
-        const dataB = new Date(parseInt(anoB), parseInt(mesB) - 1);
-        return dataA - dataB;
-      });
+      let mesesArray = cacheMesesFimPlanejado.get(dados);
+      if (!mesesArray) {
+        const mesesSet = new Set();
+
+        dados.forEach(item => {
+          const fimPlanejado = item.fim_planejado || '';
+          if (fimPlanejado) {
+            const partes = fimPlanejado.split('.');
+            if (partes.length >= 3) {
+              const mesAno = partes[1] + '.' + partes[2]; // MM.YYYY
+              mesesSet.add(mesAno);
+            }
+          }
+        });
+
+        mesesArray = Array.from(mesesSet).sort((a, b) => {
+          const [mesA, anoA] = a.split('.');
+          const [mesB, anoB] = b.split('.');
+          const dataA = new Date(parseInt(anoA, 10), parseInt(mesA, 10) - 1);
+          const dataB = new Date(parseInt(anoB, 10), parseInt(mesB, 10) - 1);
+          return dataA - dataB;
+        });
+
+        cacheMesesFimPlanejado.set(dados, mesesArray);
+      }
 
       const selectMes = document.getElementById('filtroMesFimPlanejado');
       if (!selectMes) {
@@ -8442,17 +8516,10 @@
       const todosStatusMarcados = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => checkbox.checked);
       const nenhumStatusMarcado = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => !checkbox.checked);
 
-      const normalizarStatusBase = function (status) {
-        const statusNormalizado = (status || '').trim().toUpperCase();
-        if (statusNormalizado.includes('ABER')) return 'ABER';
-        if (statusNormalizado.includes('ANDM')) return 'ANDM';
-        return statusNormalizado;
-      };
-
       // Aplicar os mesmos filtros que o gráfico
       const dadosFiltrados = dadosBase.filter(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = normalizarStatusBase(status);
+        const statusBase = normalizarStatusBaseCached(status);
         const descricao = (item.descricao || '').trim();
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
@@ -8644,13 +8711,6 @@
       const dataInicio = dataInicioSelecionada ? new Date(dataInicioSelecionada + 'T00:00:00') : null;
       const dataFim = dataFimSelecionada ? new Date(dataFimSelecionada + 'T23:59:59') : null;
 
-      const normalizarStatusBase = function (status) {
-        const statusNormalizado = (status || '').trim().toUpperCase();
-        if (statusNormalizado.includes('ABER')) return 'ABER';
-        if (statusNormalizado.includes('ANDM')) return 'ANDM';
-        return statusNormalizado;
-      };
-
       // Obter descrições selecionadas nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesDescricoes input[type="checkbox"]');
       const descricoesChecadas = new Set();
@@ -8686,7 +8746,7 @@
       const contagemStatus = {};
       dadosPermitidos.forEach(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = normalizarStatusBase(status);
+        const statusBase = normalizarStatusBaseCached(status);
         contagemStatus[statusBase] = (contagemStatus[statusBase] || 0) + 1;
       });
 
@@ -8697,7 +8757,7 @@
 
       const dadosFiltrados = dadosPermitidos.filter(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = normalizarStatusBase(status);
+        const statusBase = normalizarStatusBaseCached(status);
         const descricao = (item.descricao || '').trim();
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
@@ -8747,7 +8807,7 @@
       dadosFiltrados.forEach(item => {
         const fimPlanejado = item.fim_planejado || 'Sem data';
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = normalizarStatusBase(status);
+        const statusBase = normalizarStatusBaseCached(status);
         if (!statusBase) {
           return;
         }
@@ -8853,7 +8913,7 @@
               const notasFiltradas = dadosFiltrados.filter(item => {
                 const fimPlanejado = item.fim_planejado || 'Sem data';
                 const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-                const statusBase = normalizarStatusBase(status);
+                const statusBase = normalizarStatusBaseCached(status);
                 return fimPlanejado === dataLabel && statusBase === statusLabel;
               });
 
@@ -8982,9 +9042,7 @@
         const fimPlanejado = (item.fim_planejado || '').trim();
 
         // Normalizar status para ABER/ANDM
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(status)
-          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(status);
 
         // Filtrar apenas descrição contendo 0034 OU código 0034 e status ABER ou ANDM
         const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
@@ -9018,9 +9076,7 @@
         const fimPlanejado = item.fim_planejado || 'Sem data';
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
 
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(status)
-          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(status);
 
         if (!agrupamentoPorData[fimPlanejado]) {
           agrupamentoPorData[fimPlanejado] = {
@@ -9126,7 +9182,7 @@
               const notasFiltradas = dadosFiltrados.filter(item => {
                 const fimPlanejado = item.fim_planejado || 'Sem data';
                 const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-                const statusBase = status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : '');
+                const statusBase = normalizarStatusBaseCached(status);
                 return fimPlanejado === dataLabel && statusBase === statusLabel;
               });
 
@@ -9246,9 +9302,7 @@
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const fimPlanejado = (item.fim_planejado || '').trim();
 
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(status)
-          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(status);
 
         const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
@@ -9277,9 +9331,7 @@
       dadosFiltrados.forEach(item => {
         const textoMedidas = (item.texto_medidas || '').trim() || 'Sem Texto de Medidas';
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(status)
-          : (status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(status);
 
         if (!agrupamentoPorTexto[textoMedidas]) {
           agrupamentoPorTexto[textoMedidas] = {
@@ -9379,7 +9431,7 @@
               const notasFiltradas = dadosFiltrados.filter(item => {
                 const textoMedidas = (item.texto_medidas || '').trim() || 'Sem Texto de Medidas';
                 const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-                const statusBase = status.includes('ABER') ? 'ABER' : (status.includes('ANDM') ? 'ANDM' : '');
+                const statusBase = normalizarStatusBaseCached(status);
                 return textoMedidas === dataLabel && statusBase === statusLabel;
               });
 
@@ -11273,9 +11325,7 @@
         const descricao = (item.descricao || '').toLowerCase();
         const temDescricao = descricao.includes('mini geração') || descricao.includes('micro geração');
         const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(statusRaw)
-          : (statusRaw.includes('ABER') ? 'ABER' : (statusRaw.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(statusRaw);
         const temStatus = statusBase === 'ABER' || statusBase === 'ANDM';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
@@ -11931,9 +11981,7 @@
       const dadosFiltrados = dados.filter(item => {
         const descricao = (item.descricao || '').toLowerCase();
         const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        const statusBase = typeof normalizarStatusBase === 'function'
-          ? normalizarStatusBase(statusRaw)
-          : (statusRaw.includes('ABER') ? 'ABER' : (statusRaw.includes('ANDM') ? 'ANDM' : ''));
+        const statusBase = normalizarStatusBaseCached(statusRaw);
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const codigosPermitidos = ['0040', '0041', '0042', '0045'];
         const codigoPermitido = codigosPermitidos.includes(codigoMedidas);
