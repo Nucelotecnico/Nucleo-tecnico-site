@@ -1433,7 +1433,7 @@
         <strong>Regras para geração deste gráfico:</strong><br>
         - Considera apenas notas com <b>código de medidas 0034</b>.<br>
         - Inclui apenas notas com status <b>ABER</b> (Abertas) ou <b>ANDM</b> (Em Andamento).<br>
-        - Notas filtradas por mês e por descrição, conforme seleção dos filtros acima.<br>
+        - Notas filtradas por período (data início/fim) e por descrição, conforme seleção dos filtros acima.<br>
         - Os totais exibidos referem-se apenas às notas que atendem a todos os critérios acima.<br>
         - Outras regras específicas podem ser aplicadas conforme a lógica do sistema.<br>
       </div>
@@ -1441,11 +1441,12 @@
         <h2 class="nt-chart-title">📊 Quantidade de Notas ABER e ANDM - Código 0034</h2>
         <div class="nt-chart-toolbar">
           <div class="nt-filter-row">
-            <label for="filtroMesMedidas0034" class="nt-filter-label">Filtrar por
-              mês:</label>
-            <select id="filtroMesMedidas0034" class="nt-filter-control" onchange="filtrarGraficoMedidas0034PorMes()">
-              <option value="todos">Todos os meses</option>
-            </select>
+            <label for="filtroDataInicioMedidas0034" class="nt-filter-label">Data início:</label>
+            <input type="date" id="filtroDataInicioMedidas0034" class="nt-filter-control" onchange="filtrarGraficoMedidas0034PorMes()">
+          </div>
+          <div class="nt-filter-row">
+            <label for="filtroDataFimMedidas0034" class="nt-filter-label">Data fim:</label>
+            <input type="date" id="filtroDataFimMedidas0034" class="nt-filter-control" onchange="filtrarGraficoMedidas0034PorMes()">
           </div>
           <div class="nt-filter-stack">
             <button id="botaoToggleDescricoesMedidas0034" class="nt-filter-toggle-btn"
@@ -8606,11 +8607,12 @@
       XLSX.writeFile(wb, nomeArquivo);
     };
 
-    // Função para filtrar gráfico Medidas 0034 por mês
+    // Função para filtrar gráfico Medidas 0034 por período
     window.filtrarGraficoMedidas0034PorMes = function () {
-      const mesSelecionado = document.getElementById('filtroMesMedidas0034')?.value || 'todos';
+      const dataInicioSelecionada = document.getElementById('filtroDataInicioMedidas0034')?.value || '';
+      const dataFimSelecionada = document.getElementById('filtroDataFimMedidas0034')?.value || '';
       const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
-      gerarGraficoMedidas0034(dadosBase, mesSelecionado);
+      gerarGraficoMedidas0034(dadosBase, null, dataInicioSelecionada, dataFimSelecionada);
     };
 
     // Função para filtrar gráfico Medidas 0034 (Cópia) por mês
@@ -9008,10 +9010,25 @@
     };
 
     // Função para gerar gráfico de Medidas 0034
-    window.gerarGraficoMedidas0034 = function (dados, mesFiltro = null) {
+    window.gerarGraficoMedidas0034 = function (dados, mesFiltro = null, dataInicioFiltro = null, dataFimFiltro = null) {
       if (!dados || dados.length === 0) {
         return;
       }
+
+      const parseDataBR = function (valor) {
+        const partes = (valor || '').split('.');
+        if (partes.length < 3) return null;
+        const dia = parseInt(partes[0], 10);
+        const mes = parseInt(partes[1], 10);
+        const ano = parseInt(partes[2], 10);
+        if (!dia || !mes || !ano) return null;
+        return new Date(ano, mes - 1, dia);
+      };
+
+      const dataInicioSelecionada = dataInicioFiltro ?? (document.getElementById('filtroDataInicioMedidas0034')?.value || '');
+      const dataFimSelecionada = dataFimFiltro ?? (document.getElementById('filtroDataFimMedidas0034')?.value || '');
+      const dataInicio = dataInicioSelecionada ? new Date(dataInicioSelecionada + 'T00:00:00') : null;
+      const dataFim = dataFimSelecionada ? new Date(dataFimSelecionada + 'T23:59:59') : null;
 
       // Verificar quantos registros têm 0034 na descrição ou no código
       const com0034Descricao = dados.filter(item => (item.descricao || '').trim().includes('0034'));
@@ -9046,18 +9063,22 @@
 
         // Filtrar apenas descrição contendo 0034 OU código 0034 e status ABER ou ANDM
         const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        const statusPermitido = statusBase === 'ABER' || statusBase === 'ANDM';
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
-        if (!eh0034 || !statusBase || !descricaoOk) {
+        if (!eh0034 || !statusPermitido || !descricaoOk) {
           return false;
         }
 
-        // Aplicar filtro de mês se fornecido
-        if (mesFiltro && mesFiltro !== 'todos') {
-          const partes = fimPlanejado.split('.');
-          if (partes.length >= 3) {
-            const mesAno = partes[1] + '.' + partes[2];
-            return mesAno === mesFiltro;
-          } else {
+        // Aplicar filtro por período se informado
+        if (dataInicio || dataFim) {
+          const dataFimPlanejado = parseDataBR(fimPlanejado);
+          if (!dataFimPlanejado) {
+            return false;
+          }
+          if (dataInicio && dataFimPlanejado < dataInicio) {
+            return false;
+          }
+          if (dataFim && dataFimPlanejado > dataFim) {
             return false;
           }
         }
@@ -9077,6 +9098,9 @@
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
 
         const statusBase = normalizarStatusBaseCached(status);
+        if (statusBase !== 'ABER' && statusBase !== 'ANDM') {
+          return;
+        }
 
         if (!agrupamentoPorData[fimPlanejado]) {
           agrupamentoPorData[fimPlanejado] = {
@@ -9275,10 +9299,7 @@
         }
       });
 
-      // Popular o filtro de meses
-      if (!mesFiltro) {
-        popularFiltroMesesMedidas0034(dados);
-      }
+      // O gráfico 0034 agora usa filtro por período (data início/fim)
     };
 
     // Função para gerar gráfico de Medidas 0034 (Cópia)
@@ -9305,8 +9326,9 @@
         const statusBase = normalizarStatusBaseCached(status);
 
         const eh0034 = descricao.includes('0034') || codigoMedidas === '0034';
+        const statusPermitido = statusBase === 'ABER' || statusBase === 'ANDM';
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
-        if (!eh0034 || !statusBase || !descricaoOk) {
+        if (!eh0034 || !statusPermitido || !descricaoOk) {
           return false;
         }
 
@@ -9332,6 +9354,9 @@
         const textoMedidas = (item.texto_medidas || '').trim() || 'Sem Texto de Medidas';
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBaseCached(status);
+        if (statusBase !== 'ABER' && statusBase !== 'ANDM') {
+          return;
+        }
 
         if (!agrupamentoPorTexto[textoMedidas]) {
           agrupamentoPorTexto[textoMedidas] = {
