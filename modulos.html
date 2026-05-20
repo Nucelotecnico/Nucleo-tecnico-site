@@ -75,10 +75,14 @@
 
     <h1 style="display:inline-block; vertical-align:middle; padding: 0px 0px;">MÓDULOS BLINDADOS HOMOLOGADOS</h1>
 
+    <div class="acoes-cadastro-modulos">
+      <button id="toggleCadastroBtn" class="btn-primario" type="button">Mostrar Cadastro de arquivos em PDF</button>
+    </div>
+
 
     <!-- Seções: Cadastro e Busca -->
     <div class="modulos-secoes">
-      <div id="formularioCadastro" class="modulos-card">
+      <div id="formularioCadastro" class="modulos-card" hidden>
         <h2>Cadastro de arquivos em PDF</h2>
         <form id="formProjeto" class="form-modulos">
           <div class="campo">
@@ -129,6 +133,10 @@
           <div class="campo">
             <label for="arquivoPDF">Arquivo PDF</label>
             <input type="file" id="arquivoPDF" accept="application/pdf" required>
+            <div id="dropzoneArquivoPDF" class="upload-dropzone" tabindex="0" role="button" aria-label="Arraste um PDF aqui ou clique para selecionar">
+              Arraste o PDF aqui ou clique para selecionar
+            </div>
+            <p id="arquivoPDFSelecionado" class="upload-file-name">Nenhum arquivo selecionado.</p>
           </div>
           <div class="acoes-form">
             <button type="submit" class="btn-primario">Enviar</button>

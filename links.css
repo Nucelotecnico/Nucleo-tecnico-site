@@ -148,6 +148,14 @@ button {
     gap: 24px;
 }
 
+.acoes-links-cadastro {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 14px;
+    display: flex;
+    justify-content: center;
+}
+
 .links-card {
     background: #fff;
     padding: 24px;

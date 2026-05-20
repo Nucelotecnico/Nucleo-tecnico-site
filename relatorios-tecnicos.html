@@ -300,6 +300,12 @@
       background: #e8f5e9;
       border-color: #1b5e20;
     }
+    
+    .upload-area.dragover {
+      background: #e8f5e9;
+      border-color: #1b5e20;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+    }
 
     .upload-area input[type="file"] {
       display: none;
@@ -323,6 +329,13 @@
       width: 100%;
       height: 150px;
       object-fit: cover;
+    }
+
+    .preview-item video {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      background: #000;
     }
 
     .file-preview-item {
@@ -1172,19 +1185,19 @@
         </div>
 
         <div class="input-group">
-          <label>📷 Fotos do Evento</label>
-          <div class="upload-area" onclick="document.getElementById('fotosInput').click()">
-            <p style="color: #2e7d32; font-size: 16px; font-weight: 500;">📁 Clique para selecionar fotos</p>
-            <p style="color: #999; font-size: 14px; margin-top: 8px;">Formatos aceitos: JPG, PNG, JPEG</p>
-            <input type="file" id="fotosInput" accept="image/*" multiple onchange="previewImages()">
+          <label>📷 Fotos/Vídeos do Evento</label>
+          <div id="fotosUploadArea" class="upload-area" onclick="document.getElementById('fotosInput').click()">
+            <p style="color: #2e7d32; font-size: 16px; font-weight: 500;">📁 Clique ou arraste fotos/vídeos aqui</p>
+            <p style="color: #999; font-size: 14px; margin-top: 8px;">Formatos aceitos: JPG, PNG, JPEG, MP4, MOV</p>
+            <input type="file" id="fotosInput" accept="image/*,video/*" multiple onchange="previewImages()">
           </div>
           <div id="previewContainer" class="preview-images"></div>
         </div>
 
         <div class="input-group">
           <label>📄 Arquivos Anexos (PDF, DOC, XLS, etc.)</label>
-          <div class="upload-area" onclick="document.getElementById('arquivosInput').click()">
-            <p style="color: #2e7d32; font-size: 16px; font-weight: 500;">📁 Clique para selecionar arquivos</p>
+          <div id="arquivosUploadArea" class="upload-area" onclick="document.getElementById('arquivosInput').click()">
+            <p style="color: #2e7d32; font-size: 16px; font-weight: 500;">📁 Clique ou arraste arquivos aqui</p>
             <p style="color: #999; font-size: 14px; margin-top: 8px;">PDF, DOC, DOCX, XLS, XLSX, TXT, ZIP</p>
             <input type="file" id="arquivosInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar" multiple onchange="previewFiles()">
           </div>
@@ -1243,6 +1256,21 @@
         }
       }
     }
+    
+    function handleDroppedImages(files) {
+      const mediaFiles = Array.from(files).filter(isAllowedMediaFile);
+      if (mediaFiles.length === 0) {
+        alert('Arraste apenas fotos ou vídeos (JPG, PNG, JPEG, MP4, MOV...).');
+        return;
+      }
+
+      if (mediaFiles.length !== files.length) {
+        alert('Alguns arquivos foram ignorados por não serem mídia válida.');
+      }
+
+      imageFilesArray = [...imageFilesArray, ...mediaFiles];
+      mostrarPreviewCompleto();
+    }
 
     // Chamar ao carregar a página
     garantirAutenticacao().catch(console.error);
@@ -1252,6 +1280,19 @@
     let documentFilesArray = []; // Novos arquivos (documentos)
     let existingDocumentUrls = []; // Arquivos já cadastrados (URLs)
     let editandoRelatorio = false;
+
+    function isVideoFile(file) {
+      return Boolean(file && file.type && file.type.startsWith('video/'));
+    }
+
+    function isVideoUrl(url) {
+      const cleanUrl = String(url || '').split('?')[0].toLowerCase();
+      return /\.(mp4|mov|webm|m4v|3gp|avi|mkv)$/.test(cleanUrl);
+    }
+
+    function isAllowedMediaFile(file) {
+      return Boolean(file && file.type && (file.type.startsWith('image/') || file.type.startsWith('video/')));
+    }
 
     // Função para converter Markdown básico para HTML
     function markdownToHtml(text) {
@@ -1309,6 +1350,56 @@
       
       return result.join('\n');
     }
+    
+    function handleDroppedDocuments(files) {
+      const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'zip', 'rar'];
+      const validFiles = Array.from(files).filter(file => {
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        return allowedExtensions.includes(ext);
+      });
+
+      if (validFiles.length === 0) {
+        alert('Arraste apenas arquivos permitidos: PDF, DOC, DOCX, XLS, XLSX, TXT, ZIP, RAR.');
+        return;
+      }
+
+      documentFilesArray = [...documentFilesArray, ...validFiles];
+      mostrarPreviewArquivos();
+    }
+
+    function setupUploadDragAndDrop() {
+      const bindDropzone = (areaId, onDropFiles) => {
+        const area = document.getElementById(areaId);
+        if (!area) {
+          return;
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+          area.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            area.classList.add('dragover');
+          });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+          area.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            area.classList.remove('dragover');
+          });
+        });
+
+        area.addEventListener('drop', (event) => {
+          const files = event.dataTransfer?.files;
+          if (!files || !files.length) {
+            return;
+          }
+          onDropFiles(files);
+        });
+      };
+
+      bindDropzone('fotosUploadArea', handleDroppedImages);
+      bindDropzone('arquivosUploadArea', handleDroppedDocuments);
+    }
 
     // Atualizar contador de caracteres
     function atualizarContador() {
@@ -1352,10 +1443,51 @@
       }
     }
 
-    // Carregar sidebar ao iniciar (relatórios não carregam automaticamente)
+    // Carregar sidebar e último relatório ao iniciar
     document.addEventListener('DOMContentLoaded', () => {
+      setupUploadDragAndDrop();
       carregarSidebar();
+      carregarUltimoRelatorioInicial();
     });
+
+    async function carregarUltimoRelatorioInicial() {
+      const container = document.getElementById('relatoriosList');
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = '<div class="loading">Carregando último relatório...</div>';
+
+      try {
+        const { data, error } = await supabaseRelatorios
+          .from('relatorios_tecnicos')
+          .select('*')
+          .order('data_criacao', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <h3>Nenhum relatório cadastrado</h3>
+              <p>Clique em "Novo Relatório" para adicionar o primeiro registro.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = '';
+        const card = await criarCardRelatorio(data);
+        container.appendChild(card);
+      } catch (error) {
+        console.error('Erro ao carregar o último relatório:', error);
+        container.innerHTML = '<div class="empty-state"><p>Erro ao carregar o último relatório.</p></div>';
+      }
+    }
 
     // Obter nome do usuário baseado no email
     async function obterNomeUsuario(emailOuNome) {
@@ -1486,41 +1618,48 @@
       const previewContainer = document.getElementById('previewContainer');
       previewContainer.innerHTML = '';
 
-      // Mostrar fotos existentes (URLs)
+      // Mostrar midias existentes (URLs)
       existingImageUrls.forEach((url, index) => {
         const div = document.createElement('div');
         div.className = 'preview-item';
+        const mediaTag = isVideoUrl(url)
+          ? `<video src="${url}" controls preload="metadata"></video>`
+          : `<img src="${url}" alt="Mídia existente ${index + 1}">`;
         div.innerHTML = `
-          <img src="${url}" alt="Foto existente ${index + 1}">
+          ${mediaTag}
           <button class="remove-preview" onclick="removerFotoExistente(${index})">&times;</button>
           <small style="display:block; text-align:center; color:#2e7d32; font-size:11px; margin-top:3px;">✓ Cadastrada</small>
         `;
         previewContainer.appendChild(div);
       });
 
-      // Mostrar novas fotos (arquivos)
+      // Mostrar novas midias (arquivos)
       imageFilesArray.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const div = document.createElement('div');
-          div.className = 'preview-item';
-          div.innerHTML = `
-            <img src="${e.target.result}" alt="Nova foto ${index + 1}">
-            <button class="remove-preview" onclick="removerNovaFoto(${index})">&times;</button>
-            <small style="display:block; text-align:center; color:#ff9800; font-size:11px; margin-top:3px;">⊕ Nova</small>
-          `;
-          previewContainer.appendChild(div);
-        };
-        reader.readAsDataURL(file);
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        const mediaUrl = URL.createObjectURL(file);
+        const mediaTag = isVideoFile(file)
+          ? `<video src="${mediaUrl}" controls preload="metadata"></video>`
+          : `<img src="${mediaUrl}" alt="Nova mídia ${index + 1}">`;
+        div.innerHTML = `
+          ${mediaTag}
+          <button class="remove-preview" onclick="removerNovaFoto(${index})">&times;</button>
+          <small style="display:block; text-align:center; color:#ff9800; font-size:11px; margin-top:3px;">⊕ Nova</small>
+        `;
+        previewContainer.appendChild(div);
       });
     }
 
-    // Preview de imagens
+    // Preview de midias (imagens e videos)
     function previewImages() {
       const files = document.getElementById('fotosInput').files;
-      // Adicionar novas fotos ao array existente ao invés de substituir
-      const newFiles = Array.from(files);
-      imageFilesArray = [...imageFilesArray, ...newFiles];
+      const allSelected = Array.from(files);
+      const mediaFiles = allSelected.filter(isAllowedMediaFile);
+      if (mediaFiles.length !== allSelected.length) {
+        alert('Alguns arquivos foram ignorados. Envie apenas imagens ou vídeos.');
+      }
+
+      imageFilesArray = [...imageFilesArray, ...mediaFiles];
       
       mostrarPreviewCompleto();
       
@@ -1824,10 +1963,15 @@
       if (relatorio.fotos && relatorio.fotos.length > 0) {
         fotosHtml = '<div class="relatorio-images">';
         relatorio.fotos.forEach((foto, index) => {
+          const isVideo = isVideoUrl(foto);
+          const mediaHtml = isVideo
+            ? `<video src="${foto}" controls preload="metadata"></video>`
+            : `<img src="${foto}" alt="Imagem ${index + 1}" onclick="abrirImagemModal('${foto}', 'Imagem ${index + 1}')">`;
+          const caption = isVideo ? `🎥 Vídeo ${index + 1}` : `📷 Imagem ${index + 1}`;
           fotosHtml += `
             <div class="relatorio-image-item">
-              <img src="${foto}" alt="Imagem ${index + 1}" onclick="abrirImagemModal('${foto}', 'Imagem ${index + 1}')">
-              <div class="image-caption">📷 Imagem ${index + 1}</div>
+              ${mediaHtml}
+              <div class="image-caption">${caption}</div>
             </div>
           `;
         });

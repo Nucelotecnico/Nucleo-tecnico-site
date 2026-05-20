@@ -5,6 +5,24 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 let editingLinkId = null;
 
+function updateAdicionarLinkToggleButton() {
+    const toggleBtn = document.getElementById('btnToggleAdicionarLink');
+    const formAdicionar = document.getElementById('form-adicionar-link');
+    if (!toggleBtn || !formAdicionar) return;
+
+    toggleBtn.textContent = formAdicionar.hidden
+        ? 'Mostrar Adicionar Novo Link'
+        : 'Ocultar Adicionar Novo Link';
+}
+
+function setAdicionarLinkVisibility(visible) {
+    const formAdicionar = document.getElementById('form-adicionar-link');
+    if (!formAdicionar) return;
+
+    formAdicionar.hidden = !visible;
+    updateAdicionarLinkToggleButton();
+}
+
 function escapeHtml(value) {
     return (value || '')
         .toString()
@@ -31,6 +49,7 @@ function updateFormMode() {
 }
 
 window.startEditLink = function (id, titleEncoded, urlEncoded) {
+    setAdicionarLinkVisibility(true);
     editingLinkId = id;
     document.getElementById('title').value = decodeURIComponent(titleEncoded || '');
     document.getElementById('url').value = decodeURIComponent(urlEncoded || '');
@@ -153,14 +172,29 @@ async function deleteLink(id) {
 // 🚀 Inicializa a tabela ao carregar a página
 loadLinks();
 updateFormMode();
+updateAdicionarLinkToggleButton();
 
 // Ocultar formulário de adicionar links para usuario
 document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('btnToggleAdicionarLink');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const formAdicionar = document.getElementById('form-adicionar-link');
+            if (!formAdicionar) return;
+            setAdicionarLinkVisibility(formAdicionar.hidden);
+        });
+    }
+
     const userCategoria = sessionStorage.getItem('userCategoria');
     if (userCategoria === 'usuario') {
         const formAdicionar = document.getElementById('form-adicionar-link');
-        if (formAdicionar) {
-            formAdicionar.style.display = 'none';
+        if (toggleBtn) {
+            toggleBtn.style.display = 'none';
         }
+        if (formAdicionar) {
+            formAdicionar.hidden = true;
+        }
+    } else {
+        setAdicionarLinkVisibility(false);
     }
 });

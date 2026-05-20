@@ -439,6 +439,109 @@ function coletarFiltroDaTela() {
     };
 }
 
+function setupCadastroToggle() {
+    const toggleButton = document.getElementById('toggleCadastroBtn');
+    const formCadastro = document.getElementById('formularioCadastro');
+
+    if (!toggleButton || !formCadastro) {
+        return;
+    }
+
+    const updateButtonLabel = () => {
+        toggleButton.textContent = formCadastro.hidden
+            ? 'Mostrar Cadastro de arquivos em PDF'
+            : 'Ocultar Cadastro de arquivos em PDF';
+    };
+
+    updateButtonLabel();
+    toggleButton.addEventListener('click', () => {
+        formCadastro.hidden = !formCadastro.hidden;
+        updateButtonLabel();
+    });
+}
+
+let selectedPdfFile = null;
+
+function updateSelectedFileName() {
+    const label = document.getElementById('arquivoPDFSelecionado');
+    if (!label) {
+        return;
+    }
+
+    label.textContent = selectedPdfFile
+        ? `Arquivo selecionado: ${selectedPdfFile.name}`
+        : 'Nenhum arquivo selecionado.';
+}
+
+function assignSelectedPdfFile(file) {
+    if (!file || file.type !== 'application/pdf') {
+        selectedPdfFile = null;
+        updateSelectedFileName();
+        return false;
+    }
+
+    selectedPdfFile = file;
+    updateSelectedFileName();
+    return true;
+}
+
+function setupPdfDropzone() {
+    const fileInput = document.getElementById('arquivoPDF');
+    const dropzone = document.getElementById('dropzoneArquivoPDF');
+
+    if (!fileInput || !dropzone) {
+        return;
+    }
+
+    const syncFromInput = () => {
+        const file = fileInput.files?.[0] || null;
+        assignSelectedPdfFile(file);
+    };
+
+    fileInput.addEventListener('change', syncFromInput);
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            fileInput.click();
+        }
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+    });
+
+    ['dragleave', 'dragend', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.classList.remove('dragover');
+        });
+    });
+
+    dropzone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const droppedFile = event.dataTransfer?.files?.[0] || null;
+
+        if (!assignSelectedPdfFile(droppedFile)) {
+            alert('Arraste apenas um arquivo PDF.');
+            return;
+        }
+
+        try {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(droppedFile);
+            fileInput.files = dataTransfer.files;
+        } catch {
+            // Some browsers may not allow programmatic assignment to input.files.
+        }
+    });
+
+    syncFromInput();
+}
+
 document.getElementById('formProjeto').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -449,7 +552,8 @@ document.getElementById('formProjeto').addEventListener('submit', async (e) => {
     const modalidadeProjeto = document.getElementById('modalidadeProjeto').value;
     const aplicacaoProjeto = document.getElementById('aplicacaoProjeto').value;
     const versaoProjeto = document.getElementById('versaoProjeto').value.trim();
-    const arquivo = document.getElementById('arquivoPDF').files[0];
+    const arquivoInput = document.getElementById('arquivoPDF');
+    const arquivo = selectedPdfFile || arquivoInput.files[0];
 
     if (!nomeProjeto || !arquivo) {
         alert('Preencha o Nome do Projeto e selecione o PDF.');
@@ -485,6 +589,8 @@ document.getElementById('formProjeto').addEventListener('submit', async (e) => {
 
     alert('Projeto cadastrado com sucesso!');
     document.getElementById('formProjeto').reset();
+    selectedPdfFile = null;
+    updateSelectedFileName();
     listarProjetos();
 });
 
@@ -492,18 +598,29 @@ document.getElementById('btnBuscar').addEventListener('click', () => {
     listarProjetos(coletarFiltroDaTela());
 });
 
-document.getElementById('buscaProjeto').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        listarProjetos(coletarFiltroDaTela());
-    }
+const buscaCampos = document.querySelectorAll('#buscaProjeto, #buscaTipoSubestacao, #buscaModeloProjeto, #buscaNivelTensao, #buscaModalidadeProjeto, #buscaAplicacaoProjeto, #buscaVersaoProjeto');
+buscaCampos.forEach((campo) => {
+    campo.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            listarProjetos(coletarFiltroDaTela());
+        }
+    });
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    setupCadastroToggle();
+    setupPdfDropzone();
+
     const userCategoria = sessionStorage.getItem('userCategoria');
     if (userCategoria === 'usuario') {
+        const toggleCadastroBtn = document.getElementById('toggleCadastroBtn');
         const formCadastro = document.getElementById('formularioCadastro');
+        if (toggleCadastroBtn) {
+            toggleCadastroBtn.style.display = 'none';
+        }
         if (formCadastro) {
-            formCadastro.style.display = 'none';
+            formCadastro.hidden = true;
         }
     }
 
