@@ -2,6 +2,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 let resolvedBucket = 'Projetos_modulos_blindados';
 let resolvedBasePath = 'projetos/projetos';
+let selectedPdfFile = null;
+let editingStoragePath = null;
 
 const PROJECT_META_TABLE = 'modulos_projetos';
 
@@ -388,7 +390,16 @@ async function listarProjetos(filtro = '*') {
             if (isUsuario) {
                 linha.innerHTML = baseCells;
             } else {
-                linha.innerHTML = `${baseCells}<td><button class="excluir" onclick="excluirProjeto('${registro.storagePath}')">Excluir</button></td>`;
+                const storagePathEncoded = encodeURIComponent(registro.storagePath || '');
+                const nomeProjetoEncoded = encodeURIComponent(meta.nomeProjeto || '');
+                const tipoSubestacaoEncoded = encodeURIComponent(meta.tipoSubestacao || '');
+                const modeloProjetoEncoded = encodeURIComponent(meta.modeloProjeto || '');
+                const nivelTensaoEncoded = encodeURIComponent(meta.nivelTensao || '');
+                const modalidadeProjetoEncoded = encodeURIComponent(meta.modalidadeProjeto || '');
+                const aplicacaoProjetoEncoded = encodeURIComponent(meta.aplicacaoProjeto || '');
+                const versaoProjetoEncoded = encodeURIComponent(meta.versaoProjeto || '');
+
+                linha.innerHTML = `${baseCells}<td><button class="editar" onclick="startEditModulo('${storagePathEncoded}','${nomeProjetoEncoded}','${tipoSubestacaoEncoded}','${modeloProjetoEncoded}','${nivelTensaoEncoded}','${modalidadeProjetoEncoded}','${aplicacaoProjetoEncoded}','${versaoProjetoEncoded}')">Editar</button><button class="excluir" onclick="excluirProjeto('${registro.storagePath}')">Excluir</button></td>`;
             }
 
             corpoTabela.appendChild(linha);
@@ -423,8 +434,56 @@ window.excluirProjeto = async function (storagePath) {
 
     await deleteMetadata(storagePath);
 
+    if (editingStoragePath === storagePath) {
+        window.cancelEditModulo();
+    }
+
     alert('Projeto excluido com sucesso!');
     listarProjetos();
+};
+
+window.startEditModulo = function (
+    storagePathEncoded,
+    nomeProjetoEncoded,
+    tipoSubestacaoEncoded,
+    modeloProjetoEncoded,
+    nivelTensaoEncoded,
+    modalidadeProjetoEncoded,
+    aplicacaoProjetoEncoded,
+    versaoProjetoEncoded
+) {
+    editingStoragePath = decodeURIComponent(storagePathEncoded || '');
+
+    document.getElementById('nomeProjeto').value = decodeURIComponent(nomeProjetoEncoded || '');
+    document.getElementById('tipoSubestacao').value = decodeURIComponent(tipoSubestacaoEncoded || '');
+    document.getElementById('modeloProjeto').value = decodeURIComponent(modeloProjetoEncoded || '');
+    document.getElementById('nivelTensao').value = decodeURIComponent(nivelTensaoEncoded || '');
+    document.getElementById('modalidadeProjeto').value = decodeURIComponent(modalidadeProjetoEncoded || '');
+    document.getElementById('aplicacaoProjeto').value = decodeURIComponent(aplicacaoProjetoEncoded || '');
+    document.getElementById('versaoProjeto').value = decodeURIComponent(versaoProjetoEncoded || '');
+
+    const arquivoInput = document.getElementById('arquivoPDF');
+    if (arquivoInput) {
+        arquivoInput.value = '';
+    }
+
+    selectedPdfFile = null;
+    updateSelectedFileName();
+    setCadastroVisibility(true);
+    updateProjetoFormMode();
+    document.getElementById('nomeProjeto').focus();
+};
+
+window.cancelEditModulo = function () {
+    editingStoragePath = null;
+    const form = document.getElementById('formProjeto');
+    if (form) {
+        form.reset();
+    }
+
+    selectedPdfFile = null;
+    updateSelectedFileName();
+    updateProjetoFormMode();
 };
 
 function coletarFiltroDaTela() {
@@ -439,6 +498,28 @@ function coletarFiltroDaTela() {
     };
 }
 
+function updateCadastroToggleLabel() {
+    const toggleButton = document.getElementById('toggleCadastroBtn');
+    const formCadastro = document.getElementById('formularioCadastro');
+    if (!toggleButton || !formCadastro) {
+        return;
+    }
+
+    toggleButton.textContent = formCadastro.hidden
+        ? 'Mostrar Cadastro de arquivos em PDF'
+        : 'Ocultar Cadastro de arquivos em PDF';
+}
+
+function setCadastroVisibility(isVisible) {
+    const formCadastro = document.getElementById('formularioCadastro');
+    if (!formCadastro) {
+        return;
+    }
+
+    formCadastro.hidden = !isVisible;
+    updateCadastroToggleLabel();
+}
+
 function setupCadastroToggle() {
     const toggleButton = document.getElementById('toggleCadastroBtn');
     const formCadastro = document.getElementById('formularioCadastro');
@@ -447,20 +528,30 @@ function setupCadastroToggle() {
         return;
     }
 
-    const updateButtonLabel = () => {
-        toggleButton.textContent = formCadastro.hidden
-            ? 'Mostrar Cadastro de arquivos em PDF'
-            : 'Ocultar Cadastro de arquivos em PDF';
-    };
-
-    updateButtonLabel();
+    updateCadastroToggleLabel();
     toggleButton.addEventListener('click', () => {
-        formCadastro.hidden = !formCadastro.hidden;
-        updateButtonLabel();
+        setCadastroVisibility(formCadastro.hidden);
     });
 }
 
-let selectedPdfFile = null;
+function updateProjetoFormMode() {
+    const btnSalvar = document.getElementById('btnSalvarProjeto');
+    const btnCancelar = document.getElementById('btnCancelarEdicaoModulo');
+    const arquivoInput = document.getElementById('arquivoPDF');
+    if (!btnSalvar || !btnCancelar || !arquivoInput) {
+        return;
+    }
+
+    if (editingStoragePath) {
+        btnSalvar.textContent = 'Salvar Edição';
+        btnCancelar.style.display = 'inline-block';
+        arquivoInput.required = false;
+    } else {
+        btnSalvar.textContent = 'Enviar';
+        btnCancelar.style.display = 'none';
+        arquivoInput.required = true;
+    }
+}
 
 function updateSelectedFileName() {
     const label = document.getElementById('arquivoPDFSelecionado');
@@ -554,26 +645,31 @@ document.getElementById('formProjeto').addEventListener('submit', async (e) => {
     const versaoProjeto = document.getElementById('versaoProjeto').value.trim();
     const arquivoInput = document.getElementById('arquivoPDF');
     const arquivo = selectedPdfFile || arquivoInput.files[0];
+    const isEditing = Boolean(editingStoragePath);
 
-    if (!nomeProjeto || !arquivo) {
+    if (!nomeProjeto || (!arquivo && !isEditing)) {
         alert('Preencha o Nome do Projeto e selecione o PDF.');
         return;
     }
 
-    const nomeBase = sanitizeToken(nomeProjeto) || `projeto_${Date.now()}`;
-    const filename = `${nomeBase}.pdf`;
+    let storagePath = editingStoragePath;
+    if (!storagePath) {
+        const nomeBase = sanitizeToken(nomeProjeto) || `projeto_${Date.now()}`;
+        const filename = `${nomeBase}.pdf`;
+        const uploadBasePath = resolvedBasePath || 'projetos';
+        storagePath = uploadBasePath ? `${uploadBasePath}/${filename}` : filename;
+    }
 
-    const uploadBasePath = resolvedBasePath || 'projetos';
-    const storagePath = uploadBasePath ? `${uploadBasePath}/${filename}` : filename;
+    if (arquivo) {
+        const { error: uploadError } = await supabase.storage
+            .from(resolvedBucket)
+            .upload(storagePath, arquivo, { upsert: true });
 
-    const { error: uploadError } = await supabase.storage
-        .from(resolvedBucket)
-        .upload(storagePath, arquivo, { upsert: true });
-
-    if (uploadError) {
-        alert('Erro ao enviar o PDF');
-        console.error('uploadError', uploadError);
-        return;
+        if (uploadError) {
+            alert('Erro ao enviar o PDF');
+            console.error('uploadError', uploadError);
+            return;
+        }
     }
 
     await upsertMetadata({
@@ -587,10 +683,8 @@ document.getElementById('formProjeto').addEventListener('submit', async (e) => {
         versao: versaoProjeto || null
     });
 
-    alert('Projeto cadastrado com sucesso!');
-    document.getElementById('formProjeto').reset();
-    selectedPdfFile = null;
-    updateSelectedFileName();
+    alert(isEditing ? 'Projeto atualizado com sucesso!' : 'Projeto cadastrado com sucesso!');
+    window.cancelEditModulo();
     listarProjetos();
 });
 
@@ -611,17 +705,22 @@ buscaCampos.forEach((campo) => {
 document.addEventListener('DOMContentLoaded', () => {
     setupCadastroToggle();
     setupPdfDropzone();
+    updateProjetoFormMode();
+
+    const btnCancelarEdicao = document.getElementById('btnCancelarEdicaoModulo');
+    if (btnCancelarEdicao) {
+        btnCancelarEdicao.addEventListener('click', () => {
+            window.cancelEditModulo();
+        });
+    }
 
     const userCategoria = sessionStorage.getItem('userCategoria');
     if (userCategoria === 'usuario') {
         const toggleCadastroBtn = document.getElementById('toggleCadastroBtn');
-        const formCadastro = document.getElementById('formularioCadastro');
         if (toggleCadastroBtn) {
             toggleCadastroBtn.style.display = 'none';
         }
-        if (formCadastro) {
-            formCadastro.hidden = true;
-        }
+        setCadastroVisibility(false);
     }
 
     const resultado = document.getElementById('resultado');
