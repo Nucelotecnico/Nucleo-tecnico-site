@@ -190,17 +190,18 @@
 
     .nszip-input-group label {
       display: block;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 600;
       margin-bottom: 5px;
       color: #333;
     }
 
     .nszip-input-group input {
       width: 100%;
-      padding: 8px;
+      padding: 11px 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     .nszip-seal-config {
@@ -476,7 +477,7 @@
 
     <div class="nszip-input-group">
       <label for="nszip-nsNumber">Número da NS:</label>
-      <input id="nszip-nsNumber" type="text" placeholder="Digite o número da NS">
+      <input id="nszip-nsNumber" type="text" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="Digite os 10 dígitos da NS">
     </div>
 
     <div class="nszip-select-actions">
@@ -500,6 +501,39 @@
         <div class="nszip-config-field">
           <label for="nszip-cemigText">Texto sequencial</label>
           <input id="nszip-cemigText" type="text" value="CEMIG">
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-excText">Texto de Excepcionalidade</label>
+          <input id="nszip-excText" type="text" value="APROVAÇÃO EM CARÁTER EXCEPCIONAL. A SOLUÇÃO ADOTADA NÃO DEVERÁ SER UTILIZADA COMO PADRÃO OU REFERÊNCIA PARA FUTURAS SOLICITAÇÕES.">
+        </div>
+
+        <div class="nszip-config-field">
+          <label class="nszip-checkbox-field" for="nszip-excEditable">
+            <input id="nszip-excEditable" type="checkbox" checked>
+            Permitir edição do texto de excepcionalidade
+          </label>
+        </div>
+
+        <div class="nszip-config-field">
+          <label class="nszip-checkbox-field" for="nszip-excShowProj">
+            <input id="nszip-excShowProj" type="checkbox">
+            Exibir texto de excepcionalidade nos PDFs do PROJ
+          </label>
+        </div>
+
+        <div class="nszip-config-field">
+          <label class="nszip-checkbox-field" for="nszip-excShowCoord">
+            <input id="nszip-excShowCoord" type="checkbox">
+            Exibir texto de excepcionalidade nos PDFs do COORD
+          </label>
+        </div>
+
+        <div class="nszip-config-field">
+          <label class="nszip-checkbox-field" for="nszip-excShowOptional">
+            <input id="nszip-excShowOptional" type="checkbox">
+            Exibir texto de excepcionalidade nos PDFs Opcionais
+          </label>
         </div>
 
         <div class="nszip-config-field">
@@ -558,6 +592,14 @@
           <div class="nszip-opacity-wrapper">
             <input id="nszip-cemigOpacity" type="range" min="0.05" max="1" value="0.20" step="0.01">
             <span id="nszip-cemigOpacityValue" class="nszip-opacity-value">0.20</span>
+          </div>
+        </div>
+
+        <div class="nszip-config-field">
+          <label for="nszip-excOpacity">Opacidade texto excepcionalidade</label>
+          <div class="nszip-opacity-wrapper">
+            <input id="nszip-excOpacity" type="range" min="0.05" max="1" value="0.25" step="0.01">
+            <span id="nszip-excOpacityValue" class="nszip-opacity-value">0.25</span>
           </div>
         </div>
       </div>
@@ -744,6 +786,12 @@
         "nszip-matricula",
         "nszip-approvalText",
         "nszip-cemigText",
+        "nszip-excText",
+        "nszip-excEditable",
+        "nszip-excShowProj",
+        "nszip-excShowCoord",
+        "nszip-excShowOptional",
+        "nszip-excOpacity",
         "nszip-approvalColor",
         "nszip-bandColor",
         "nszip-cemigColor",
@@ -754,8 +802,7 @@
         "nszip-bandOpacity",
         "nszip-approvalOpacity",
         "nszip-cemigOpacity",
-        "nszip-enableSeal",
-        "nszip-extraSheetText"
+        "nszip-enableSeal"
       ];
 
       const preferences = {};
@@ -782,13 +829,31 @@
         if (!element) {
           return;
         }
-
         if (element.type === "checkbox") {
           element.checked = Boolean(value);
         } else {
           element.value = value;
         }
       });
+
+      // Sempre inicia com as exibicoes de excepcionalidade desabilitadas.
+      ["nszip-excShowProj", "nszip-excShowCoord", "nszip-excShowOptional"].forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          checkbox.checked = false;
+        }
+      });
+
+      // Sempre inicia com opacidade da excepcionalidade em 0.25.
+      const excOpacityInput = document.getElementById("nszip-excOpacity");
+      if (excOpacityInput) {
+        excOpacityInput.value = "0.25";
+      }
+
+      // Atualiza opacidade do texto de excepcionalidade
+      if (document.getElementById("nszip-excOpacity")) {
+        document.getElementById("nszip-excOpacity").dispatchEvent(new Event("input"));
+      }
     }
 
     function nszipApplyUserCategoryRestrictions() {
@@ -1120,6 +1185,12 @@
         approvalText: getText("nszip-approvalText", "APROVADO"),
         matricula: getText("nszip-matricula", ""),
         cemigText: getText("nszip-cemigText", "CEMIG"),
+        excText: getText("nszip-excText", "APROVAÇÃO EM CARÁTER EXCEPCIONAL. A SOLUÇÃO ADOTADA NÃO DEVERÁ SER UTILIZADA COMO PADRÃO OU REFERÊNCIA PARA FUTURAS SOLICITAÇÕES."),
+        excEditable: document.getElementById("nszip-excEditable").checked,
+        excShowProj: document.getElementById("nszip-excShowProj").checked,
+        excShowCoord: document.getElementById("nszip-excShowCoord").checked,
+        excShowOptional: document.getElementById("nszip-excShowOptional").checked,
+        excOpacity: Math.max(0.05, Math.min(1, Number(document.getElementById("nszip-excOpacity").value) || 1)),
         projEnabled: document.getElementById("nszip-enableProjSeal").checked,
         coordEnabled: document.getElementById("nszip-enableCoordSeal").checked,
         approvalColor: document.getElementById("nszip-approvalColor").value,
@@ -1177,7 +1248,8 @@
         const previewGap = Math.max(6, requestedBandHeight * 0.1);
         const previewApprovalHeight = boldFont.heightAtSize(previewApprovalSize);
         const previewCemigHeight = regularFont.heightAtSize(previewCemigSize);
-        const previewNeededHeight = (previewCemigHeight * 2) + previewApprovalHeight + (previewGap * 2);
+        const previewExcSize = Math.min(16, requestedBandHeight * 0.32);
+        const previewNeededHeight = (previewCemigHeight * 2) + previewApprovalHeight + (previewGap * 2) + previewExcSize;
         const targetBandHeight = previewNeededHeight + Math.max(12, requestedBandHeight * 0.2);
         const bandHeight = Math.min(Math.max(requestedBandHeight, targetBandHeight), Math.max(30, height * 0.75));
 
@@ -1195,42 +1267,53 @@
 
         const baseApprovalSize = Math.min(sealConfig.approvalSize, bandHeight * 0.72);
         const baseCemigSize = Math.min(sealConfig.cemigSize, bandHeight * 0.36);
+        const baseExcSize = Math.min(16, bandHeight * 0.32);
         const baseGap = Math.max(6, bandHeight * 0.09);
         const approvalTokenGap = Math.max(8, bandHeight * 0.13);
         const cemigTokenGap = Math.max(8, bandHeight * 0.11);
 
         const baseApprovalHeight = boldFont.heightAtSize(baseApprovalSize);
         const baseCemigHeight = regularFont.heightAtSize(baseCemigSize);
+        const baseExcHeight = boldFont.heightAtSize(baseExcSize);
         const availableHeight = Math.max(20, bandHeight - (verticalPadding * 2));
-        const neededHeight = (baseCemigHeight * 2) + baseApprovalHeight + (baseGap * 2);
+        const neededHeight = (baseCemigHeight * 2) + baseApprovalHeight + baseExcHeight + (baseGap * 2);
         const heightScale = neededHeight > availableHeight ? (availableHeight / neededHeight) : 1;
 
         let approvalFontSize = baseApprovalSize * heightScale;
         let cemigFontSize = baseCemigSize * heightScale;
+        let excFontSize = baseExcSize * heightScale;
         let lineGap = baseGap * heightScale;
 
         approvalFontSize = Math.max(8, approvalFontSize);
         cemigFontSize = Math.max(6, cemigFontSize);
+        excFontSize = Math.max(8, excFontSize);
 
         const previewApproval = approvalSealText || "APROVADO";
         const previewCemig = (sealConfig.cemigText || "CEMIG").trim() || "CEMIG";
+        const previewExc = (sealConfig.excText || "").trim();
         approvalFontSize = nszipFitFontSizeToWidth(previewApproval, boldFont, approvalFontSize, innerWidth);
         cemigFontSize = nszipFitFontSizeToWidth(previewCemig, regularFont, cemigFontSize, innerWidth);
+        excFontSize = nszipFitFontSizeToWidth(previewExc, boldFont, excFontSize, innerWidth);
 
         const approvalRepeat = nszipBuildRepeatedTokens(approvalSealText, boldFont, approvalFontSize, innerWidth, approvalTokenGap);
         const cemigRepeat = nszipBuildRepeatedTokens(sealConfig.cemigText, regularFont, cemigFontSize, innerWidth, cemigTokenGap);
+        const excRepeat = nszipBuildRepeatedTokens(previewExc, boldFont, excFontSize, innerWidth, 8);
 
         const approvalHeight = boldFont.heightAtSize(approvalFontSize);
         const cemigHeight = regularFont.heightAtSize(cemigFontSize);
-        const centerGap = ((approvalHeight + cemigHeight) / 2) + lineGap;
+        const excHeight = boldFont.heightAtSize(excFontSize);
+        const centerGap = ((approvalHeight + cemigHeight + excHeight) / 2) + lineGap;
         const baseCenterX = (start.x + end.x) / 2;
         const baseCenterY = (start.y + end.y) / 2;
         const approvalOffset = 0;
+        const excOffset = -((approvalHeight + excHeight) / 2) - lineGap / 2;
         const cemigTopOffset = centerGap;
         const cemigBottomOffset = -centerGap;
 
         const approvalCenterX = baseCenterX + (normalX * approvalOffset);
         const approvalCenterY = baseCenterY + (normalY * approvalOffset);
+        const excCenterX = baseCenterX + (normalX * excOffset);
+        const excCenterY = baseCenterY + (normalY * excOffset);
         const cemigTopCenterX = baseCenterX + (normalX * cemigTopOffset);
         const cemigTopCenterY = baseCenterY + (normalY * cemigTopOffset);
         const cemigBottomCenterX = baseCenterX + (normalX * cemigBottomOffset);
@@ -1252,6 +1335,30 @@
           rotation,
           textHeight: approvalHeight
         });
+
+        // Excepcionalidade
+        if (
+          (sealConfig.excShowProj && sealConfig.projEnabled) ||
+          (sealConfig.excShowCoord && sealConfig.coordEnabled) ||
+          sealConfig.excShowOptional
+        ) {
+          if (previewExc) {
+            nszipDrawRepeatedCenteredLine({
+              page,
+              repeatData: excRepeat,
+              font: boldFont,
+              size: excFontSize,
+              color: PDFLib.rgb(1, 0, 0),
+              opacity: sealConfig.excOpacity,
+              centerX: excCenterX,
+              centerY: excCenterY,
+              dirX,
+              dirY,
+              rotation,
+              textHeight: excHeight
+            });
+          }
+        }
 
         nszipDrawRepeatedCenteredLine({
           page,
@@ -1290,6 +1397,17 @@
     nszipSetupPickers("nszip-fileInput-proj", "nszip-pickFiles-proj", "nszip-fileList-proj", nszipFilesProj);
     nszipSetupPickers("nszip-fileInput-coord", "nszip-pickFiles-coord", "nszip-fileList-coord", nszipFilesCoord);
 
+    // Mantem o campo da NS apenas com numeros e no maximo 10 digitos.
+    const nszipNsNumberInput = document.getElementById("nszip-nsNumber");
+    if (nszipNsNumberInput) {
+      nszipNsNumberInput.addEventListener("input", () => {
+        const onlyDigits = nszipNsNumberInput.value.replace(/\D/g, "").slice(0, 10);
+        if (nszipNsNumberInput.value !== onlyDigits) {
+          nszipNsNumberInput.value = onlyDigits;
+        }
+      });
+    }
+
     function nszipBindOpacityControl(inputId, valueId) {
       const input = document.getElementById(inputId);
       const value = document.getElementById(valueId);
@@ -1311,7 +1429,23 @@
       });
     }
 
+    function nszipSetupExcTextEditable() {
+      const excText = document.getElementById("nszip-excText");
+      const excEditable = document.getElementById("nszip-excEditable");
+      if (!excText || !excEditable) {
+        return;
+      }
+
+      const updateExcTextEditable = () => {
+        excText.readOnly = !excEditable.checked;
+      };
+
+      excEditable.addEventListener("change", updateExcTextEditable);
+      updateExcTextEditable();
+    }
+
     nszipApplyStoredPreferences();
+    nszipSetupExcTextEditable();
     nszipApplyUserCategoryRestrictions();
     nszipSetupSealConfigToggle();
     nszipSetupSheetPreviewToggle();
@@ -1329,11 +1463,18 @@
     nszipBindOpacityControl("nszip-bandOpacity", "nszip-bandOpacityValue");
     nszipBindOpacityControl("nszip-approvalOpacity", "nszip-approvalOpacityValue");
     nszipBindOpacityControl("nszip-cemigOpacity", "nszip-cemigOpacityValue");
+    nszipBindOpacityControl("nszip-excOpacity", "nszip-excOpacityValue");
 
     [
       "nszip-matricula",
       "nszip-approvalText",
       "nszip-cemigText",
+      "nszip-excText",
+      "nszip-excEditable",
+      "nszip-excShowProj",
+      "nszip-excShowCoord",
+      "nszip-excShowOptional",
+      "nszip-excOpacity",
       "nszip-approvalColor",
       "nszip-bandColor",
       "nszip-cemigColor",
@@ -1341,10 +1482,15 @@
       "nszip-bandHeight",
       "nszip-approvalSize",
       "nszip-cemigSize",
-      "nszip-enableSeal",
-      "nszip-extraSheetText"
+      "nszip-bandOpacity",
+      "nszip-approvalOpacity",
+      "nszip-cemigOpacity",
+      "nszip-enableSeal"
     ].forEach(elementId => {
-      const eventName = elementId === "nszip-enableSeal" ? "change" : "input";
+      let eventName = "input";
+      if (["nszip-enableSeal","nszip-excEditable","nszip-excShowProj","nszip-excShowCoord","nszip-excShowOptional"].includes(elementId)) {
+        eventName = "change";
+      }
       nszipBindPreferencePersistence(elementId, eventName);
     });
 
@@ -1543,8 +1689,8 @@
 
     document.getElementById("nszip-createZipBtn").addEventListener("click", async () => {
       const nsNumber = document.getElementById("nszip-nsNumber").value.trim();
-      if (!nsNumber) {
-        alert("Digite o número da NS!");
+      if (!/^\d{10}$/.test(nsNumber)) {
+        alert("Digite o número da NS com exatamente 10 dígitos numéricos!");
         return;
       }
 
