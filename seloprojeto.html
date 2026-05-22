@@ -1528,6 +1528,17 @@
       };
     }
 
+    function nszipGetCurrentFileTimestamp() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      return `${day}${month}${year}_${hours}${minutes}${seconds}`;
+    }
+
     function nszipBuildExtraSheetText(nsNumber, currentDate, currentTime, rawText) {
       const defaultText = 
 
@@ -1696,10 +1707,11 @@
 
       const currentDate = nszipGetCurrentDateFormatted();
       const currentDateTime = nszipRenderExtraSheetPreview()?.currentDateTime || nszipGetCurrentDateTimeFormatted();
+      const fileTimestamp = nszipGetCurrentFileTimestamp();
 
-      const projName = `${nsNumber}_PROJ_APVD_${currentDate}.pdf`;
-      const coordName = `${nsNumber}_COORD_APVD_${currentDate}.pdf`;
-      const zipName = `${nsNumber}_APROVACAO_${currentDate}.zip`;
+      const projName = `${nsNumber}_PROJ_APVD_${fileTimestamp}.pdf`;
+      const coordName = `${nsNumber}_COORD_APVD_${fileTimestamp}.pdf`;
+      const zipName = `${nsNumber}_APROVACAO_${fileTimestamp}.zip`;
       const sealConfig = nszipGetSealConfig();
       sealConfig.nsNumber = nsNumber;
       sealConfig.currentDateTime = currentDateTime;
@@ -1734,12 +1746,12 @@
       }
 
       const extraSheetPdfBytes = await nszipCreateExtraSheetPdf(nsNumber, currentDateTime.date, currentDateTime.time, sealConfig);
-      zip.file(`${nsNumber}_CARTA_APROVACAO_${currentDate}.pdf`, extraSheetPdfBytes);
+      zip.file(`${nsNumber}_CARTA_APROVACAO_${fileTimestamp}.pdf`, extraSheetPdfBytes);
 
       for (let i = 0; i < optionalGroupsWithFiles.length; i++) {
         const group = optionalGroupsWithFiles[i];
         const customTitle = nszipSanitizeTitle(group.titleInput.value);
-        const optionalName = `${nsNumber}_${customTitle}_APVD_${currentDate}.pdf`;
+        const optionalName = `${nsNumber}_${customTitle}_APVD_${fileTimestamp}.pdf`;
         const optionalSealConfig = {
           ...sealConfig,
           enabled: sealConfig.enabled && group.applySealInput.checked
