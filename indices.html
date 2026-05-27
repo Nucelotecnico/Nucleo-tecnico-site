@@ -527,6 +527,42 @@
         font-size: 13px;
       }
 
+      .nt-filter-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .nt-filter-row .nt-filter-control,
+      .nt-filter-row select,
+      .nt-filter-row input[type="date"] {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      .nt-filter-stack button {
+        width: 100%;
+      }
+
+      .nt-chart-canvas-wrap,
+      .nt-chart-canvas-wrap-wide {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+      }
+
+      .nt-chart-canvas-wrap canvas {
+        min-height: 250px !important;
+      }
+
+      .nt-chart-canvas-wrap-wide canvas {
+        min-width: 680px;
+        min-height: 300px !important;
+      }
+
+      [id^="containerCheckboxes"] {
+        max-height: 180px;
+      }
+
       .nt-info-panel,
       .nt-info-panel-blue,
       .nt-info-panel-blue-soft,
@@ -1103,6 +1139,7 @@
     function bindDropdownActionButtons() {
       const dropdownButtonMap = [
         { id: 'botaoToggleDescricoes', action: 'toggleDropdownDescricoes' },
+        { id: 'botaoToggleTextoMedidasFimPlanejado', action: 'toggleDropdownTextoMedidasFimPlanejado' },
         { id: 'botaoToggleCodigoMedidas', action: 'toggleDropdownCodigoMedidas' },
         { id: 'botaoToggleStatusFimPlanejado', action: 'toggleDropdownStatusFimPlanejado' },
         { id: 'botaoToggleDescricoesMedidas0034', action: 'toggleDropdownDescricoesMedidas0034' },
@@ -1131,6 +1168,7 @@
         { id: 'botaoToggleAnoNotasSemContrato', action: 'toggleDropdownAnoNotasSemContrato' },
         { id: 'botaoToggleMesNotasSemContrato', action: 'toggleDropdownMesNotasSemContrato' },
         { id: 'botaoToggleDiasNotasSemContrato', action: 'toggleDropdownDiasNotasSemContrato' },
+        { id: 'botaoToggleTextoMedidasNotasSemContrato', action: 'toggleDropdownTextoMedidasNotasSemContrato' },
         { id: 'botaoToggleStatusNotasSemContrato', action: 'toggleDropdownStatusNotasSemContrato' },
         { id: 'botaoToggleStatusNotasSemDataNotasSemContrato', action: 'toggleDropdownStatusNotasSemDataNotasSemContrato' },
         { id: 'botaoToggleDescricoesRPVD', action: 'toggleDropdownDescricoesRPVD' }
@@ -1347,6 +1385,17 @@
               <span>Filtrar por descrição</span>
             </button>
             <div id="containerCheckboxesDescricoes"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div class="nt-filter-stack">
+            <button id="botaoToggleTextoMedidasFimPlanejado" class="nt-filter-toggle-btn"
+              style="padding: 10px 16px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por texto medidas</span>
+            </button>
+            <div id="containerCheckboxesTextoMedidasFimPlanejado"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
@@ -2032,6 +2081,17 @@
               <span>Filtrar por status</span>
             </button>
             <div id="containerCheckboxesStatusNotasSemContrato"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button id="botaoToggleTextoMedidasNotasSemContrato"
+              style="padding: 10px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+              <span>▼</span>
+              <span>Filtrar por texto medidas</span>
+            </button>
+            <div id="containerCheckboxesTextoMedidasNotasSemContrato"
               style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; background: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0; min-height: 40px; margin-top: 8px; max-width: 300px;">
               <!-- Os checkboxes serão inseridos aqui dinamicamente -->
             </div>
@@ -3172,9 +3232,6 @@
       btnSelectAll.textContent = 'Selecionar Tudo';
       btnSelectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
-        popularFiltroMesNotasSemContrato(dados);
-        popularFiltroDiasNotasSemContrato(dados);
-        popularFiltroStatusNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -3198,6 +3255,7 @@
           popularFiltroMesNotasSemContrato(dados);
           popularFiltroDiasNotasSemContrato(dados);
           popularFiltroStatusNotasSemContrato(dados);
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
@@ -3235,6 +3293,7 @@
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
         popularFiltroDiasNotasSemContrato(dados);
         popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -3244,6 +3303,9 @@
       btnDeselectAll.textContent = 'Desmarcar Tudo';
       btnDeselectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroDiasNotasSemContrato(dados);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnDeselectAll);
@@ -3257,6 +3319,7 @@
         checkbox.onchange = function () {
           popularFiltroDiasNotasSemContrato(dados);
           popularFiltroStatusNotasSemContrato(dados);
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
@@ -3295,6 +3358,7 @@
       btnSelectAll.textContent = 'Selecionar Tudo';
       btnSelectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -3304,6 +3368,7 @@
       btnDeselectAll.textContent = 'Desmarcar Tudo';
       btnDeselectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnDeselectAll);
@@ -3316,6 +3381,7 @@
         checkbox.checked = true;
         checkbox.onchange = function () {
           popularFiltroStatusNotasSemContrato(dados);
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
@@ -3357,6 +3423,7 @@
       btnSelectAll.textContent = 'Selecionar Tudo';
       btnSelectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -3366,6 +3433,7 @@
       btnDeselectAll.textContent = 'Desmarcar Tudo';
       btnDeselectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnDeselectAll);
@@ -3377,10 +3445,88 @@
         checkbox.value = status;
         checkbox.checked = true;
         checkbox.onchange = function () {
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
         label.appendChild(document.createTextNode(' ' + status));
+        container.appendChild(label);
+      });
+    };
+
+    window.popularFiltroTextoMedidasNotasSemContrato = function (dados) {
+      const anosSelected = Array.from(document.getElementById('containerCheckboxesAnoNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const mesesSelected = Array.from(document.getElementById('containerCheckboxesMesNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const diasSelected = Array.from(document.getElementById('containerCheckboxesDiasNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const statusSelected = Array.from(document.getElementById('containerCheckboxesStatusNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const statusExcluidos = ['ABER', 'ANDM', 'ANDM ENVI'];
+
+      const textosSet = new Set();
+
+      dados.forEach(item => {
+        if (item.codigo_medidas !== '0555') return;
+
+        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        if (statusExcluidos.includes(statusRaw)) return;
+
+        const concluida_em = item.concluida_em;
+        if (!concluida_em) return;
+
+        const [dia, mes, ano] = concluida_em.split('.');
+        const anoOk = anosSelected.length === 0 || anosSelected.includes(ano);
+        const mesOk = mesesSelected.length === 0 || mesesSelected.includes(mes);
+        const diaOk = diasSelected.length === 0 || diasSelected.includes(dia);
+        const statusOk = statusSelected.length === 0 || statusSelected.includes(statusRaw);
+
+        if (anoOk && mesOk && diaOk && statusOk) {
+          const textoMedidas = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
+          textosSet.add(textoMedidas);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesTextoMedidasNotasSemContrato');
+      if (!container) return;
+
+      const textosArray = Array.from(textosSet).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+      container.innerHTML = '';
+
+      const btnSelectAll = document.createElement('button');
+      btnSelectAll.className = 'btn-select-all';
+      btnSelectAll.textContent = 'Selecionar Tudo';
+      btnSelectAll.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        popularFiltroMesNotasSemContrato(dados);
+        popularFiltroDiasNotasSemContrato(dados);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
+        gerarGraficoNotasSemContrato(dados);
+      };
+      container.appendChild(btnSelectAll);
+
+      const btnDeselectAll = document.createElement('button');
+      btnDeselectAll.className = 'btn-deselect-all';
+      btnDeselectAll.textContent = 'Desmarcar Tudo';
+      btnDeselectAll.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroMesNotasSemContrato(dados);
+        popularFiltroDiasNotasSemContrato(dados);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
+        gerarGraficoNotasSemContrato(dados);
+      };
+      container.appendChild(btnDeselectAll);
+
+      textosArray.forEach(texto => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = texto;
+        checkbox.checked = true;
+        checkbox.onchange = function () {
+          gerarGraficoNotasSemContrato(dados);
+        };
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(' ' + texto));
         container.appendChild(label);
       });
     };
@@ -3402,6 +3548,11 @@
 
     window.toggleDropdownDiasNotasSemContrato = function () {
       const container = document.getElementById('containerCheckboxesDiasNotasSemContrato');
+      container.style.display = container.style.display === 'none' ? 'block' : 'none';
+    };
+
+    window.toggleDropdownTextoMedidasNotasSemContrato = function () {
+      const container = document.getElementById('containerCheckboxesTextoMedidasNotasSemContrato');
       container.style.display = container.style.display === 'none' ? 'block' : 'none';
     };
 
@@ -3778,6 +3929,10 @@
       const mesesSelected = Array.from(document.getElementById('containerCheckboxesMesNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const diasSelected = Array.from(document.getElementById('containerCheckboxesDiasNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const statusSelected = Array.from(document.getElementById('containerCheckboxesStatusNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const containerTextoMedidas = document.getElementById('containerCheckboxesTextoMedidasNotasSemContrato');
+      const textosMedidasSelected = containerTextoMedidas
+        ? Array.from(containerTextoMedidas.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value)
+        : [];
 
       // Agregador por mês: {ano-mes: count}
       const notasPorMes = {};
@@ -3801,8 +3956,10 @@
           }
 
           const statusOk = statusSelected.length === 0 || statusSelected.includes(statusRaw);
+          const textoMedidas = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
+          const textoMedidasOk = textosMedidasSelected.length === 0 || textosMedidasSelected.includes(textoMedidas);
 
-          if (statusOk) {
+          if (statusOk && textoMedidasOk) {
             const concluida_em = item.concluida_em;
             if (concluida_em) {
               const [dia, mes, ano] = concluida_em.split('.');
@@ -3828,6 +3985,7 @@
         console.error('  - mesesSelected:', mesesSelected);
         console.error('  - diasSelected:', diasSelected);
         console.error('  - statusSelected:', statusSelected);
+        console.error('  - textosMedidasSelected:', textosMedidasSelected);
         console.error('  - totalNotas0555 encontrados:', totalNotas0555);
         console.error('  - totalExcluidos:', totalExcluidos);
 
@@ -3941,6 +4099,7 @@
         popularFiltroMesNotasSemContrato(dados);
         popularFiltroDiasNotasSemContrato(dados);
         popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
 
         // Gráfico de notas sem data de conclusão
@@ -4015,6 +4174,9 @@
         // Popular filtros do gráfico FimPlanejado
         if (typeof popularFiltroDescricoes === 'function') {
           popularFiltroDescricoes(dadosBase);
+        }
+        if (typeof popularFiltroTextoMedidasFimPlanejado === 'function') {
+          popularFiltroTextoMedidasFimPlanejado(dadosBase);
         }
         if (typeof popularFiltroCodigoMedidasFimPlanejado === 'function') {
           popularFiltroCodigoMedidasFimPlanejado(dadosBase);
@@ -4622,6 +4784,7 @@
 
         // Popular filtro de descrições e de meses ANTES de gerar o gráfico
         popularFiltroDescricoes(dadosCodigosPadrao);
+        popularFiltroTextoMedidasFimPlanejado(dadosCodigosPadrao);
         popularFiltroDescricoesMedidas0034(todosOsDados);
         popularFiltroMesesFimPlanejado(dadosCodigosPadrao);
         popularFiltroMeses(dadosCodigosPadrao);
@@ -4964,6 +5127,7 @@
 
         // Popular filtro de descrições e de meses
         popularFiltroDescricoes(dadosFimPlanejado);
+        popularFiltroTextoMedidasFimPlanejado(dadosFimPlanejado);
         popularFiltroMesesFimPlanejado(dadosFimPlanejado);
         popularFiltroMeses(dadosFiltrados);
         popularFiltroCodigoMedidas(dadosGlobaisCompletos);
@@ -5203,6 +5367,22 @@
     window.toggleDropdownStatusFimPlanejado = function () {
       const container = document.getElementById('containerCheckboxesStatusFimPlanejado');
       const botao = document.getElementById('botaoToggleStatusFimPlanejado');
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#1b5e20';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de Texto Medidas do gráfico de Fim Planejado
+    window.toggleDropdownTextoMedidasFimPlanejado = function () {
+      const container = document.getElementById('containerCheckboxesTextoMedidasFimPlanejado');
+      const botao = document.getElementById('botaoToggleTextoMedidasFimPlanejado');
 
       if (container.style.display === 'none') {
         container.style.display = 'flex';
@@ -5733,6 +5913,106 @@
       gerarGrafico(dadosGlobais);
     };
 
+    // Função para popular filtro de Texto Medidas do gráfico de Fim Planejado com checkboxes
+    window.popularFiltroTextoMedidasFimPlanejado = function (dados) {
+      if (!dados || dados.length === 0) {
+        return;
+      }
+
+      const textosMedidas = new Set();
+      const statusPermitidosFimPlanejado = new Set(['ABER', 'ANDM']);
+
+      dados.forEach((item) => {
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const statusBase = normalizarStatusBaseCached(status);
+        if (!statusPermitidosFimPlanejado.has(statusBase)) {
+          return;
+        }
+
+        const texto = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
+        if (texto) {
+          textosMedidas.add(texto);
+        }
+      });
+
+      const container = document.getElementById('containerCheckboxesTextoMedidasFimPlanejado');
+
+      if (!container) {
+        console.error('❌ Container "containerCheckboxesTextoMedidasFimPlanejado" não encontrado!');
+        return;
+      }
+
+      container.innerHTML = '';
+
+      const botoesDiv = document.createElement('div');
+      botoesDiv.style.cssText = 'display: flex; gap: 8px; margin-bottom: 8px; width: 100%;';
+
+      const botaoSelecionarTodos = document.createElement('button');
+      botaoSelecionarTodos.textContent = 'Selecionar Todos';
+      botaoSelecionarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #1b5e20; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoSelecionarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = true;
+        });
+        aplicarFiltroTextoMedidasFimPlanejado();
+      };
+
+      const botaoDesmarcarTodos = document.createElement('button');
+      botaoDesmarcarTodos.textContent = 'Desmarcar Todos';
+      botaoDesmarcarTodos.style.cssText = 'padding: 6px 12px; font-size: 12px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; flex: 1;';
+      botaoDesmarcarTodos.onclick = function () {
+        container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = false;
+        });
+        aplicarFiltroTextoMedidasFimPlanejado();
+      };
+
+      botoesDiv.appendChild(botaoSelecionarTodos);
+      botoesDiv.appendChild(botaoDesmarcarTodos);
+      container.appendChild(botoesDiv);
+
+      const textosArray = Array.from(textosMedidas).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      textosArray.forEach((texto, index) => {
+        const checkboxId = 'checkbox_texto_medidas_fim_planejado_' + index;
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '8px';
+        label.style.cursor = 'pointer';
+        label.style.fontSize = '14px';
+        label.style.color = '#333';
+        label.style.padding = '6px 0';
+        label.style.width = '100%';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = checkboxId;
+        checkbox.value = texto;
+        checkbox.checked = true;
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.accentColor = '#2e7d32';
+        checkbox.style.width = '16px';
+        checkbox.style.height = '16px';
+        checkbox.onchange = function () {
+          aplicarFiltroTextoMedidasFimPlanejado();
+        };
+
+        const span = document.createElement('span');
+        span.textContent = texto;
+        span.style.userSelect = 'none';
+
+        label.appendChild(checkbox);
+        label.appendChild(span);
+        container.appendChild(label);
+      });
+    };
+
+    window.aplicarFiltroTextoMedidasFimPlanejado = function () {
+      const dadosBase = (dadosGlobaisCompletos && dadosGlobaisCompletos.length > 0) ? dadosGlobaisCompletos : dadosGlobais;
+      gerarGrafico(dadosBase);
+    };
+
     // Função para popular filtro de Código Medidas - Fim Planejado
     window.popularFiltroCodigoMedidas = function (dados) {
       // Buscar todos os códigos de medidas existentes no banco
@@ -5792,10 +6072,11 @@
     // Função para popular filtro de Status - Fim Planejado
     window.popularFiltroStatusFimPlanejado = function (dados) {
       const statusSet = new Set();
+      const statusPermitidosFimPlanejado = new Set(['ABER', 'ANDM']);
       dados.forEach(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBaseCached(status);
-        if (statusBase) {
+        if (statusBase && statusPermitidosFimPlanejado.has(statusBase)) {
           statusSet.add(statusBase);
         }
       });
@@ -5825,7 +6106,7 @@
         checkbox.type = 'checkbox';
         checkbox.id = checkboxId;
         checkbox.value = status;
-        checkbox.checked = status === 'ABER' || status === 'ANDM';
+        checkbox.checked = true;
         checkbox.style.cursor = 'pointer';
         checkbox.style.accentColor = '#2e7d32';
         checkbox.style.width = '16px';
@@ -8309,6 +8590,10 @@
       const mesesSelected = Array.from(document.getElementById('containerCheckboxesMesNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const diasSelected = Array.from(document.getElementById('containerCheckboxesDiasNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
       const statusSelected = Array.from(document.getElementById('containerCheckboxesStatusNotasSemContrato').querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+      const containerTextoMedidas = document.getElementById('containerCheckboxesTextoMedidasNotasSemContrato');
+      const textosMedidasSelected = containerTextoMedidas
+        ? Array.from(containerTextoMedidas.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value)
+        : [];
 
       // Status excluídos
       const statusExcluidos = ['ABER', 'ANDM', 'ANDM ENVI'];
@@ -8324,6 +8609,10 @@
 
         const statusOk = statusSelected.length === 0 || statusSelected.includes(statusRaw);
         if (!statusOk) return false;
+
+        const textoMedidas = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
+        const textoMedidasOk = textosMedidasSelected.length === 0 || textosMedidasSelected.includes(textoMedidas);
+        if (!textoMedidasOk) return false;
 
         const concluida_em = item.concluida_em;
         if (!concluida_em) return false;
@@ -8517,13 +8806,30 @@
       const todosStatusMarcados = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => checkbox.checked);
       const nenhumStatusMarcado = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => !checkbox.checked);
 
+      // Obter textos medidas selecionados nos checkboxes
+      const checkboxesTextoMedidas = document.querySelectorAll('#containerCheckboxesTextoMedidasFimPlanejado input[type="checkbox"]');
+      const textosMedidasChecados = new Set();
+      checkboxesTextoMedidas.forEach(checkbox => {
+        if (checkbox.checked) {
+          textosMedidasChecados.add((checkbox.value || '').trim());
+        }
+      });
+      const todosTextosMedidasMarcados = checkboxesTextoMedidas.length > 0 && Array.from(checkboxesTextoMedidas).every(checkbox => checkbox.checked);
+
       // Aplicar os mesmos filtros que o gráfico
+      const statusPermitidosFimPlanejado = new Set(['ABER', 'ANDM']);
       const dadosFiltrados = dadosBase.filter(item => {
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBaseCached(status);
         const descricao = (item.descricao || '').trim();
+        const textoMedidas = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
+
+        // Considerar somente status ABER e ANDM
+        if (!statusPermitidosFimPlanejado.has(statusBase)) {
+          return false;
+        }
 
         // Excluir códigos de medidas não considerados neste export
         if (codigoMedidas === '0034' || codigoMedidas === '0555') {
@@ -8552,15 +8858,14 @@
           }
         }
 
-        const statusOk = nenhumStatusMarcado
-          ? (statusBase === 'ABER' || statusBase === 'ANDM')
-          : (todosStatusMarcados || statusChecados.size === 0)
-            ? !!statusBase
-            : statusChecados.has(statusBase);
+        const statusOk = (todosStatusMarcados || statusChecados.size === 0)
+          ? statusPermitidosFimPlanejado.has(statusBase)
+          : statusChecados.has(statusBase);
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const textoMedidasOk = todosTextosMedidasMarcados || textosMedidasChecados.size === 0 || textosMedidasChecados.has(textoMedidas);
         const codigoOk = todosCodigosMarcados || codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
 
-        return statusOk && descricaoOk && codigoOk && mesOk && periodoOk;
+        return statusOk && descricaoOk && textoMedidasOk && codigoOk && mesOk && periodoOk;
       });
 
       if (dadosFiltrados.length === 0) {
@@ -8744,6 +9049,16 @@
       const todosStatusMarcados = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => checkbox.checked);
       const nenhumStatusMarcado = checkboxesStatus.length > 0 && Array.from(checkboxesStatus).every(checkbox => !checkbox.checked);
 
+      // Obter textos medidas selecionados nos checkboxes
+      const checkboxesTextoMedidas = document.querySelectorAll('#containerCheckboxesTextoMedidasFimPlanejado input[type="checkbox"]');
+      const textosMedidasChecados = new Set();
+      checkboxesTextoMedidas.forEach(checkbox => {
+        if (checkbox.checked) {
+          textosMedidasChecados.add((checkbox.value || '').trim());
+        }
+      });
+      const todosTextosMedidasMarcados = checkboxesTextoMedidas.length > 0 && Array.from(checkboxesTextoMedidas).every(checkbox => checkbox.checked);
+
       // Debug: verificar quantos registros de cada status existem
       const contagemStatus = {};
       dadosPermitidos.forEach(item => {
@@ -8753,6 +9068,7 @@
       });
 
       // Filtrar por status selecionado e aplicar filtros de descrição/código
+      const statusPermitidosFimPlanejado = new Set(['ABER', 'ANDM']);
       let rejeitadosPorStatus = 0;
       let rejeitadosPorDescricao = 0;
       let rejeitadosPorCodigo = 0;
@@ -8761,8 +9077,14 @@
         const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         const statusBase = normalizarStatusBaseCached(status);
         const descricao = (item.descricao || '').trim();
+        const textoMedidas = (item.texto_medidas || '').trim() || '(Sem texto medidas)';
         const codigoMedidas = (item.codigo_medidas || '').trim();
         const fimPlanejado = (item.fim_planejado || '').trim();
+
+        // Considerar somente status ABER e ANDM
+        if (!statusPermitidosFimPlanejado.has(statusBase)) {
+          return false;
+        }
 
         let mesOk = true;
         if (mesSelecionado && mesSelecionado !== 'todos') {
@@ -8786,19 +9108,18 @@
           }
         }
 
-        const statusOk = nenhumStatusMarcado
-          ? (statusBase === 'ABER' || statusBase === 'ANDM')
-          : (todosStatusMarcados || statusChecados.size === 0)
-            ? !!statusBase
-            : statusChecados.has(statusBase);
+        const statusOk = (todosStatusMarcados || statusChecados.size === 0)
+          ? statusPermitidosFimPlanejado.has(statusBase)
+          : statusChecados.has(statusBase);
         const descricaoOk = todasDescricoesMarcadas || descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const textoMedidasOk = todosTextosMedidasMarcados || textosMedidasChecados.size === 0 || textosMedidasChecados.has(textoMedidas);
         const codigoOk = todosCodigosMarcados || codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
 
         if (!statusOk) rejeitadosPorStatus++;
         if (!descricaoOk) rejeitadosPorDescricao++;
         if (!codigoOk) rejeitadosPorCodigo++;
 
-        return statusOk && descricaoOk && codigoOk && mesOk && periodoOk;
+        return statusOk && descricaoOk && textoMedidasOk && codigoOk && mesOk && periodoOk;
       });
 
       // Agrupar dados por fim_planejado e status
@@ -14459,6 +14780,9 @@
       btnSelectAll.textContent = 'Selecionar Tudo';
       btnSelectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        popularFiltroDiasNotasSemContrato(dados);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -14468,6 +14792,9 @@
       btnDeselectAll.textContent = 'Desmarcar Tudo';
       btnDeselectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroDiasNotasSemContrato(dados);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnDeselectAll);
@@ -14479,6 +14806,9 @@
         checkbox.value = ano;
         checkbox.checked = true;
         checkbox.onchange = function () {
+          popularFiltroDiasNotasSemContrato(dados);
+          popularFiltroStatusNotasSemContrato(dados);
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
@@ -14514,6 +14844,8 @@
       btnSelectAll.textContent = 'Selecionar Tudo';
       btnSelectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnSelectAll);
@@ -14523,6 +14855,8 @@
       btnDeselectAll.textContent = 'Desmarcar Tudo';
       btnDeselectAll.onclick = function () {
         container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+        popularFiltroStatusNotasSemContrato(dados);
+        popularFiltroTextoMedidasNotasSemContrato(dados);
         gerarGraficoNotasSemContrato(dados);
       };
       container.appendChild(btnDeselectAll);
@@ -14534,6 +14868,8 @@
         checkbox.value = mes;
         checkbox.checked = true;
         checkbox.onchange = function () {
+          popularFiltroStatusNotasSemContrato(dados);
+          popularFiltroTextoMedidasNotasSemContrato(dados);
           gerarGraficoNotasSemContrato(dados);
         };
         label.appendChild(checkbox);
