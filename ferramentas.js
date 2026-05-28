@@ -1,16 +1,29 @@
 let valor = "conversorCoordenadas"; // Valor padrão
+const TOOL_IDS = [
+    'conversorCoordenadas',
+    'PesquisarRTs',
+    'equipamentosaterramento',
+    'protecoesdegeracao',
+    'Gerenciador de Textos de Reprovação',
+    'pdfzip'
+];
 
+function setFerramentaAtiva(proximaFerramenta) {
+    if (proximaFerramenta) {
+        valor = proximaFerramenta;
+    }
 
+    TOOL_IDS.forEach((toolId) => {
+        const section = document.getElementById(toolId);
+        if (section) {
+            section.style.display = toolId === valor ? 'block' : 'none';
+        }
+    });
 
-document.getElementById('ferramentaSelector').addEventListener('change', function () {
-        valor = this.value;
-        document.getElementById('conversorCoordenadas').style.display = valor === 'conversorCoordenadas' ? 'block' : 'none';
-        document.getElementById('PesquisarRTs').style.display = valor === 'PesquisarRTs' ? 'block' : 'none';
-        document.getElementById('equipamentosaterramento').style.display = valor === 'equipamentosaterramento' ? 'block' : 'none';
-        document.getElementById('protecoesdegeracao').style.display = valor === 'protecoesdegeracao' ? 'block' : 'none';
-        document.getElementById('Gerenciador de Textos de Reprovação').style.display = valor === 'Gerenciador de Textos de Reprovação' ? 'block' : 'none';
-        document.getElementById('pdfzip').style.display = valor === 'pdfzip' ? 'block' : 'none';
-});
+    if (valor === 'conversorCoordenadas') {
+        fixLeafletMap();
+    }
+}
 
 // --- PDF/ZIP TOOL ---
 if (document.getElementById('pdfzip')) {
@@ -130,17 +143,21 @@ if (document.getElementById('pdfzip')) {
 
 
 
-let map = L.map('map').setView([-17.5, -45.5], 5);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+let map = null;
+if (window.L && document.getElementById('map')) {
+    map = L.map('map').setView([-17.5, -45.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
         detectRetina: true,
         maxZoom: 19,
         tileSize: 256,
         zoomOffset: 0
-}).addTo(map);
+    }).addTo(map);
+}
 
 // Corrige o problema de exibição do mapa ao trocar de ferramenta ou ao carregar
 function fixLeafletMap() {
+    if (!map) return;
     setTimeout(() => {
         map.invalidateSize();
     }, 300);
@@ -150,15 +167,24 @@ function fixLeafletMap() {
 const ferramentaSelector = document.getElementById('ferramentaSelector');
 if (ferramentaSelector) {
     ferramentaSelector.addEventListener('change', function () {
-        if (this.value === 'conversorCoordenadas') {
-            fixLeafletMap();
-        }
+        setFerramentaAtiva(this.value);
     });
+} else if (document.body && document.body.dataset.activeTool) {
+    valor = document.body.dataset.activeTool;
 }
 
 // Também corrige ao carregar a página se já estiver visível
 window.addEventListener('DOMContentLoaded', function () {
-    if (document.getElementById('conversorCoordenadas').style.display !== 'none') {
+    if (ferramentaSelector && ferramentaSelector.value) {
+        valor = ferramentaSelector.value;
+    }
+
+    if (ferramentaSelector) {
+        setFerramentaAtiva(valor || ferramentaSelector.value);
+    }
+
+    const conversorSection = document.getElementById('conversorCoordenadas');
+    if (conversorSection && conversorSection.style.display !== 'none') {
         fixLeafletMap();
     }
 });
@@ -166,8 +192,11 @@ window.addEventListener('DOMContentLoaded', function () {
 let marker1, marker2, line;
 
 function atualizarCampos(id) {
-    const formato = document.getElementById(`formato${id}`).value;
+    const formatoSelect = document.getElementById(`formato${id}`);
     const container = document.getElementById(`campos${id}`);
+    if (!formatoSelect || !container) return;
+
+    const formato = formatoSelect.value;
     container.innerHTML = "";
 
     if (formato === "geo") {
@@ -191,8 +220,13 @@ function atualizarCampos(id) {
     }
 }
 
-atualizarCampos(1);
-atualizarCampos(2);
+if (document.getElementById('formato1') && document.getElementById('campos1')) {
+    atualizarCampos(1);
+}
+
+if (document.getElementById('formato2') && document.getElementById('campos2')) {
+    atualizarCampos(2);
+}
 
 function utmParaGeo(zona, hem, easting, northing) {
     const a = 6378137.0;
@@ -266,6 +300,176 @@ function haversine(lat1, lon1, lat2, lon2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c;
+}
+
+function formatarCoordenadaGoogleMaps(geo) {
+    return `${geo.lat.toFixed(15)}, ${geo.lon.toFixed(15)}`;
+}
+
+function escapeHtml(texto) {
+    return String(texto)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function copiarTextoSimples(texto, botao) {
+    navigator.clipboard.writeText(texto).then(() => {
+        if (!botao) return;
+
+        const textoOriginal = botao.textContent;
+        botao.textContent = 'Copiado';
+        botao.disabled = true;
+
+        setTimeout(() => {
+            botao.textContent = textoOriginal;
+            botao.disabled = false;
+        }, 1500);
+    }).catch((err) => {
+        console.error('Erro ao copiar:', err);
+        alert('Erro ao copiar para a area de transferencia: ' + err.message);
+    });
+}
+
+function calcularAzimute(origLat, origLon, destLat, destLon) {
+    const toRad = (deg) => (deg * Math.PI) / 180;
+    const toDeg = (rad) => (rad * 180) / Math.PI;
+
+    const lat1 = toRad(origLat);
+    const lat2 = toRad(destLat);
+    const dLon = toRad(destLon - origLon);
+
+    const y = Math.sin(dLon) * Math.cos(lat2);
+    const x = Math.cos(lat1) * Math.sin(lat2) -
+        Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+    return (toDeg(Math.atan2(y, x)) + 360) % 360;
+}
+
+async function abrirStreetViewAjustado(lat, lon, botao) {
+    const textoOriginal = botao ? botao.textContent : '';
+
+    if (botao) {
+        botao.disabled = true;
+        botao.textContent = 'Buscando via próxima...';
+    }
+
+    let alvoLat = lat;
+    let alvoLon = lon;
+    let usouViaProxima = false;
+
+    try {
+        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`;
+        const resposta = await fetch(reverseUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (resposta.ok) {
+            const dados = await resposta.json();
+            const latVia = parseFloat(dados?.lat);
+            const lonVia = parseFloat(dados?.lon);
+
+            if (Number.isFinite(latVia) && Number.isFinite(lonVia)) {
+                alvoLat = latVia;
+                alvoLon = lonVia;
+                usouViaProxima = true;
+            }
+        }
+    } catch (error) {
+        console.warn('Falha ao buscar via proxima para Street View:', error);
+    }
+
+    const heading = Math.round(calcularAzimute(alvoLat, alvoLon, lat, lon));
+    const streetViewUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${encodeURIComponent(`${alvoLat},${alvoLon}`)}&heading=${heading}&pitch=0&fov=80`;
+    window.open(streetViewUrl, '_blank', 'noopener,noreferrer');
+
+    if (botao) {
+        botao.textContent = usouViaProxima ? 'Abrindo Street View...' : 'Abrindo Street View (direto)...';
+        setTimeout(() => {
+            botao.disabled = false;
+            botao.textContent = textoOriginal;
+        }, 1200);
+    }
+}
+
+function montarBlocoResultadoCoordenada(titulo, geo, utm, identificador) {
+    const coordenadaGoogle = formatarCoordenadaGoogleMaps(geo);
+    const urlGoogleMaps = `https://www.google.com/maps?q=${encodeURIComponent(coordenadaGoogle)}`;
+
+    return `
+        <div class="resultado-coordenada-item">
+            <div class="resultado-coordenada-header">
+                <strong>${escapeHtml(titulo)}</strong>
+            </div>
+            <div class="resultado-tipos-grid">
+                <div class="resultado-tipo-card">
+                    <div class="resultado-tipo-titulo">Geográfica</div>
+                    <div class="resultado-coordenada-linhas">
+                        <div><strong>Latitude:</strong> ${geo.lat.toFixed(5)}</div>
+                        <div><strong>Longitude:</strong> ${geo.lon.toFixed(5)}</div>
+                    </div>
+                </div>
+
+                <div class="resultado-tipo-card resultado-tipo-card-maps">
+                    <div class="resultado-tipo-header">
+                        <div class="resultado-tipo-titulo">Google Maps</div>
+                        <button class="resultado-copiar-btn" onclick="copiarTextoSimples('${escapeHtml(coordenadaGoogle)}', this)">Copiar</button>
+                    </div>
+                    <div class="resultado-coordenada-linhas">
+                        <div class="resultado-maps-texto">${escapeHtml(coordenadaGoogle)}</div>
+                        <div class="resultado-maps-links">
+                            <a class="resultado-maps-link" href="${urlGoogleMaps}" target="_blank" rel="noopener noreferrer">Abrir no Google Maps</a>
+                            <button class="resultado-maps-link resultado-maps-link-street resultado-maps-street-btn" onclick="abrirStreetViewAjustado(${geo.lat}, ${geo.lon}, this)">Abrir no Street View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resultado-tipo-card">
+                    <div class="resultado-tipo-titulo">UTM</div>
+                    <div class="resultado-coordenada-linhas">
+                        <div><strong>Zona:</strong> ${utm.zona}${utm.hemisferio}</div>
+                        <div><strong>Easting:</strong> ${utm.easting.toFixed(2)}</div>
+                        <div><strong>Northing:</strong> ${utm.northing.toFixed(2)}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderizarResultadoConversor({ p1Geo, p1UTM, p2Geo = null, p2UTM = null, distancia = null }) {
+    const resultadoDiv = document.getElementById('resultado');
+    if (!resultadoDiv) return;
+
+    const blocos = [montarBlocoResultadoCoordenada('Coordenada 1', p1Geo, p1UTM, '1')];
+
+    if (p2Geo && p2UTM) {
+        blocos.push(montarBlocoResultadoCoordenada('Coordenada 2', p2Geo, p2UTM, '2'));
+    }
+
+    const distanciaHtml = distancia === null
+        ? ''
+        : `
+            <div class="resultado-distancia-box">
+                <strong>Distância:</strong> ${(distancia / 1000).toFixed(3)} km (${distancia.toFixed(2)} m)
+            </div>
+        `;
+
+    resultadoDiv.innerHTML = `
+        <div class="resultado-coordenada-grid">
+            ${blocos.join('')}
+        </div>
+        ${distanciaHtml}
+    `;
+
+    resultadoDiv.classList.add('result');
+    resultadoDiv.style.background = '#fff';
+    resultadoDiv.style.display = 'block';
 }
 
 //função para validar campos 
@@ -395,19 +599,7 @@ function converterEPlotar() {
     //---------codigo novo 
     // Se a coordenada 2 não foi preenchida, só mostra a 1 no mapa
     if (!coord2Preenchida) {
-        document.getElementById("resultado").innerText =
-            `📍 Coordenada 1 (Geográfica):\n` +
-            `Latitude: ${p1Geo.lat.toFixed(5)}\n` +
-            `Longitude: ${p1Geo.lon.toFixed(5)}\n` +
-            `📍 Coordenada 1 (UTM):\n` +
-            `Zona: ${p1UTM.zona}${p1UTM.hemisferio}\n` +
-            `Easting: ${p1UTM.easting.toFixed(2)}\n` +
-            `Northing: ${p1UTM.northing.toFixed(2)}\n`;
-
-        const resultadoDiv = document.getElementById("resultado");
-        resultadoDiv.classList.add("result");
-        resultadoDiv.style.background = "#fff";
-        resultadoDiv.style.display = "block";
+        renderizarResultadoConversor({ p1Geo, p1UTM });
 
         if (marker1) map.removeLayer(marker1);
         if (marker2) map.removeLayer(marker2);
@@ -444,33 +636,7 @@ function converterEPlotar() {
 
     const distancia = haversine(p1Geo.lat, p1Geo.lon, p2Geo.lat, p2Geo.lon);
 
-    document.getElementById("resultado").innerText =
-        `📍 Coordenada 1 (Geográfica):\n` +
-        `Latitude: ${p1Geo.lat.toFixed(5)}\n` +
-        `Longitude: ${p1Geo.lon.toFixed(5)}\n` +
-        `📍 Coordenada 1 (UTM):\n` +
-        `Zona: ${p1UTM.zona}${p1UTM.hemisferio}\n` +
-        `Easting: ${p1UTM.easting.toFixed(2)}\n` +
-        `Northing: ${p1UTM.northing.toFixed(2)}\n\n` +
-        `📍 Coordenada 2 (Geográfica):\n` +
-        `Latitude: ${p2Geo.lat.toFixed(5)}\n` +
-        `Longitude: ${p2Geo.lon.toFixed(5)}\n` +
-        `📍 Coordenada 2 (UTM):\n` +
-        `Zona: ${p2UTM.zona}${p2UTM.hemisferio}\n` +
-        `Easting: ${p2UTM.easting.toFixed(2)}\n` +
-        `Northing: ${p2UTM.northing.toFixed(2)}\n\n` +
-        `📏 Distância:\n${(distancia / 1000).toFixed(3)} km (${distancia.toFixed(2)} m)`;
-
-    const resultadoDiv = document.getElementById("resultado");
-    if (resultadoDiv.innerText.trim() !== "") {
-        resultadoDiv.classList.add("result");
-        resultadoDiv.style.background = "#fff";
-        resultadoDiv.style.display = "block";
-    } else {
-        resultadoDiv.classList.remove("result");
-        resultadoDiv.style.background = "";
-        resultadoDiv.style.display = "none";
-    }
+    renderizarResultadoConversor({ p1Geo, p1UTM, p2Geo, p2UTM, distancia });
 
     if (marker1) map.removeLayer(marker1);
     if (marker2) map.removeLayer(marker2);
@@ -498,72 +664,64 @@ const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
 const resultsDiv = document.getElementById('results');
 
-// Carrega o arquivo automaticamente
-fetch('listaRTs.txt')
-    .then(response => response.text())
-    .then(text => {
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+if (searchInput && searchBtn && resultsDiv) {
+    fetch('listaRTs.txt')
+        .then(response => response.text())
+        .then(text => {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
 
-        contatos = lines.map(line => {
-            // Divide por espaços
-            const partes = line.split(/\s+/);
+            contatos = lines.map(line => {
+                const partes = line.split(/\s+/);
+                const email = partes.find(p => /\S+@\S+\.\S+/.test(p));
+                const telefone = partes.find(p => /\(\d{2}\)\d{4,5}-\d{4}/.test(p));
+                const nome = partes.filter(p => p !== email && p !== telefone).join(' ');
 
-            // Regex para identificar email e telefone
-            const email = partes.find(p => /\S+@\S+\.\S+/.test(p));
-            const telefone = partes.find(p => /\(\d{2}\)\d{4,5}-\d{4}/.test(p));
+                return { nome, email, telefone };
+            });
 
-            // Remove email e telefone do array para sobrar só o nome
-            const nome = partes.filter(p => p !== email && p !== telefone).join(' ');
-
-            return { nome, email, telefone };
+            searchInput.disabled = false;
+            searchBtn.disabled = false;
+            resultsDiv.innerHTML = '<div>✅ Arquivo carregado. Agora pesquise pelo nome.</div>';
+        })
+        .catch(() => {
+            resultsDiv.innerHTML = '<div>❌ Erro ao carregar o arquivo de contatos.</div>';
         });
 
-        searchInput.disabled = false;
-        searchBtn.disabled = false;
-        resultsDiv.innerHTML = '<div>✅ Arquivo carregado. Agora pesquise pelo nome.</div>';
-    })
-    .catch(() => {
-        resultsDiv.innerHTML = '<div>❌ Erro ao carregar o arquivo de contatos.</div>';
-    });
+    searchBtn.addEventListener('click', function () {
+        const query = searchInput.value.toLowerCase();
+        resultsDiv.innerHTML = '';
+        if (query.length === 0) return;
 
-searchBtn.addEventListener('click', function () {
-    const query = searchInput.value.toLowerCase();
-    resultsDiv.innerHTML = '';
-    if (query.length === 0) return;
+        const filtered = contatos.filter(c =>
+            (c.nome && c.nome.toLowerCase().includes(query)) ||
+            (c.email && c.email.toLowerCase().includes(query)) ||
+            (c.telefone && c.telefone.toLowerCase().includes(query))
+        );
 
-    const filtered = contatos.filter(c =>
-        (c.nome && c.nome.toLowerCase().includes(query)) ||
-        (c.email && c.email.toLowerCase().includes(query)) ||
-        (c.telefone && c.telefone.toLowerCase().includes(query))
-    );
+        if (filtered.length === 0) {
+            resultsDiv.innerHTML = '<div>Nenhum contato encontrado.</div>';
+            return;
+        }
 
-    if (filtered.length === 0) {
-        resultsDiv.innerHTML = '<div>Nenhum contato encontrado.</div>';
-        return;
-    }
-
-    filtered.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'result-item';
-        item.innerHTML = `
+        filtered.forEach(c => {
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            item.innerHTML = `
                     <div style="text-align: left;"><strong>Nome:</strong> ${c.nome || '—'}</div>
                     <div style="text-align: left;"><strong>Email:</strong> ${c.email || '—'}</div>
                     <div style="text-align: left;"><strong>Telefone:</strong> ${c.telefone || '—'}</div>
-                `; resultsDiv.appendChild(item);
+                `;
+            resultsDiv.appendChild(item);
+        });
+
+        if (filtered.length > 0) {
+            const contato = filtered[0];
+            localStorage.setItem('contato_nome', contato.nome || '');
+            localStorage.setItem('contato_email', contato.email || '');
+            localStorage.setItem('contato_telefone', contato.telefone || '');
+        }
     });
-
-    if (filtered.length > 0) {
-        // Armazena o primeiro contato encontrado no localStorage
-        var contato = filtered[0];
-        localStorage.setItem('contato_nome', contato.nome || '');
-        localStorage.setItem('contato_email', contato.email || '');
-        localStorage.setItem('contato_telefone', contato.telefone || '');
-    }
-
-
-
-
-});
+}
 
 
 
@@ -715,17 +873,21 @@ function calcular() {
 const paralelismoRadios = document.querySelectorAll('input[name="paralelismo"]');
 const camposExtras = document.getElementById("camposExtras");
 
-paralelismoRadios.forEach(radio => {
-    radio.addEventListener("change", () => {
-        if ((radio.value === "momentaneo" || radio.value === "emergencial" || radio.value === "nenhum") && radio.checked) {
-            camposExtras.classList.add("ocultar");
-        } else {
-            camposExtras.classList.remove("ocultar");
-        }
+if (camposExtras && paralelismoRadios.length > 0) {
+    paralelismoRadios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            if ((radio.value === "momentaneo" || radio.value === "emergencial" || radio.value === "nenhum") && radio.checked) {
+                camposExtras.classList.add("ocultar");
+            } else {
+                camposExtras.classList.remove("ocultar");
+            }
+        });
     });
-});
+}
 
-document.getElementById("formulario").addEventListener("submit", function (e) {
+const formularioProtecoes = document.getElementById("formulario");
+if (formularioProtecoes) {
+formularioProtecoes.addEventListener("submit", function (e) {
     e.preventDefault();
     const subestacao = document.querySelector('input[name="subestacao"]:checked')?.value;
     const paralelismo = document.querySelector('input[name="paralelismo"]:checked')?.value;
@@ -1886,6 +2048,7 @@ document.getElementById("formulario").addEventListener("submit", function (e) {
 
 
 });
+}
 
 
 // Esconde/mostra a opção "300_2500" de faixa_gd conforme subestação selecionada
@@ -1910,10 +2073,12 @@ function atualizarFaixaGD() {
 }
 
 // Executa ao carregar e ao mudar subestação
-atualizarFaixaGD();
-document.querySelectorAll('input[name="subestacao"]').forEach(radio => {
-    radio.addEventListener("change", atualizarFaixaGD);
-});
+if (document.querySelector('input[name="subestacao"]')) {
+    atualizarFaixaGD();
+    document.querySelectorAll('input[name="subestacao"]').forEach(radio => {
+        radio.addEventListener("change", atualizarFaixaGD);
+    });
+}
 //FIM LOGICA PARA AUTOMAÇÃO DE EXIBIÇÃO DA FERRAMENTA DE PROTEÇÕES
 
 
@@ -1925,7 +2090,7 @@ document.querySelectorAll('input[name="subestacao"]').forEach(radio => {
 
 const supabaseUrl = 'https://nelzhukmxrgdoarsxcek.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5lbHpodWtteHJnZG9hcnN4Y2VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDIxNzUsImV4cCI6MjA3MTU3ODE3NX0.KHvfJHVimKwiraEzbyZWyLnTO5P5VEvM86GlyE7y09k';
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase ? supabase.createClient(supabaseUrl, supabaseKey) : null;
 
 let reprovadorEdicaoId = null;
 

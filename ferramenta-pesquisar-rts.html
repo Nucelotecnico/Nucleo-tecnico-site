@@ -4,19 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ferramentas - Portal Núcleo Técnico</title>
+  <title>Pesquisar RTs - Portal Núcleo Técnico</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="ferramentas.css">
   <style>
     @keyframes titleShine {
-      0% {
-        left: -100%;
-      }
-
-      50%,
-      100% {
-        left: 100%;
-      }
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
     }
 
     #titulo {
@@ -41,12 +35,9 @@
   </style>
 </head>
 
-<body>
+<body data-active-tool="PesquisarRTs">
   <div style="display: flex; align-items: center; justify-content: center; gap: 24px;">
-    <h1 id="titulo"
-      style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">
-      PORTAL NÚCLEO TÉCNICO
-    </h1>
+    <h1 id="titulo" style="font-family:'Roboto Slab', 'Georgia', serif; font-size:2.8em; color:#184d27; letter-spacing:2px; font-weight:900; padding:10px 12px; margin:0;">PORTAL NÚCLEO TÉCNICO</h1>
   </div>
   <br>
 
@@ -66,16 +57,13 @@
     <button class="menu-btn" onclick="logout()" style="background: linear-gradient(145deg, #d32f2f, #f44336);">Sair</button>
   </div>
 
-  <script src="auth.js"></script>
-  <script src="menu.js"></script>
-
   <div class="ferramentas-nav-shell">
-    <h2 class="ferramentas-nav-title">Ferramentas Disponíveis</h2>
-    <p class="ferramentas-nav-description">Escolha uma ferramenta abaixo. Cada recurso agora abre em uma página própria, mantendo o layout padrão do portal.</p>
+    <h2 class="ferramentas-nav-title">Ferramentas</h2>
+    <p class="ferramentas-nav-description">Navegue entre as ferramentas sem sair da área de Ferramentas.</p>
     <div class="ferramentas-nav">
-      <a class="ferramenta-link-btn active" href="ferramentas.html">Visão Geral</a>
+      <a class="ferramenta-link-btn" href="ferramentas.html">Visão Geral</a>
       <a class="ferramenta-link-btn" href="ferramenta-conversor-coordenadas.html">Conversor de Coordenadas</a>
-      <a class="ferramenta-link-btn" href="ferramenta-pesquisar-rts.html">Pesquisar RTs</a>
+      <a class="ferramenta-link-btn active" href="ferramenta-pesquisar-rts.html">Pesquisar RTs</a>
       <a class="ferramenta-link-btn" href="ferramenta-equipamentos-aterramento.html">Equipamentos de Aterramento</a>
       <a class="ferramenta-link-btn" href="ferramenta-protecoes-geracao.html">Proteções de Geração</a>
       <a class="ferramenta-link-btn" href="ferramenta-gerenciador-reprovacoes.html">Gerenciador de Reprovações</a>
@@ -83,43 +71,20 @@
     </div>
   </div>
 
-  <div class="ferramentas-hub-grid">
-    <div class="ferramentas-hub-item">
-      <h3>Conversor de Coordenadas</h3>
-      <p>Converta coordenadas geográficas e UTM, visualize pontos no mapa e calcule distâncias de forma rápida.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-conversor-coordenadas.html">Abrir ferramenta</a>
-    </div>
-
-    <div class="ferramentas-hub-item">
-      <h3>Pesquisar RTs</h3>
-      <p>Consulte nomes, e-mails e telefones a partir da base local de RTs usada pelo projeto.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-pesquisar-rts.html">Abrir ferramenta</a>
-    </div>
-
-    <div class="ferramentas-hub-item">
-      <h3>Equipamentos de Aterramento</h3>
-      <p>Selecione o tipo de aterramento, potência e tensão para obter a recomendação técnica correspondente.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-equipamentos-aterramento.html">Abrir ferramenta</a>
-    </div>
-
-    <div class="ferramentas-hub-item">
-      <h3>Proteções de Geração</h3>
-      <p>Monte o cenário da conexão da usina e visualize as proteções e diagramas aplicáveis.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-protecoes-geracao.html">Abrir ferramenta</a>
-    </div>
-
-    <div class="ferramentas-hub-item">
-      <h3>Gerenciador de Reprovações</h3>
-      <p>Pesquise, copie, cadastre e edite textos de reprovação em um ambiente dedicado.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-gerenciador-reprovacoes.html">Abrir ferramenta</a>
-    </div>
-
-    <div class="ferramentas-hub-item">
-      <h3>Unir PDFs e Criar ZIP</h3>
-      <p>Organize arquivos PROJ e COORD, gere PDFs consolidados e baixe tudo em um único ZIP.</p>
-      <a class="ferramenta-link-btn" href="ferramenta-pdfzip.html">Abrir ferramenta</a>
+  <div id="PesquisarRTs" style="display:block; width:100%;">
+    <div class="search-container">
+      <h2>Pesquisar RTs</h2>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="Digite o nome..." disabled class="search-input">
+        <button id="searchBtn" disabled class="search-btn">Pesquisar</button>
+      </div>
+      <div class="results search-results" id="results"></div>
     </div>
   </div>
+
+  <script src="auth.js"></script>
+  <script src="menu.js"></script>
+  <script src="ferramentas.js"></script>
 </body>
 
 </html>
