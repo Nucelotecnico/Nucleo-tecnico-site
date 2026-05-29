@@ -174,6 +174,28 @@ document.getElementById('user-form').addEventListener('submit', async function (
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
+        const form = document.getElementById('event-form');
+        const submitButton = document.getElementById('btn-adicionar-evento');
+        let editingEventId = null;
+
+        function formatDateForInput(dateValue) {
+            const date = new Date(dateValue);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function setCreateMode() {
+            editingEventId = null;
+            submitButton.textContent = '✓ Adicionar Evento';
+        }
+
+        function setEditMode(eventId) {
+            editingEventId = eventId;
+            submitButton.textContent = '✓ Salvar Alterações';
+        }
+
         // Função para exibir alerta de aniversário
         async function exibirAlertaAniversario() {
             // Buscar todos os eventos
@@ -185,43 +207,76 @@ document.addEventListener('DOMContentLoaded', async function () {
                 return;
             }
 
-            // Data atual (timezone local)
+            // Data atual normalizada para evitar diferenças por horário
             const hoje = new Date();
-            const mesDiaHoje = ('0' + (hoje.getMonth() + 1)).slice(-2) + '-' + ('0' + hoje.getDate()).slice(-2);
+            const hojeSemHora = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
 
             // Função para remover acentos
             const removeAccents = str => str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
 
             // Log para depuração
             console.log('Eventos retornados:', eventos);
-            console.log('Data hoje:', mesDiaHoje);
+            console.log('Data hoje:', hojeSemHora.toLocaleDateString('pt-BR'));
 
-            // Filtrar aniversários para hoje (comparando apenas mês e dia, ignorando caixa e acento)
-            const aniversariosHoje = eventos.filter(ev => {
+            // Filtrar aniversários entre hoje e os próximos 7 dias
+            const aniversariosProximos = eventos
+            .map(ev => {
                 if (!ev.type || !ev.start_date) return false;
                 const tipo = removeAccents(ev.type).toLowerCase();
                 if (tipo !== 'aniversario') return false;
-                const [ano, mes, diaFull] = ev.start_date.split('-');
+
+                const [, mes, diaFull] = ev.start_date.split('-');
                 const dia = diaFull.split('T')[0];
-                return `${mes}-${dia}` === mesDiaHoje;
-            });
-            console.log('Aniversários hoje:', aniversariosHoje);
-            if (aniversariosHoje.length === 0) {
+
+                let proximoAniversario = new Date(
+                    hojeSemHora.getFullYear(),
+                    Number(mes) - 1,
+                    Number(dia)
+                );
+
+                if (proximoAniversario < hojeSemHora) {
+                    proximoAniversario = new Date(
+                        hojeSemHora.getFullYear() + 1,
+                        Number(mes) - 1,
+                        Number(dia)
+                    );
+                }
+
+                const diffMs = proximoAniversario - hojeSemHora;
+                const diasRestantes = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                if (diasRestantes >= 0 && diasRestantes <= 7) {
+                    return { ...ev, diasRestantes };
+                }
+
+                return false;
+            })
+            .filter(Boolean)
+            .sort((a, b) => a.diasRestantes - b.diasRestantes);
+
+            console.log('Aniversários nos próximos 7 dias:', aniversariosProximos);
+            if (aniversariosProximos.length === 0) {
                 document.getElementById('alerta-aniversario').style.display = 'none';
                 return;
             }
 
             const alerta = document.getElementById('alerta-aniversario');
             alerta.innerHTML = '';
-            aniversariosHoje.forEach((aniv, idx) => {
+            aniversariosProximos.forEach((aniv, idx) => {
                 const line = document.createElement('div');
                 line.appendChild(document.createTextNode('🎉 '));
                 const strong = document.createElement('b');
                 strong.textContent = aniv.users?.name || 'Usuário';
                 line.appendChild(strong);
-                line.appendChild(document.createTextNode(' faz aniversário hoje!'));
+                if (aniv.diasRestantes === 0) {
+                    line.appendChild(document.createTextNode(' faz aniversário hoje!'));
+                } else if (aniv.diasRestantes === 1) {
+                    line.appendChild(document.createTextNode(' faz aniversário amanhã!'));
+                } else {
+                    line.appendChild(document.createTextNode(` faz aniversário em ${aniv.diasRestantes} dias!`));
+                }
                 alerta.appendChild(line);
-                if (idx < aniversariosHoje.length - 1) {
+                if (idx < aniversariosProximos.length - 1) {
                     alerta.appendChild(document.createElement('br'));
                 }
             });
@@ -347,9 +402,29 @@ document.addEventListener('DOMContentLoaded', async function () {
         eventClick: async function (info) {
             const categoria = sessionStorage.getItem('userCategoria');
             if (categoria === 'usuario') {
-                alert('Usuários não têm permissão para excluir eventos.');
+                alert('Usuários não têm permissão para alterar ou excluir eventos.');
                 return;
             }
+
+            const desejaEditar = confirm('Deseja editar este evento?\nClique em "Cancelar" para opção de exclusão.');
+
+            if (desejaEditar) {
+                const eventData = info.event.extendedProps;
+
+                document.getElementById('title').value = eventData.eventTitle || '';
+                document.getElementById('type').value = eventData.eventType || '';
+                document.getElementById('user').value = eventData.eventUserId || '';
+                document.getElementById('start').value = formatDateForInput(info.event.start);
+
+                const adjustedEnd = info.event.end ? new Date(info.event.end) : new Date(info.event.start);
+                adjustedEnd.setDate(adjustedEnd.getDate() - 1);
+                document.getElementById('end').value = formatDateForInput(adjustedEnd);
+
+                setEditMode(info.event.id);
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
             if (confirm('Deseja excluir este evento?')) {
                 const { error } = await supabaseClient.from('events').delete().eq('id', info.event.id);
                 if (error) {
@@ -366,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         events: async function (fetchInfo, successCallback, failureCallback) {
             const { data, error } = await supabaseClient
                 .from('events')
-                .select('id,title,type,start_date,end_date,users(name,color)');
+                .select('id,title,type,user_id,start_date,end_date,users(name,color)');
 
             if (error) {
                 console.error('Erro ao buscar eventos:', error);
@@ -385,6 +460,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 extendedProps: {
                     eventTitle: ev.title,
                     eventType: ev.type,
+                    eventUserId: ev.user_id,
                     userName: ev.users?.name || 'Usuário'
                 }
             }));
@@ -413,7 +489,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
         .subscribe();
 
-    const form = document.getElementById('event-form');
     // form.addEventListener('submit', async function (e) {
     //     e.preventDefault();
     //     const title = document.getElementById('title').value;
@@ -479,21 +554,40 @@ document.addEventListener('DOMContentLoaded', async function () {
         const adjustedEnd = new Date(end);
         adjustedEnd.setDate(adjustedEnd.getDate() + 1);
 
-        const { error } = await supabaseClient.from('events').insert([{
-            title,
-            type,
-            user_id,
-            start_date: start,
-            end_date: adjustedEnd.toISOString().split('T')[0]
-        }]);
+        let error = null;
+
+        if (editingEventId) {
+            const response = await supabaseClient
+                .from('events')
+                .update({
+                    title,
+                    type,
+                    user_id,
+                    start_date: start,
+                    end_date: adjustedEnd.toISOString().split('T')[0]
+                })
+                .eq('id', editingEventId);
+            error = response.error;
+        } else {
+            const response = await supabaseClient.from('events').insert([{
+                title,
+                type,
+                user_id,
+                start_date: start,
+                end_date: adjustedEnd.toISOString().split('T')[0]
+            }]);
+            error = response.error;
+        }
 
         if (error) {
-            console.error('Erro ao cadastrar evento:', error);
-            alert('Erro ao cadastrar evento: ' + error.message);
+            const acao = editingEventId ? 'alterar' : 'cadastrar';
+            console.error(`Erro ao ${acao} evento:`, error);
+            alert(`Erro ao ${acao} evento: ` + error.message);
             return;
         }
 
         form.reset();
+        setCreateMode();
         if (typeof window.refreshCalendarViews === 'function') {
             await window.refreshCalendarViews();
         }
