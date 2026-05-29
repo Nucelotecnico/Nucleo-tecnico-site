@@ -601,19 +601,26 @@
           <button id="nszip-closeHelpBtn" type="button" class="nszip-help-close-btn">Fechar</button>
         </div>
 
-        <p>Este módulo permite aplicar selo nos PDFs, gerar cartas e baixar um arquivo ZIP final.</p>
+        <p>Este módulo permite aplicar selo em PDFs, gerar cartas e baixar um ZIP final com os arquivos processados.</p>
 
         <ul>
           <li>Preencha Matrícula e Número da NS (10 dígitos).</li>
-          <li>Use Mostrar Configuração do Selo para ajustar textos, cores, opacidade e regras.</li>
-          <li>Selecione se deseja modo APROVADO ou REPROVADO.</li>
-          <li>Anexe os PDFs em PROJ, COORD e arquivos opcionais.</li>
-          <li>Em Carta orientativa, você pode colar texto e imagens (Ctrl+V).</li>
-          <li>Use os botões de mostrar/ocultar para controlar os blocos de cartas.</li>
-          <li>Clique em Criar ZIP para gerar todos os arquivos.</li>
+          <li>Use Mostrar Configuração do Selo para ajustar textos, cores, opacidades e parâmetros visuais.</li>
+          <li>Escolha o modo: APROVADO ou REPROVADO.</li>
+          <li>Anexe PDFs nos blocos PROJ, COORD e Opcionais conforme necessidade.</li>
+          <li>Na Carta orientativa, é possível colar texto e imagens (Ctrl+V).</li>
+          <li>Os botões de mostrar/ocultar controlam a exibição das seções na tela.</li>
+          <li>Se a Carta orientativa estiver oculta, ela não será incluída no ZIP.</li>
+          <li>Se o campo da Carta orientativa estiver vazio, ela também não será gerada.</li>
         </ul>
 
-        <p>Observação: em modo REPROVADO, é possível gerar ZIP mesmo sem anexos, desde que confirmado no alerta.</p>
+        <p>Regras de geração do ZIP:</p>
+        <ul>
+          <li>Modo APROVADO: exige ao menos um anexo (PROJ, COORD ou Opcional).</li>
+          <li>Modo REPROVADO com anexos: gera normalmente.</li>
+          <li>Modo REPROVADO sem anexos: só permite gerar se a Carta orientativa estiver preenchida e o usuário confirmar no alerta.</li>
+          <li>Modo REPROVADO sem anexos e sem Carta orientativa preenchida: a geração do ZIP é bloqueada.</li>
+        </ul>
       </div>
     </div>
 
@@ -1137,6 +1144,7 @@
       const paragraphs = bodyText.split(/\n\s*\n/).map(block => block.trim()).filter(Boolean);
       const isRejected = Boolean(document.getElementById("nszip-useRejectedSeal")?.checked);
       const statusText = isRejected ? "REPROVADA" : "APROVADA";
+      const matriculaValue = matricula || "________";
 
       return {
         nsNumber,
@@ -1144,7 +1152,7 @@
         currentDateTime,
         currentDate,
         currentTime,
-        title: `NS: ${nsNumber} ${statusText} ${currentDate} ${currentTime}`,
+        title: `NS: ${nsNumber} ${statusText} POR: ${matriculaValue} ${currentDate} ${currentTime}`,
         paragraphs
       };
     }
@@ -1242,24 +1250,7 @@
       titleElement.className = "nszip-letter-preview-title";
       titleElement.textContent = previewModel.title;
 
-      const metaElement = document.createElement("div");
-      metaElement.className = "nszip-letter-preview-meta";
-
-      const matriculaSpan = document.createElement("span");
-      matriculaSpan.textContent = `Matrícula: ${previewModel.matricula}`;
-
-      const dateSpan = document.createElement("span");
-      dateSpan.textContent = `Data: ${previewModel.currentDate}`;
-
-      const timeSpan = document.createElement("span");
-      timeSpan.textContent = `Hora: ${previewModel.currentTime}`;
-
-      metaElement.appendChild(matriculaSpan);
-      metaElement.appendChild(dateSpan);
-      metaElement.appendChild(timeSpan);
-
       header.appendChild(titleElement);
-      header.appendChild(metaElement);
 
       const bodyElement = document.createElement("div");
       bodyElement.className = "nszip-letter-preview-body";
@@ -2115,15 +2106,11 @@
       const content = nszipBuildExtraSheetText(nsNumber, currentDate, currentTime, document.getElementById("nszip-extraSheetText").value);
 
       const statusConfig = nszipGetSealStatusConfig();
-      const title = `NS: ${nsNumber} ${statusConfig.statusTitleText} ${currentDate} ${currentTime}`;
       const matriculaValue = document.getElementById("nszip-matricula").value.trim() || "________";
-      const metaLine = `Matrícula: ${matriculaValue}    Data: ${currentDate}    Hora: ${currentTime}`;
+      const title = `NS: ${nsNumber} ${statusConfig.statusTitleText} POR: ${matriculaValue} ${currentDate} ${currentTime}`;
       const titleSize = 18;
-      const metaSize = 12;
       const titleWidth = fontBold.widthOfTextAtSize(title, titleSize);
       const titleX = (595.28 - titleWidth) / 2;
-      const metaWidth = font.widthOfTextAtSize(metaLine, metaSize);
-      const metaX = (595.28 - metaWidth) / 2;
 
       page.drawRectangle({
         x: 35,
@@ -2138,29 +2125,21 @@
 
       page.drawText(title, {
         x: titleX,
-        y: 784,
+        y: 775,
         size: titleSize,
         font: fontBold,
         color: greenColor
       });
 
-      page.drawText(metaLine, {
-        x: metaX,
-        y: 766,
-        size: metaSize,
-        font: fontBold,
-        color: greenColor
-      });
-
       page.drawLine({
-        start: { x: 70, y: 760 },
-        end: { x: 525, y: 760 },
+        start: { x: 70, y: 752 },
+        end: { x: 525, y: 752 },
         thickness: 1.2,
         color: greenColor,
         opacity: 0.9
       });
 
-      cursorY -= 82;
+      cursorY -= 74;
 
       const paragraphs = content.split(/\r?\n\s*\n/).map(block => block.trim()).filter(Boolean);
 
@@ -2227,7 +2206,7 @@
       return await pdfDoc.save();
     }
 
-    async function nszipCreateOrientativeSheetPdf(nsNumber, currentDate, currentTime) {
+    async function nszipCreateOrientativeSheetPdf(nsNumber, currentDate, currentTime, orientativeBlocks = null) {
       const pdfDoc = await PDFLib.PDFDocument.create();
       let page = pdfDoc.addPage([595.28, 841.89]);
       const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
@@ -2436,7 +2415,7 @@
       );
       cursorY -= 6;
 
-      const blocks = nszipParseOrientativeContentBlocks();
+      const blocks = Array.isArray(orientativeBlocks) ? orientativeBlocks : nszipParseOrientativeContentBlocks();
       if (!blocks.length) {
         cursorY = drawWrappedText("(Nenhuma orientação adicional foi informada.)", cursorY, 11, 16);
       } else {
@@ -2550,7 +2529,12 @@ www.cemig.com.br`,
       const dateAndHourStamp = nszipGetDateAndHourStamp();
       const statusConfig = nszipGetSealStatusConfig();
       const orientativeSection = document.getElementById("nszip-orientativeSection");
-      const shouldGenerateOrientative = !orientativeSection || !orientativeSection.hidden;
+      const orientativeBlocks = nszipParseOrientativeContentBlocks();
+      const hasOrientativeContent = orientativeBlocks.some(block => (
+        block.type === "image"
+        || (block.type === "text" && String(block.content || "").trim().length > 0)
+      ));
+      const shouldGenerateOrientative = (!orientativeSection || !orientativeSection.hidden) && hasOrientativeContent;
 
       const projName = `${nsNumber}_PROJ_${statusConfig.statusText}_${fileTimestamp}.pdf`;
       const coordName = `${nsNumber}_COORD_${statusConfig.statusText}_${fileTimestamp}.pdf`;
@@ -2566,6 +2550,11 @@ www.cemig.com.br`,
 
       if (hasNoAttachments) {
         if (statusConfig.isRejected) {
+          if (!hasOrientativeContent) {
+            alert("No modo REPROVADO, sem anexos, é obrigatório preencher a Carta orientativa para gerar o ZIP.");
+            return;
+          }
+
           const shouldProceed = confirm("Nenhum arquivo foi anexado. Deseja prosseguir com a geração do ZIP mesmo assim?");
           if (!shouldProceed) {
             return;
@@ -2605,7 +2594,7 @@ www.cemig.com.br`,
       }
 
       if (shouldGenerateOrientative) {
-        const orientativePdfBytes = await nszipCreateOrientativeSheetPdf(nsNumber, currentDateTime.date, currentDateTime.time);
+        const orientativePdfBytes = await nszipCreateOrientativeSheetPdf(nsNumber, currentDateTime.date, currentDateTime.time, orientativeBlocks);
         zip.file(`${nsNumber}_CARTA_ORIENTATIVA_${dateAndHourStamp.date}_${dateAndHourStamp.hour}.pdf`, orientativePdfBytes);
       }
 
