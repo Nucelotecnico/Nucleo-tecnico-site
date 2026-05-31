@@ -357,8 +357,9 @@ button {
 
 .ferramenta-link-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(46, 125, 50, 0.28);
-  filter: brightness(1.04);
+  background: linear-gradient(145deg, #ff9f68, #ffb088);
+  box-shadow: 0 8px 20px rgba(255, 159, 104, 0.28);
+  color: #184d27;
 }
 
 .ferramenta-link-btn.active {

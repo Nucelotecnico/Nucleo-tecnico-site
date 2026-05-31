@@ -13402,6 +13402,47 @@
       const container = document.getElementById('containerCheckboxesUsuariosNotasConcluidasPorDia');
       container.innerHTML = '';
 
+  const acoesWrapper = document.createElement('div');
+  acoesWrapper.style.display = 'flex';
+  acoesWrapper.style.gap = '8px';
+  acoesWrapper.style.flexWrap = 'wrap';
+  acoesWrapper.style.marginBottom = '8px';
+  acoesWrapper.style.width = '100%';
+  acoesWrapper.style.position = 'sticky';
+  acoesWrapper.style.top = '0';
+  acoesWrapper.style.zIndex = '1';
+  acoesWrapper.style.background = '#f9f9f9';
+
+  const botaoSelecionarTodas = document.createElement('button');
+  botaoSelecionarTodas.type = 'button';
+  botaoSelecionarTodas.textContent = 'Selecionar todas';
+  botaoSelecionarTodas.onclick = () => selecionarTodosUsuariosNotasConcluidasPorDia();
+  botaoSelecionarTodas.style.padding = '8px 12px';
+  botaoSelecionarTodas.style.background = '#1976d2';
+  botaoSelecionarTodas.style.color = 'white';
+  botaoSelecionarTodas.style.border = 'none';
+  botaoSelecionarTodas.style.borderRadius = '6px';
+  botaoSelecionarTodas.style.cursor = 'pointer';
+  botaoSelecionarTodas.style.fontWeight = '600';
+  botaoSelecionarTodas.style.fontSize = '13px';
+
+  const botaoDesmarcarTodas = document.createElement('button');
+  botaoDesmarcarTodas.type = 'button';
+  botaoDesmarcarTodas.textContent = 'Desmarcar todas';
+  botaoDesmarcarTodas.onclick = () => desmarcarTodosUsuariosNotasConcluidasPorDia();
+  botaoDesmarcarTodas.style.padding = '8px 12px';
+  botaoDesmarcarTodas.style.background = '#c62828';
+  botaoDesmarcarTodas.style.color = 'white';
+  botaoDesmarcarTodas.style.border = 'none';
+  botaoDesmarcarTodas.style.borderRadius = '6px';
+  botaoDesmarcarTodas.style.cursor = 'pointer';
+  botaoDesmarcarTodas.style.fontWeight = '600';
+  botaoDesmarcarTodas.style.fontSize = '13px';
+
+  acoesWrapper.appendChild(botaoSelecionarTodas);
+  acoesWrapper.appendChild(botaoDesmarcarTodas);
+  container.appendChild(acoesWrapper);
+
       // Buscar nomes dos usuários da tabela user_login_nt
       let mapaNomesUsuarios = {};
       try {
@@ -13460,6 +13501,28 @@
       container.style.display = container.style.display === 'none' ? 'flex' : 'none';
     };
 
+    window.selecionarTodosUsuariosNotasConcluidasPorDia = function () {
+      const checkboxes = document.querySelectorAll('#containerCheckboxesUsuariosNotasConcluidasPorDia input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+      });
+
+      if (typeof gerarGraficoNotasConcluidasPorDiaUsuario === 'function' && typeof dadosGlobais !== 'undefined') {
+        gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
+      }
+    };
+
+    window.desmarcarTodosUsuariosNotasConcluidasPorDia = function () {
+      const checkboxes = document.querySelectorAll('#containerCheckboxesUsuariosNotasConcluidasPorDia input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+      });
+
+      if (typeof gerarGraficoNotasConcluidasPorDiaUsuario === 'function' && typeof dadosGlobais !== 'undefined') {
+        gerarGraficoNotasConcluidasPorDiaUsuario(dadosGlobais);
+      }
+    };
+
     // Gráfico de notas concluídas por dia por usuário
     window.gerarGraficoNotasConcluidasPorDiaUsuario = async function (dados) {
       if (!dados || dados.length === 0) {
@@ -13477,6 +13540,23 @@
       const selectDia = document.getElementById('filtroDiaNotasConcluidasPorDiaUsuario');
       const diaSelecionado = selectDia ? selectDia.value : 'todos';
 
+      // Reaproveitar os mesmos filtros base do gráfico por usuário
+      const checkboxesDescricao = document.querySelectorAll('#containerCheckboxesDescricoesNotasPorUsuario input[type="checkbox"]');
+      const descricoesChecadas = new Set();
+      checkboxesDescricao.forEach(checkbox => {
+        if (checkbox.checked) {
+          descricoesChecadas.add(checkbox.value);
+        }
+      });
+
+      const checkboxesCodigo = document.querySelectorAll('#containerCheckboxesCodigoMedidasNotasPorUsuario input[type="checkbox"]');
+      const codigosChecados = new Set();
+      checkboxesCodigo.forEach(checkbox => {
+        if (checkbox.checked) {
+          codigosChecados.add(checkbox.value);
+        }
+      });
+
       // Obter usuários selecionados nos checkboxes
       const checkboxes = document.querySelectorAll('#containerCheckboxesUsuariosNotasConcluidasPorDia input[type="checkbox"]');
       const usuariosChecados = new Set();
@@ -13489,6 +13569,8 @@
       const notasConcluidas = dados.filter(item => {
         const status = item.status_usuario || '';
         const usuario = (item.concluido_por || '').trim();
+        const descricao = item.descricao || '';
+        const codigoMedidas = item.codigo_medidas || '';
         const concluidaEm = item.concluida_em || '';
         const textoMedidas = (item.texto_medidas || '').toUpperCase();
 
@@ -13496,7 +13578,10 @@
           textoMedidas.includes('FALTA ANEXO') || textoMedidas.includes('FALTA APÊNDICE') ||
           textoMedidas.includes('AUSÊNCIA') || textoMedidas.includes('INEXISTENTE'));
 
-        const usuarioOk = usuariosChecados.size === 0 || usuariosChecados.has(usuario);
+        const descricaoOk = descricoesChecadas.size === 0 || descricoesChecadas.has(descricao);
+        const codigoOk = codigosChecados.size === 0 || codigosChecados.has(codigoMedidas);
+
+        const usuarioOk = checkboxes.length === 0 ? true : (usuariosChecados.size > 0 && usuariosChecados.has(usuario));
 
         let mesOk = true;
         if (mesSelecionado !== 'todos') {
@@ -13520,7 +13605,7 @@
           }
         }
 
-        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && concluidaEm && mesOk && diaOk && temAnexo && usuarioOk;
+        return (status === 'CONC CTEC' || status === 'CONC RTEC') && usuario !== '' && concluidaEm && mesOk && diaOk && temAnexo && usuarioOk && descricaoOk && codigoOk;
       });
 
       if (notasConcluidas.length === 0) {
