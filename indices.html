@@ -10,6 +10,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@4.3.2/dist/chartjs-chart-geo.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="indices.css">
@@ -1123,6 +1125,24 @@
           btnExportarNotasSemDataSemContrato.style.background = '#4caf50';
         });
       }
+
+      const btnExportarComparacaoNotasCarga0555 = document.getElementById('btnExportarComparacaoNotasCarga0555');
+      if (btnExportarComparacaoNotasCarga0555) {
+        btnExportarComparacaoNotasCarga0555.addEventListener('click', function () {
+          aplicarEstadoExportacaoTemporario(btnExportarComparacaoNotasCarga0555);
+          if (typeof window.exportarComparacaoNotasCarga0555Excel === 'function') {
+            window.exportarComparacaoNotasCarga0555Excel();
+          }
+        });
+
+        btnExportarComparacaoNotasCarga0555.addEventListener('mouseover', function () {
+          btnExportarComparacaoNotasCarga0555.style.background = '#388e3c';
+        });
+
+        btnExportarComparacaoNotasCarga0555.addEventListener('mouseout', function () {
+          btnExportarComparacaoNotasCarga0555.style.background = '#4caf50';
+        });
+      }
     }
 
     function bindModalActionButtons() {
@@ -1438,6 +1458,28 @@
         <strong>Total de notas:</strong> <span id="totalGeralNotas">0</span> |
         <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalANDM" style="color: #2e7d32;">0</span> |
         <strong style="color: #66bb6a;">ABER:</strong> <span id="totalABER" style="color: #66bb6a;">0</span>
+      </div>
+
+      <div style="margin-top: 22px; border-top: 1px solid #e8f5e9; padding-top: 18px;">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+          <button
+            id="btnToggleMapaNotasCidadeFimPlanejado"
+            class="nt-export-btn"
+            style="padding: 8px 12px; cursor: pointer; font-weight: 600; font-size: 13px;"
+            onclick="window.toggleMapaNotasCidadeFimPlanejado()"
+          >Exibir mapa</button>
+        </div>
+
+        <div id="blocoMapaNotasCidadeFimPlanejado" style="display: none;">
+        <h3 style="margin: 0 0 12px 0; color: #2e7d32; font-size: 1.2em;">Mapa Geográfico de Notas por Cidade (ABER/ANDM)</h3>
+        <div id="mapaNotasCidadeFimPlanejado" style="width: 100%; min-height: 430px; border-radius: 10px; border: 1px solid #d7e7da; background: #f8fcf8;"></div>
+        <div id="infoMapaNotasCidadeFimPlanejado" class="nt-info-panel" style="margin-top: 10px;">
+          <strong>Cidades mapeadas:</strong> <span id="totalCidadesMapaNotasCidadeFimPlanejado">0</span> |
+          <strong>Total de notas no mapa:</strong> <span id="totalNotasMapaNotasCidadeFimPlanejado">0</span> |
+          <strong style="color: #2e7d32;">ANDM:</strong> <span id="totalAndmMapaNotasCidadeFimPlanejado" style="color: #2e7d32;">0</span> |
+          <strong style="color: #66bb6a;">ABER:</strong> <span id="totalAberMapaNotasCidadeFimPlanejado" style="color: #66bb6a;">0</span>
+        </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2144,17 +2186,24 @@
     <div id="graficoComparacaoNotasCarga0555"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-top: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
       <div style="margin-bottom: 16px;">
-        <h2 style="color: #1976d2; margin: 0;">🔍 Notas com med 0040 sem contrato assinado (sem med 0555 concluída)
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+          <button id="btnExportarComparacaoNotasCarga0555"
+            style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+            <span>📊</span>
+            <span>Exportar Excel</span>
+          </button>
+        </div>
+        <h2 style="color: #1976d2; margin: 0;">🔍 Notas com med 0040 (sem 0555 ou com 0555 em status permitido)
         </h2>
         <p style="color: #666; font-size: 13px; margin: 8px 0 0 0;">
-          Exibe notas com código 0040, 0041, 0042, 0045 (status ABER/ANDM) que:<br>
-          - Estão vinculadas a pelo menos uma nota 0555 (com status ANDM, ABER ou ANDM ENVI) de mesmo número;<br>
+          Exibe notas com código 0040 (status ABER/ANDM) que:<br>
+          - Não possuem nota 0555 vinculada de mesmo número OU possuem 0555 em status ANDM, ABER ou ANDM ENVI, desde que não exista 0555 em status CONC (ou variações);<br>
           - São agrupadas por mês de fim planejado (ou "Sem data" se não houver data);<br>
           - Não exibem notas cuja descrição contenha "Consumidor de BT".<br>
           <br>
           <strong>Filtros aplicados:</strong><br>
-          • Apenas notas Carga (0040/41/42/45) com status ABER ou ANDM;<br>
-          • Apenas notas vinculadas a notas 0555 com status ANDM, ABER ou ANDM ENVI;<br>
+          • Apenas notas 0040 com status ABER ou ANDM;<br>
+          • Apenas notas sem vínculo a 0555 ou com vínculo 0555 em status ANDM, ABER ou ANDM ENVI, sem nenhum vínculo 0555 em CONC (ou variações);<br>
           • Notas com "Descrição Consumidor de BT" são excluídas.<br>
         </p>
       </div>
@@ -2163,7 +2212,7 @@
       </div>
       <div id="infoComparacaoNotasCarga0555"
         style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 8px; color: #1565c0;">
-        <strong>Total de notas Carga vinculadas:</strong> <span id="totalComparacaoNotasCarga0555">0</span>
+        <strong>Total de notas 0040 elegíveis pela regra de vínculo 0555:</strong> <span id="totalComparacaoNotasCarga0555">0</span>
       </div>
     </div>
   </div>
@@ -3734,38 +3783,81 @@
     window.gerarGraficoComparacaoNotasCarga0555 = function (dados) {
       if (!dados || dados.length === 0) {
         console.error('❌ Dados vazios');
+        window.ultimaComparacaoNotasCarga0555Elegiveis = [];
         return;
       }
 
-      // PASSO 1: Identificar números de nota que têm código 0555 com status ANDM, ABER ou ANDM ENVI
+      // PASSO 1: Identificar números de nota que têm código 0555
+      const notasComAlgumCodigo0555 = new Set();
+
+      // PASSO 2: Identificar números de nota que têm código 0555 com status ANDM, ABER ou ANDM ENVI
       const notasComCodigo0555 = new Set();
+      // PASSO 2.1: Identificar números de nota que têm código 0555 em status CONC (ou variações)
+      const notasComCodigo0555Concluido = new Set();
       const statusPermitidos0555 = ['ANDM', 'ABER', 'ANDM ENVI'];
 
       dados.forEach(item => {
         if (item.codigo_medidas === '0555') {
+          const numeroNota = item.nota || '';
+          if (numeroNota) {
+            notasComAlgumCodigo0555.add(numeroNota);
+          }
+
           const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
           if (statusPermitidos0555.includes(statusRaw)) {
-            const numeroNota = item.nota || '';
             if (numeroNota) {
               notasComCodigo0555.add(numeroNota);
+            }
+          }
+
+          if (statusRaw.startsWith('CONC')) {
+            if (numeroNota) {
+              notasComCodigo0555Concluido.add(numeroNota);
             }
           }
         }
       });
 
-      // PASSO 2: Filtrar notas Carga (0040/41/42/45) com status ABER/ANDM que estejam no Set
-      const codigosCarga = ['0040', '0041', '0042', '0045'];
+      // PASSO 3: Filtrar apenas notas 0040 com status ABER/ANDM que:
+      // - não tenham 0555, OU
+      // - tenham 0555 em status permitido (ABER/ANDM/ANDM ENVI)
+      const codigoCarga = '0040';
       const statusPermitidosCarga = ['ABER', 'ANDM'];
       const notasPorMes = {}; // Formato: 'YYYY-MM': count
       let totalNotas = 0;
+      let totalSemVinculo0555 = 0;
+      let totalComVinculoPermitido0555 = 0;
+      let totalComVinculoNaoPermitido0555 = 0;
+      let totalComVinculoConcluido0555 = 0;
 
       dados.forEach(item => {
-        if (codigosCarga.includes(item.codigo_medidas)) {
+        if (item.codigo_medidas === codigoCarga) {
           const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
           if (statusPermitidosCarga.includes(statusRaw)) {
             const numeroNota = item.nota || '';
-            // Verificar se esta nota está vinculada a uma nota 0555
-            if (numeroNota && notasComCodigo0555.has(numeroNota)) {
+            if (numeroNota) {
+              // Excluir notas com "Descrição Consumidor de BT"
+              if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) {
+                return;
+              }
+
+              const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
+              const tem0555Permitido = notasComCodigo0555.has(numeroNota);
+              const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
+
+              if (!temAlgum0555) {
+                totalSemVinculo0555++;
+              } else if (tem0555Concluido) {
+                totalComVinculoConcluido0555++;
+                totalComVinculoNaoPermitido0555++;
+                return;
+              } else if (tem0555Permitido) {
+                totalComVinculoPermitido0555++;
+              } else {
+                totalComVinculoNaoPermitido0555++;
+                return;
+              }
+
               totalNotas++;
 
               // Agrupar por mês de fim planejado
@@ -3788,14 +3880,21 @@
 
       // Armazenar dados para uso no onClick
       const dadosCompletos = dados.filter(item => {
-        if (!codigosCarga.includes(item.codigo_medidas)) return false;
+        if (item.codigo_medidas !== codigoCarga) return false;
         const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
         if (!statusPermitidosCarga.includes(statusRaw)) return false;
         const numeroNota = item.nota || '';
         // Excluir notas com 'Descrição Consumidor de BT'
         if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) return false;
-        return numeroNota && notasComCodigo0555.has(numeroNota);
+        if (!numeroNota) return false;
+
+        const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
+        const tem0555Permitido = notasComCodigo0555.has(numeroNota);
+        const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
+        return !temAlgum0555 || (tem0555Permitido && !tem0555Concluido);
       });
+
+      window.ultimaComparacaoNotasCarga0555Elegiveis = dadosCompletos;
 
       // Separar "Sem data" das datas válidas
       const semData = notasPorMes['Sem data'] || 0;
@@ -3820,7 +3919,7 @@
       });
 
       // Atualizar info
-      const infoText = `${totalNotas} notas | Vinculadas a ${notasComCodigo0555.size} nota(s) 0555`;
+      const infoText = `${totalNotas} notas 0040 | sem vínculo 0555: ${totalSemVinculo0555} | com vínculo 0555 permitido: ${totalComVinculoPermitido0555} | excluídas por vínculo 0555 CONC: ${totalComVinculoConcluido0555} | com vínculo 0555 não permitido (excluídas): ${totalComVinculoNaoPermitido0555}`;
       document.getElementById('totalComparacaoNotasCarga0555').textContent = infoText;
 
       // Destruir gráfico anterior
@@ -3835,7 +3934,7 @@
         data: {
           labels: labels,
           datasets: [{
-            label: 'Notas Carga (0040/41/42/45) vinculadas a 0555',
+            label: 'Notas 0040 elegíveis pela regra de vínculo 0555',
             data: dataValues,
             backgroundColor: '#1976d2',
             borderColor: '#0d47a1',
@@ -3872,7 +3971,7 @@
               },
               title: {
                 display: true,
-                text: 'Quantidade de Notas Carga'
+                text: 'Quantidade de Notas 0040'
               }
             },
             x: {
@@ -3906,7 +4005,7 @@
                 });
               }
 
-              const titulo = `Notas Carga vinculadas a 0555 - ${labels[elementIndex]}`;
+              const titulo = `Notas 0040 elegíveis pela regra de vínculo 0555 - ${labels[elementIndex]}`;
               abrirModalNotasCarga(notasFiltradas, titulo);
             }
           }
@@ -8756,6 +8855,110 @@
       XLSX.writeFile(wb, nomeArquivo);
     };
 
+    window.exportarComparacaoNotasCarga0555Excel = function () {
+      const dados = typeof dadosGlobaisCompletos !== 'undefined' && dadosGlobaisCompletos.length > 0
+        ? dadosGlobaisCompletos
+        : dadosGlobais;
+
+      if (!dados || dados.length === 0) {
+        alert('Não há dados para exportar.');
+        return;
+      }
+
+      const codigoCarga = '0040';
+      const statusPermitidosCarga = ['ABER', 'ANDM'];
+      const statusPermitidos0555 = ['ANDM', 'ABER', 'ANDM ENVI'];
+
+      const notasComAlgumCodigo0555 = new Set();
+      const notasComCodigo0555Permitido = new Set();
+      const notasComCodigo0555Concluido = new Set();
+
+      dados.forEach(item => {
+        if ((item.codigo_medidas || '').trim() !== '0555') return;
+        const numeroNota = item.nota || '';
+        if (!numeroNota) return;
+
+        notasComAlgumCodigo0555.add(numeroNota);
+
+        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        if (statusPermitidos0555.includes(statusRaw)) {
+          notasComCodigo0555Permitido.add(numeroNota);
+        }
+        if (statusRaw.startsWith('CONC')) {
+          notasComCodigo0555Concluido.add(numeroNota);
+        }
+      });
+
+      const dadosFiltrados = dados.filter(item => {
+        if ((item.codigo_medidas || '').trim() !== codigoCarga) return false;
+
+        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        if (!statusPermitidosCarga.includes(statusRaw)) return false;
+
+        if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) return false;
+
+        const numeroNota = item.nota || '';
+        if (!numeroNota) return false;
+
+        const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
+        const tem0555Permitido = notasComCodigo0555Permitido.has(numeroNota);
+        const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
+
+        return !temAlgum0555 || (tem0555Permitido && !tem0555Concluido);
+      });
+
+      if (dadosFiltrados.length === 0) {
+        alert('Não há dados para exportar com os critérios atuais.');
+        return;
+      }
+
+      const dadosExcel = dadosFiltrados.map(item => ({
+        'Nota': item.nota || '',
+        'Área Operacional': item.area_operacional || '',
+        'Regional': item.regional || '',
+        'Cidade': item.cidade || '',
+        'Código Medidas': item.codigo_medidas || '',
+        'Descrição': item.descricao || '',
+        'Texto Medidas': item.texto_medidas || '',
+        'Status': item.status_usuario || item.status || item.Status || item.status_atual || '',
+        'Responsável': item.responsavel || '',
+        'Fim Planejado': item.fim_planejado || '',
+        'Concluída Em': item.concluida_em || ''
+      }));
+
+      const wsDetalhes = XLSX.utils.json_to_sheet(dadosExcel);
+
+      const resumo = [
+        {
+          'Métrica': 'Total de notas 0040 elegíveis',
+          'Valor': dadosFiltrados.length
+        }
+      ];
+      const wsResumo = XLSX.utils.json_to_sheet(resumo);
+
+      wsDetalhes['!cols'] = [
+        { wch: 12 },
+        { wch: 18 },
+        { wch: 16 },
+        { wch: 18 },
+        { wch: 14 },
+        { wch: 35 },
+        { wch: 32 },
+        { wch: 16 },
+        { wch: 20 },
+        { wch: 16 },
+        { wch: 16 }
+      ];
+      wsResumo['!cols'] = [{ wch: 36 }, { wch: 14 }];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, wsDetalhes, 'Comparacao 0040 x 0555');
+      XLSX.utils.book_append_sheet(wb, wsResumo, 'Resumo');
+
+      const nomeArquivo = `comparacao_notas_carga_0555_${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, nomeArquivo);
+    };
+
     window.exportarNotasFimPlanejadoExcel = function () {
       const mesSelecionado = document.getElementById('filtroMesFimPlanejado')?.value || 'todos';
       const dataInicioSelecionada = document.getElementById('filtroDataInicioFimPlanejado')?.value || '';
@@ -8972,6 +9175,475 @@
     };
     let chartConcluidasPorTipoDemaisInstance = null;
     let chartRPVDInstance = null;
+    let mapaNotasCidadeFimPlanejadoInstance = null;
+    let camadaNotasCidadeFimPlanejado = null;
+    let tokenRenderMapaNotasCidadeFimPlanejado = 0;
+    let notasMapaPorCidadeFimPlanejado = {};
+    const chaveCacheCidadeMapaNotas = 'nt_mapa_notas_cidade_coords_v2';
+    const ttlCacheCoordenadasCidadeMapaMs = 180 * 24 * 60 * 60 * 1000;
+    const ttlCacheCoordenadasCidadeNaoEncontradaMs = 12 * 60 * 60 * 1000;
+    const timeoutGeocodingCidadeMs = 9000;
+    const concorrenciaGeocodingCidade = 1;
+    const intervaloMinimoReqGeocodingMs = 1100;
+    let ultimoReqGeocodingTs = 0;
+
+    window.abrirModalNotasCidadeMapaFimPlanejado = function (chaveCidade) {
+      if (!chaveCidade || typeof abrirModalNotasCargaGD !== 'function') return;
+      const payload = notasMapaPorCidadeFimPlanejado[chaveCidade];
+      if (!payload) return;
+      abrirModalNotasCargaGD(payload.notas || [], `Cidade: ${payload.nome} (Mapa ABER/ANDM)`);
+    };
+
+    window.toggleMapaNotasCidadeFimPlanejado = function () {
+      const bloco = document.getElementById('blocoMapaNotasCidadeFimPlanejado');
+      const botao = document.getElementById('btnToggleMapaNotasCidadeFimPlanejado');
+      if (!bloco || !botao) return;
+
+      const estaOculto = bloco.style.display === 'none';
+      bloco.style.display = estaOculto ? 'block' : 'none';
+      botao.textContent = estaOculto ? 'Ocultar mapa' : 'Exibir mapa';
+
+      if (estaOculto && mapaNotasCidadeFimPlanejadoInstance) {
+        setTimeout(() => {
+          mapaNotasCidadeFimPlanejadoInstance.invalidateSize();
+        }, 100);
+      }
+    };
+
+    const cacheCoordenadasCidadeMapaNotas = (() => {
+      try {
+        const bruto = localStorage.getItem(chaveCacheCidadeMapaNotas);
+        const obj = bruto ? JSON.parse(bruto) : {};
+        if (obj && typeof obj === 'object') return obj;
+      } catch (_) {
+      }
+      return {};
+    })();
+
+    function salvarCacheCoordenadasCidadeMapaNotas() {
+      try {
+        localStorage.setItem(chaveCacheCidadeMapaNotas, JSON.stringify(cacheCoordenadasCidadeMapaNotas));
+      } catch (_) {
+      }
+    }
+
+    function agoraMsMapaNotas() {
+      return Date.now();
+    }
+
+    function lerEntradaCacheCidadeMapaNotas(chaveCidade) {
+      if (!chaveCidade) return null;
+      const entrada = cacheCoordenadasCidadeMapaNotas[chaveCidade];
+      if (!entrada) return null;
+
+      // Compatibilidade com o formato antigo: { lat, lon }.
+      if (typeof entrada.lat === 'number' && typeof entrada.lon === 'number' && !('ts' in entrada)) {
+        return {
+          lat: entrada.lat,
+          lon: entrada.lon,
+          ts: agoraMsMapaNotas(),
+          notFound: false
+        };
+      }
+
+      if (typeof entrada !== 'object') return null;
+      return entrada;
+    }
+
+    function entradaCacheCidadeValida(entrada) {
+      if (!entrada || typeof entrada !== 'object') return false;
+      const ts = Number(entrada.ts || 0);
+      if (!ts) return false;
+      const ttl = entrada.notFound ? ttlCacheCoordenadasCidadeNaoEncontradaMs : ttlCacheCoordenadasCidadeMapaMs;
+      return (agoraMsMapaNotas() - ts) <= ttl;
+    }
+
+    function normalizarTextoConsultaCidadeMapaNotas(cidade) {
+      let nome = (cidade || '').toString().trim();
+      if (!nome) return '';
+
+      nome = nome.replace(/\s+/g, ' ');
+      nome = nome.replace(/\(.*?\)/g, ' ').trim();
+      nome = nome.replace(/\bM\.?G\.?\b/gi, ' ').trim();
+      nome = nome.replace(/\s+-\s+/g, ' ');
+      nome = nome.replace(/\s*\/\s*/g, ' ').trim();
+      nome = nome.replace(/\s*,\s*/g, ' ').trim();
+      nome = nome.replace(/\s+/g, ' ').trim();
+
+      return nome;
+    }
+
+    function obterCoordenadaCacheCidadeMapaNotas(chaveCidade) {
+      const entrada = lerEntradaCacheCidadeMapaNotas(chaveCidade);
+      if (!entrada || !entradaCacheCidadeValida(entrada)) return null;
+      if (entrada.notFound) return null;
+      if (!Number.isFinite(Number(entrada.lat)) || !Number.isFinite(Number(entrada.lon))) return null;
+      return { lat: Number(entrada.lat), lon: Number(entrada.lon) };
+    }
+
+    function salvarCoordenadaCacheCidadeMapaNotas(chaveCidade, coordenada) {
+      if (!chaveCidade || !coordenada) return;
+      cacheCoordenadasCidadeMapaNotas[chaveCidade] = {
+        lat: Number(coordenada.lat),
+        lon: Number(coordenada.lon),
+        ts: agoraMsMapaNotas(),
+        notFound: false
+      };
+      salvarCacheCoordenadasCidadeMapaNotas();
+    }
+
+    function salvarCacheCidadeNaoEncontradaMapaNotas(chaveCidade) {
+      if (!chaveCidade) return;
+      cacheCoordenadasCidadeMapaNotas[chaveCidade] = {
+        ts: agoraMsMapaNotas(),
+        notFound: true
+      };
+      salvarCacheCoordenadasCidadeMapaNotas();
+    }
+
+    async function aguardarJanelaGeocoding() {
+      const agora = Date.now();
+      const proximo = ultimoReqGeocodingTs + intervaloMinimoReqGeocodingMs;
+      if (proximo > agora) {
+        await new Promise(resolve => setTimeout(resolve, proximo - agora));
+      }
+      ultimoReqGeocodingTs = Date.now();
+    }
+
+    function normalizarNomeCidadeMapaNotas(cidade) {
+      return (cidade || '')
+        .toString()
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ')
+        .toUpperCase();
+    }
+
+    function garantirMapaNotasCidadeFimPlanejado() {
+      const container = document.getElementById('mapaNotasCidadeFimPlanejado');
+      if (!container || typeof L === 'undefined') return null;
+
+      if (!mapaNotasCidadeFimPlanejadoInstance) {
+        mapaNotasCidadeFimPlanejadoInstance = L.map('mapaNotasCidadeFimPlanejado', {
+          zoomControl: true
+        }).setView([-18.5, -44.5], 6);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+          maxZoom: 18
+        }).addTo(mapaNotasCidadeFimPlanejadoInstance);
+
+        camadaNotasCidadeFimPlanejado = L.layerGroup().addTo(mapaNotasCidadeFimPlanejadoInstance);
+      }
+
+      return mapaNotasCidadeFimPlanejadoInstance;
+    }
+
+    function atualizarInfoMapaNotasCidadeFimPlanejado(payload) {
+      const cidades = payload?.cidades || 0;
+      const total = payload?.total || 0;
+      const andm = payload?.andm || 0;
+      const aber = payload?.aber || 0;
+      const mensagem = payload?.mensagem || '';
+
+      const elCidades = document.getElementById('totalCidadesMapaNotasCidadeFimPlanejado');
+      const elTotal = document.getElementById('totalNotasMapaNotasCidadeFimPlanejado');
+      const elAndm = document.getElementById('totalAndmMapaNotasCidadeFimPlanejado');
+      const elAber = document.getElementById('totalAberMapaNotasCidadeFimPlanejado');
+      const painel = document.getElementById('infoMapaNotasCidadeFimPlanejado');
+
+      if (elCidades) elCidades.textContent = String(cidades);
+      if (elTotal) elTotal.textContent = String(total);
+      if (elAndm) elAndm.textContent = String(andm);
+      if (elAber) elAber.textContent = String(aber);
+
+      if (painel) {
+        const blocoAvisoId = 'mensagemMapaNotasCidadeFimPlanejado';
+        let aviso = document.getElementById(blocoAvisoId);
+        if (!aviso) {
+          aviso = document.createElement('div');
+          aviso.id = blocoAvisoId;
+          aviso.style.marginTop = '8px';
+          aviso.style.fontSize = '0.9em';
+          aviso.style.color = '#5f6f64';
+          painel.appendChild(aviso);
+        }
+        aviso.textContent = mensagem;
+      }
+    }
+
+    function limparMapaNotasCidadeFimPlanejado() {
+      tokenRenderMapaNotasCidadeFimPlanejado++;
+      if (camadaNotasCidadeFimPlanejado) {
+        camadaNotasCidadeFimPlanejado.clearLayers();
+      }
+      atualizarInfoMapaNotasCidadeFimPlanejado({
+        cidades: 0,
+        total: 0,
+        andm: 0,
+        aber: 0,
+        mensagem: 'Sem notas para exibir no mapa com os filtros atuais.'
+      });
+    }
+
+    async function obterCoordenadaCidadeMapaNotas(cidadeOriginal) {
+      const cidadeNormalizada = normalizarNomeCidadeMapaNotas(cidadeOriginal);
+      if (!cidadeNormalizada) return null;
+
+      const cidadeConsulta = normalizarTextoConsultaCidadeMapaNotas(cidadeOriginal);
+      if (!cidadeConsulta) return null;
+
+      const coordenadaEmCache = obterCoordenadaCacheCidadeMapaNotas(cidadeNormalizada);
+      if (coordenadaEmCache) {
+        return coordenadaEmCache;
+      }
+
+      const entradaCache = lerEntradaCacheCidadeMapaNotas(cidadeNormalizada);
+      if (entradaCacheCidadeValida(entradaCache) && entradaCache?.notFound) {
+        return null;
+      }
+
+      const consultas = [
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=br&state=Minas%20Gerais&city=${encodeURIComponent(cidadeConsulta)}`,
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=br&q=${encodeURIComponent(cidadeConsulta + ', Minas Gerais, Brasil')}`,
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=br&q=${encodeURIComponent(cidadeOriginal + ', Minas Gerais, Brasil')}`,
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=br&q=${encodeURIComponent(cidadeConsulta + ', Brasil')}`
+      ];
+
+      let falhaTemporaria = false;
+
+      for (const urlConsulta of consultas) {
+        try {
+          await aguardarJanelaGeocoding();
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeoutGeocodingCidadeMs);
+
+          const resposta = await fetch(urlConsulta, {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (!resposta.ok) {
+            if (resposta.status === 429 || resposta.status >= 500) {
+              falhaTemporaria = true;
+            }
+            continue;
+          }
+
+          const lista = await resposta.json();
+          if (!Array.isArray(lista) || lista.length === 0) continue;
+
+          const lat = parseFloat(lista[0].lat);
+          const lon = parseFloat(lista[0].lon);
+          if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+
+          const coordenada = { lat, lon };
+          salvarCoordenadaCacheCidadeMapaNotas(cidadeNormalizada, coordenada);
+          return coordenada;
+        } catch (_) {
+          falhaTemporaria = true;
+        }
+      }
+
+      // So marca como nao encontrada quando nao houve falha temporaria (timeout, limite de taxa, erro 5xx).
+      if (!falhaTemporaria) {
+        salvarCacheCidadeNaoEncontradaMapaNotas(cidadeNormalizada);
+      }
+
+      return null;
+    }
+
+    function corCidadeMapaNotas(andm, aber) {
+      if (andm > aber) return '#2e7d32';
+      if (aber > andm) return '#66bb6a';
+      return '#1e88e5';
+    }
+
+    async function atualizarMapaNotasCidadeFimPlanejado(dadosFiltrados) {
+      const mapa = garantirMapaNotasCidadeFimPlanejado();
+      if (!mapa) return;
+
+      if (camadaNotasCidadeFimPlanejado) {
+        camadaNotasCidadeFimPlanejado.clearLayers();
+      }
+
+      notasMapaPorCidadeFimPlanejado = {};
+
+      const agrupado = new Map();
+      let totalAndm = 0;
+      let totalAber = 0;
+
+      (dadosFiltrados || []).forEach(item => {
+        const status = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        const statusBase = normalizarStatusBaseCached(status);
+        if (statusBase !== 'ABER' && statusBase !== 'ANDM') return;
+
+        const cidadeOriginal = (item.cidade || '').trim();
+        if (!cidadeOriginal) return;
+
+        const chave = normalizarNomeCidadeMapaNotas(cidadeOriginal);
+        if (!chave) return;
+
+        if (!agrupado.has(chave)) {
+          agrupado.set(chave, {
+            cidadeExibicao: cidadeOriginal,
+            andm: 0,
+            aber: 0,
+            total: 0,
+            notas: []
+          });
+        }
+
+        const bucket = agrupado.get(chave);
+        bucket.total += 1;
+        bucket.notas.push(item);
+        if (statusBase === 'ANDM') {
+          bucket.andm += 1;
+          totalAndm += 1;
+        } else {
+          bucket.aber += 1;
+          totalAber += 1;
+        }
+      });
+
+      const cidades = Array.from(agrupado.values()).sort((a, b) => b.total - a.total);
+      if (cidades.length === 0) {
+        atualizarInfoMapaNotasCidadeFimPlanejado({
+          cidades: 0,
+          total: 0,
+          andm: 0,
+          aber: 0,
+          mensagem: 'Sem cidades para exibir no mapa com os filtros atuais.'
+        });
+        return;
+      }
+
+      const tokenAtual = ++tokenRenderMapaNotasCidadeFimPlanejado;
+      const bounds = [];
+      let cidadesSemCoordenada = 0;
+      let cidadesComCache = 0;
+      let cidadesGeocodificadas = 0;
+
+      const adicionarMarcadorCidadeMapa = (cidade, coord) => {
+        const raio = Math.min(32, 8 + Math.sqrt(cidade.total) * 2.4);
+        const cor = corCidadeMapaNotas(cidade.andm, cidade.aber);
+        const chaveCidade = normalizarNomeCidadeMapaNotas(cidade.cidadeExibicao);
+
+        notasMapaPorCidadeFimPlanejado[chaveCidade] = {
+          nome: cidade.cidadeExibicao,
+          notas: cidade.notas || []
+        };
+
+        const marker = L.circleMarker([coord.lat, coord.lon], {
+          radius: raio,
+          color: cor,
+          weight: 1.5,
+          fillColor: cor,
+          fillOpacity: 0.55
+        });
+
+        marker.bindPopup(`
+          <div style="font-family: Roboto, Arial, sans-serif; min-width: 170px;">
+            <strong style="font-size: 14px; color: #184d27;">${cidade.cidadeExibicao}</strong><br>
+            <span>Total: ${cidade.total}</span><br>
+            <span style="color: #2e7d32;">ANDM: ${cidade.andm}</span><br>
+            <span style="color: #66bb6a;">ABER: ${cidade.aber}</span><br>
+            <button
+              style="margin-top: 8px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px;"
+              onclick="window.abrirModalNotasCidadeMapaFimPlanejado('${chaveCidade}')"
+            >Ver notas da cidade</button>
+          </div>
+        `);
+
+        marker.addTo(camadaNotasCidadeFimPlanejado);
+        bounds.push([coord.lat, coord.lon]);
+      };
+
+      atualizarInfoMapaNotasCidadeFimPlanejado({
+        cidades: cidades.length,
+        total: totalAndm + totalAber,
+        andm: totalAndm,
+        aber: totalAber,
+        mensagem: 'Atualizando mapa geográfico por cidade (cache + geocodificação)...'
+      });
+
+      const pendentesGeocoding = [];
+
+      cidades.forEach((cidade) => {
+        const chaveCidade = normalizarNomeCidadeMapaNotas(cidade.cidadeExibicao);
+        const coordCache = obterCoordenadaCacheCidadeMapaNotas(chaveCidade);
+        if (coordCache) {
+          cidadesComCache++;
+          adicionarMarcadorCidadeMapa(cidade, coordCache);
+        } else {
+          pendentesGeocoding.push(cidade);
+        }
+      });
+
+      if (bounds.length > 0) {
+        mapa.fitBounds(bounds, { padding: [20, 20], maxZoom: 10 });
+      }
+
+      let processadas = 0;
+      let indiceAtual = 0;
+
+      const processarProximaCidade = async () => {
+        while (indiceAtual < pendentesGeocoding.length) {
+          if (tokenAtual !== tokenRenderMapaNotasCidadeFimPlanejado) return;
+
+          const indice = indiceAtual;
+          indiceAtual++;
+          const cidade = pendentesGeocoding[indice];
+
+          const coord = await obterCoordenadaCidadeMapaNotas(cidade.cidadeExibicao);
+          processadas++;
+
+          if (tokenAtual !== tokenRenderMapaNotasCidadeFimPlanejado) return;
+
+          if (!coord) {
+            cidadesSemCoordenada++;
+          } else {
+            cidadesGeocodificadas++;
+            adicionarMarcadorCidadeMapa(cidade, coord);
+          }
+
+          if (processadas % 5 === 0 || processadas === pendentesGeocoding.length) {
+            atualizarInfoMapaNotasCidadeFimPlanejado({
+              cidades: (cidadesComCache + cidadesGeocodificadas),
+              total: totalAndm + totalAber,
+              andm: totalAndm,
+              aber: totalAber,
+              mensagem: `Processando cidades: ${processadas}/${pendentesGeocoding.length} sem cache.`
+            });
+          }
+        }
+      };
+
+      const workers = Array.from({ length: Math.max(1, concorrenciaGeocodingCidade) }, () => processarProximaCidade());
+      await Promise.all(workers);
+
+      if (tokenAtual !== tokenRenderMapaNotasCidadeFimPlanejado) {
+        return;
+      }
+
+      if (bounds.length > 0) {
+        mapa.fitBounds(bounds, { padding: [20, 20], maxZoom: 10 });
+      }
+
+      const totalMapeadas = cidades.length - cidadesSemCoordenada;
+      const mensagem = cidadesSemCoordenada > 0
+        ? `Mapa pronto. Cache: ${cidadesComCache} | Geocodificadas: ${cidadesGeocodificadas} | Sem coordenada: ${cidadesSemCoordenada}.`
+        : `Mapa pronto. Cache: ${cidadesComCache} | Geocodificadas: ${cidadesGeocodificadas}.`;
+
+      atualizarInfoMapaNotasCidadeFimPlanejado({
+        cidades: totalMapeadas,
+        total: totalAndm + totalAber,
+        andm: totalAndm,
+        aber: totalAber,
+        mensagem
+      });
+    }
 
     // Função para toggle barras no gráfico Demais
     window.toggleBarrasDemais = function () {
@@ -8998,6 +9670,7 @@
           chartInstance.destroy();
           chartInstance = null;
         }
+        limparMapaNotasCidadeFimPlanejado();
         return;
       }
 
@@ -9121,6 +9794,8 @@
 
         return statusOk && descricaoOk && textoMedidasOk && codigoOk && mesOk && periodoOk;
       });
+
+      atualizarMapaNotasCidadeFimPlanejado(dadosFiltrados);
 
       // Agrupar dados por fim_planejado e status
       const agrupamentoPorData = {};
