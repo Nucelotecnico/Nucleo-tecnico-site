@@ -606,8 +606,9 @@
         <ul>
           <li>Preencha Matrícula e Número da NS (10 dígitos).</li>
           <li>Use Mostrar Configuração do Selo para ajustar textos, cores, opacidades e parâmetros visuais.</li>
+          <li>A inclusão da Carta de Aprovação no ZIP depende do checkbox "Gerar Carta de Aprovação".</li>
           <li>Escolha o modo: APROVADO ou REPROVADO.</li>
-          <li>Anexe PDFs nos blocos PROJ, COORD e Opcionais conforme necessidade.</li>
+          <li>Anexe PDFs nos blocos PROJ, COORD, LAUDO e Opcionais conforme necessidade.</li>
           <li>Na Carta orientativa, é possível colar texto e imagens (Ctrl+V).</li>
           <li>Os botões de mostrar/ocultar controlam a exibição das seções na tela.</li>
           <li>Se a Carta orientativa estiver oculta, ela não será incluída no ZIP.</li>
@@ -645,6 +646,11 @@
         <label class="nszip-checkbox-field" for="nszip-enableSeal">
           <input id="nszip-enableSeal" type="checkbox" checked>
           Aplicar selo de aprovação em todas as páginas
+        </label>
+
+        <label class="nszip-checkbox-field" for="nszip-enableApprovalSheet">
+          <input id="nszip-enableApprovalSheet" type="checkbox" checked>
+          Gerar Carta de Aprovação
         </label>
 
         <label class="nszip-checkbox-field" for="nszip-useRejectedSeal">
@@ -788,6 +794,17 @@
     <input id="nszip-fileInput-coord" type="file" accept=".pdf,application/pdf" multiple hidden>
     <ul id="nszip-fileList-coord" class="nszip-file-list"></ul>
 
+    <div id="nszip-dropzone-laudo" class="nszip-dropzone">Arraste aqui os PDFs do LAUDO</div>
+    <label class="nszip-checkbox-field" for="nszip-enableLaudoSeal" style="margin: 10px 0 0;">
+      <input id="nszip-enableLaudoSeal" type="checkbox" checked>
+      Aplicar selo nos PDFs do LAUDO
+    </label>
+    <div class="nszip-select-actions">
+      <button id="nszip-pickFiles-laudo" type="button" class="nszip-secondary-button">Selecionar PDFs (LAUDO)</button>
+    </div>
+    <input id="nszip-fileInput-laudo" type="file" accept=".pdf,application/pdf" multiple hidden>
+    <ul id="nszip-fileList-laudo" class="nszip-file-list"></ul>
+
     <section class="nszip-optional-section">
       <div class="nszip-optional-header">
         <h3 class="nszip-optional-title">Arquivos Opcionais</h3>
@@ -838,6 +855,7 @@
 // Namespace exclusivo: nszip-
     let nszipFilesProj = [];
     let nszipFilesCoord = [];
+    let nszipFilesLaudo = [];
     let nszipOptionalGroups = [];
     let nszipOptionalCounter = 0;
     const nszipPreferencesKey = "nszip-user-preferences";
@@ -977,7 +995,9 @@
         "nszip-approvalOpacity",
         "nszip-cemigOpacity",
         "nszip-enableSeal",
-        "nszip-useRejectedSeal"
+        "nszip-enableApprovalSheet",
+        "nszip-useRejectedSeal",
+        "nszip-enableLaudoSeal"
       ];
 
       const preferences = {};
@@ -1170,6 +1190,7 @@
     function nszipEnforceSealModeMutualExclusion(changedId) {
       const approvalToggle = document.getElementById("nszip-enableSeal");
       const rejectedToggle = document.getElementById("nszip-useRejectedSeal");
+      const approvalSheetToggle = document.getElementById("nszip-enableApprovalSheet");
 
       if (!approvalToggle || !rejectedToggle) {
         return;
@@ -1180,6 +1201,13 @@
           approvalToggle.checked = false;
         } else {
           rejectedToggle.checked = false;
+        }
+      }
+
+      if (approvalSheetToggle) {
+        approvalSheetToggle.disabled = !approvalToggle.checked;
+        if (!approvalToggle.checked) {
+          approvalSheetToggle.checked = false;
         }
       }
     }
@@ -1371,12 +1399,15 @@
 
       nszipFilesProj.length = 0;
       nszipFilesCoord.length = 0;
+      nszipFilesLaudo.length = 0;
 
       nszipRenderFileList(document.getElementById("nszip-fileList-proj"), nszipFilesProj);
       nszipRenderFileList(document.getElementById("nszip-fileList-coord"), nszipFilesCoord);
+      nszipRenderFileList(document.getElementById("nszip-fileList-laudo"), nszipFilesLaudo);
 
       document.getElementById("nszip-fileInput-proj").value = "";
       document.getElementById("nszip-fileInput-coord").value = "";
+      document.getElementById("nszip-fileInput-laudo").value = "";
 
       document.getElementById("nszip-extraSheetText").value = `
 
@@ -1489,6 +1520,7 @@
         excOpacity: Math.max(0.05, Math.min(1, Number(document.getElementById("nszip-excOpacity").value) || 1)),
         projEnabled: document.getElementById("nszip-enableProjSeal").checked,
         coordEnabled: document.getElementById("nszip-enableCoordSeal").checked,
+        laudoEnabled: document.getElementById("nszip-enableLaudoSeal")?.checked ?? true,
         approvalColor: document.getElementById("nszip-approvalColor").value,
         bandColor: document.getElementById("nszip-bandColor").value,
         cemigColor: document.getElementById("nszip-cemigColor").value,
@@ -1690,8 +1722,10 @@
 
     nszipSetupDropzone("nszip-dropzone-proj", "nszip-fileList-proj", nszipFilesProj);
     nszipSetupDropzone("nszip-dropzone-coord", "nszip-fileList-coord", nszipFilesCoord);
+    nszipSetupDropzone("nszip-dropzone-laudo", "nszip-fileList-laudo", nszipFilesLaudo);
     nszipSetupPickers("nszip-fileInput-proj", "nszip-pickFiles-proj", "nszip-fileList-proj", nszipFilesProj);
     nszipSetupPickers("nszip-fileInput-coord", "nszip-pickFiles-coord", "nszip-fileList-coord", nszipFilesCoord);
+    nszipSetupPickers("nszip-fileInput-laudo", "nszip-pickFiles-laudo", "nszip-fileList-laudo", nszipFilesLaudo);
 
     // Mantem o campo da NS apenas com numeros e no maximo 10 digitos.
     const nszipNsNumberInput = document.getElementById("nszip-nsNumber");
@@ -1805,10 +1839,12 @@
       "nszip-approvalOpacity",
       "nszip-cemigOpacity",
       "nszip-enableSeal",
-      "nszip-useRejectedSeal"
+        "nszip-enableApprovalSheet",
+        "nszip-useRejectedSeal",
+      "nszip-enableLaudoSeal"
     ].forEach(elementId => {
       let eventName = "input";
-      if (["nszip-enableSeal","nszip-useRejectedSeal","nszip-excEditable","nszip-excShowProj","nszip-excShowCoord","nszip-excShowOptional"].includes(elementId)) {
+      if (["nszip-enableSeal","nszip-useRejectedSeal","nszip-enableLaudoSeal","nszip-excEditable","nszip-excShowProj","nszip-excShowCoord","nszip-excShowOptional"].includes(elementId)) {
         eventName = "change";
       }
       nszipBindPreferencePersistence(elementId, eventName);
@@ -2535,9 +2571,11 @@ www.cemig.com.br`,
         || (block.type === "text" && String(block.content || "").trim().length > 0)
       ));
       const shouldGenerateOrientative = (!orientativeSection || !orientativeSection.hidden) && hasOrientativeContent;
+      const shouldGenerateApprovalSheet = document.getElementById("nszip-enableApprovalSheet").checked;
 
       const projName = `${nsNumber}_PROJ_${statusConfig.statusText}_${fileTimestamp}.pdf`;
       const coordName = `${nsNumber}_COORD_${statusConfig.statusText}_${fileTimestamp}.pdf`;
+      const laudoName = `${nsNumber}_LAUDO_${statusConfig.statusText}_${fileTimestamp}.pdf`;
       const zipName = `${nsNumber}_${statusConfig.zipLabel}_${fileTimestamp}.zip`;
       const sealConfig = nszipGetSealConfig();
       sealConfig.nsNumber = nsNumber;
@@ -2546,6 +2584,7 @@ www.cemig.com.br`,
 
       const hasNoAttachments = nszipFilesProj.length === 0
         && nszipFilesCoord.length === 0
+        && nszipFilesLaudo.length === 0
         && optionalGroupsWithFiles.length === 0;
 
       if (hasNoAttachments) {
@@ -2588,7 +2627,13 @@ www.cemig.com.br`,
         zip.file(coordName, coordPdfBytes);
       }
 
-      if (!statusConfig.isRejected) {
+      if (nszipFilesLaudo.length > 0) {
+        const laudoSealConfig = nszipBuildSectionSealConfig(sealConfig, sealConfig.laudoEnabled);
+        const laudoPdfBytes = await nszipMergePDFs(nszipFilesLaudo, laudoSealConfig);
+        zip.file(laudoName, laudoPdfBytes);
+      }
+
+      if (!statusConfig.isRejected && shouldGenerateApprovalSheet) {
         const extraSheetPdfBytes = await nszipCreateExtraSheetPdf(nsNumber, currentDateTime.date, currentDateTime.time, sealConfig);
         zip.file(`${nsNumber}_CARTA_APROVACAO_${fileTimestamp}.pdf`, extraSheetPdfBytes);
       }
