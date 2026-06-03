@@ -1159,6 +1159,7 @@
     function bindDropdownActionButtons() {
       const dropdownButtonMap = [
         { id: 'botaoToggleDescricoes', action: 'toggleDropdownDescricoes' },
+        { id: 'botaoToggleDescricoesComparacao0555', action: 'toggleDropdownDescricoesComparacao0555' },
         { id: 'botaoToggleTextoMedidasFimPlanejado', action: 'toggleDropdownTextoMedidasFimPlanejado' },
         { id: 'botaoToggleCodigoMedidas', action: 'toggleDropdownCodigoMedidas' },
         { id: 'botaoToggleStatusFimPlanejado', action: 'toggleDropdownStatusFimPlanejado' },
@@ -1471,8 +1472,8 @@
         </div>
 
         <div id="blocoMapaNotasCidadeFimPlanejado" style="display: none;">
-        <h3 style="margin: 0 0 12px 0; color: #2e7d32; font-size: 1.2em;">Mapa Geográfico de Notas por Cidade (ABER/ANDM)</h3>
-        <div id="mapaNotasCidadeFimPlanejado" style="width: 100%; min-height: 430px; border-radius: 10px; border: 1px solid #d7e7da; background: #f8fcf8;"></div>
+          <h3 style="margin: 0 0 12px 0; color: #2e7d32; font-size: 1.2em;">Mapa Geográfico de Notas por Cidade (ABER/ANDM)</h3>
+          <div id="mapaNotasCidadeFimPlanejado" style="width: 100%; min-height: 430px; border-radius: 10px; border: 1px solid #d7e7da; background: #f8fcf8;"></div>
         <div id="infoMapaNotasCidadeFimPlanejado" class="nt-info-panel" style="margin-top: 10px;">
           <strong>Cidades mapeadas:</strong> <span id="totalCidadesMapaNotasCidadeFimPlanejado">0</span> |
           <strong>Total de notas no mapa:</strong> <span id="totalNotasMapaNotasCidadeFimPlanejado">0</span> |
@@ -2185,29 +2186,76 @@
     <!-- Gráfico de Comparação: Notas Carga vinculadas a 0555 -->
     <div id="graficoComparacaoNotasCarga0555"
       style="display: none; background: #fff; border-radius: 10px; padding: 24px; margin-top: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-          <button id="btnExportarComparacaoNotasCarga0555"
-            style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
-            <span>📊</span>
-            <span>Exportar Excel</span>
-          </button>
-        </div>
-        <h2 style="color: #1976d2; margin: 0;">🔍 Notas com med 0040 (sem 0555 ou com 0555 em status permitido)
-        </h2>
-        <p style="color: #666; font-size: 13px; margin: 8px 0 0 0;">
-          Exibe notas com código 0040 (status ABER/ANDM) que:<br>
-          - Não possuem nota 0555 vinculada de mesmo número OU possuem 0555 em status ANDM, ABER ou ANDM ENVI, desde que não exista 0555 em status CONC (ou variações);<br>
-          - São agrupadas por mês de fim planejado (ou "Sem data" se não houver data);<br>
-          - Não exibem notas cuja descrição contenha "Consumidor de BT".<br>
-          <br>
-          <strong>Filtros aplicados:</strong><br>
-          • Apenas notas 0040 com status ABER ou ANDM;<br>
-          • Apenas notas sem vínculo a 0555 ou com vínculo 0555 em status ANDM, ABER ou ANDM ENVI, sem nenhum vínculo 0555 em CONC (ou variações);<br>
-          • Notas com "Descrição Consumidor de BT" são excluídas.<br>
-        </p>
+      
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+        <button id="btnExportarComparacaoNotasCarga0555"
+          style="padding: 10px 16px; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.3s ease;">
+          <span>📊</span>
+          <span>Exportar Excel</span>
+        </button>
       </div>
-      <div style="max-width: 1000px; margin: 0 auto;">
+
+      <div style="margin-bottom: 20px;">
+        <h2 style="color: #1976d2; margin: 0 0 15px 0;">🔍 Notas com med 0040 (sem 0555 ou com 0555 em status permitido)</h2>
+        
+        <div class="nt-rules-box" style="margin-bottom: 20px; font-size: 13px; color: #666; background: #f9f9f9; padding: 15px; border-left: 4px solid #1976d2; border-radius: 4px;">
+          <strong>Regras para este gráfico:</strong><br>
+          - Exibe notas com código 0040 (status ABER/ANDM) que não possuem nota 0555 vinculada OU possuem 0555 em status permitido (conforme filtros abaixo).<br>
+          - Se houver QUALQUER nota 0555 com status "CONC" vinculada, a nota 0040 é excluída.<br>
+          - Agrupamento por mês de fim planejado.<br>
+          - Notas com "Descrição Consumidor de BT" são excluídas.
+        </div>
+
+        <!-- FILTROS - AGORA COM MAIOR VISIBILIDADE -->
+        <div id="containerFiltros0555Grafico" style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #2196f3; margin-bottom: 25px;">
+          <div style="font-weight: bold; color: #0d47a1; margin-bottom: 15px; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+            <span>🎯</span> Filtrar Notas 0040 pelo Status da 0555 vinculada:
+          </div>
+          <div style="display: flex; gap: 25px; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; color: #1565c0;">
+              <input type="checkbox" class="filtro-vinculo-0555" value="ABER" checked
+                onchange="gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais)"
+                style="width: 20px; height: 20px; cursor: pointer;">
+              ABER
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; color: #1565c0;">
+              <input type="checkbox" class="filtro-vinculo-0555" value="ANDM" checked
+                onchange="gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais)"
+                style="width: 20px; height: 20px; cursor: pointer;">
+              ANDM
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; color: #1565c0;">
+              <input type="checkbox" class="filtro-vinculo-0555" value="ANDM ENVI" checked
+                onchange="gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais)"
+                style="width: 20px; height: 20px; cursor: pointer;">
+              ANDM ENVI
+            </label>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; color: #1565c0;">
+              <input type="checkbox" class="filtro-vinculo-0555" value="SEM_VINCULO" checked
+                onchange="gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais)"
+                style="width: 20px; height: 20px; cursor: pointer;">
+              NÃO POSSUI 0555
+            </label>
+          </div>
+
+          <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #2196f3;">
+            <div style="font-weight: bold; color: #0d47a1; margin-bottom: 10px; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+              <span>📝</span> Filtrar por Descrição da Nota 0040:
+            </div>
+            <button id="botaoToggleDescricoesComparacao0555" class="nt-filter-toggle-btn"
+              style="padding: 8px 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; font-size: 13px; background: #fff; border: 1px solid #2196f3; color: #2196f3; border-radius: 6px;">
+              <span>▼</span>
+              <span>Selecionar Descrições</span>
+            </button>
+            <div id="containerCheckboxesDescricoesComparacao0555"
+              style="display: none; flex-direction: column; align-items: flex-start; gap: 8px; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #cce3ff; min-height: 40px; margin-top: 10px; max-height: 300px; overflow-y: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <!-- Os checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nt-chart-canvas-wrap-wide" style="margin-top: 20px;">
         <canvas id="chartComparacaoNotasCarga0555"></canvas>
       </div>
       <div id="infoComparacaoNotasCarga0555"
@@ -3787,114 +3835,144 @@
         return;
       }
 
-      // PASSO 1: Identificar números de nota que têm código 0555
-      const notasComAlgumCodigo0555 = new Set();
+      // Obter filtros selecionados nos checkboxes de status 0555
+      const checkboxesStatus = document.querySelectorAll('.filtro-vinculo-0555:checked');
+      const statusSelecionados0555 = new Set(Array.from(checkboxesStatus).map(cb => cb.value));
 
-      // PASSO 2: Identificar números de nota que têm código 0555 com status ANDM, ABER ou ANDM ENVI
-      const notasComCodigo0555 = new Set();
-      // PASSO 2.1: Identificar números de nota que têm código 0555 em status CONC (ou variações)
-      const notasComCodigo0555Concluido = new Set();
-      const statusPermitidos0555 = ['ANDM', 'ABER', 'ANDM ENVI'];
+      // Obter filtros selecionados nos checkboxes de descrição 0040
+      const checkboxesDesc = document.querySelectorAll('.filtro-desc-0040:checked');
+      const descSelecionadas0040 = new Set(Array.from(checkboxesDesc).map(cb => cb.value));
+      const todasDescMarcadas = document.querySelectorAll('.filtro-desc-0040').length === checkboxesDesc.length;
+
+      // PASSO 1: Identificar números de nota que têm código 0555 e seus status
+      const mapaNotaParaStatus0555 = {}; // nota -> Set de status
+      const descricoesUnicas0040 = new Set();
 
       dados.forEach(item => {
         if (item.codigo_medidas === '0555') {
           const numeroNota = item.nota || '';
           if (numeroNota) {
-            notasComAlgumCodigo0555.add(numeroNota);
-          }
-
-          const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-          if (statusPermitidos0555.includes(statusRaw)) {
-            if (numeroNota) {
-              notasComCodigo0555.add(numeroNota);
+            if (!mapaNotaParaStatus0555[numeroNota]) {
+              mapaNotaParaStatus0555[numeroNota] = new Set();
             }
+            const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+            mapaNotaParaStatus0555[numeroNota].add(statusRaw);
           }
-
-          if (statusRaw.startsWith('CONC')) {
-            if (numeroNota) {
-              notasComCodigo0555Concluido.add(numeroNota);
+        }
+        
+        // Coletar descrições de notas 0040 elegíveis para o filtro
+        if (item.codigo_medidas === '0040') {
+          const statusRaw0040 = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+          if (['ABER', 'ANDM'].includes(statusRaw0040)) {
+            const desc = (item.descricao || '').trim();
+            if (desc && !desc.toUpperCase().includes('CONSUMIDOR DE BT')) {
+              descricoesUnicas0040.add(desc);
             }
           }
         }
       });
 
-      // PASSO 3: Filtrar apenas notas 0040 com status ABER/ANDM que:
-      // - não tenham 0555, OU
-      // - tenham 0555 em status permitido (ABER/ANDM/ANDM ENVI)
+      // Popular filtro de descrição se estiver vazio ou se dados mudaram
+      popularFiltroDescricoesComparacao0555(descricoesUnicas0040);
+
+      // PASSO 2: Filtrar notas 0040
       const codigoCarga = '0040';
       const statusPermitidosCarga = ['ABER', 'ANDM'];
       const notasPorMes = {}; // Formato: 'YYYY-MM': count
       let totalNotas = 0;
       let totalSemVinculo0555 = 0;
       let totalComVinculoPermitido0555 = 0;
-      let totalComVinculoNaoPermitido0555 = 0;
-      let totalComVinculoConcluido0555 = 0;
+      let totalExcluidasPorCONC = 0;
+      let totalExcluidasPorStatusNaoSelecionado = 0;
+      let totalExcluidasPorDescricao = 0;
+
+      const notasElegiveis = [];
 
       dados.forEach(item => {
         if (item.codigo_medidas === codigoCarga) {
-          const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-          if (statusPermitidosCarga.includes(statusRaw)) {
+          const statusRaw0040 = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+          if (statusPermitidosCarga.includes(statusRaw0040)) {
             const numeroNota = item.nota || '';
             if (numeroNota) {
+              const descricao = (item.descricao || '').trim();
+              
               // Excluir notas com "Descrição Consumidor de BT"
-              if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) {
+              if (descricao.toUpperCase().includes('CONSUMIDOR DE BT')) {
                 return;
               }
 
-              const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
-              const tem0555Permitido = notasComCodigo0555.has(numeroNota);
-              const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
-
-              if (!temAlgum0555) {
-                totalSemVinculo0555++;
-              } else if (tem0555Concluido) {
-                totalComVinculoConcluido0555++;
-                totalComVinculoNaoPermitido0555++;
+              // Aplicar filtro de descrição
+              if (!todasDescMarcadas && checkboxesDesc.length > 0 && !descSelecionadas0040.has(descricao)) {
+                totalExcluidasPorDescricao++;
                 return;
-              } else if (tem0555Permitido) {
-                totalComVinculoPermitido0555++;
+              }
+
+              const statuses0555 = mapaNotaParaStatus0555[numeroNota];
+
+              // Regra de exclusão: se tiver QUALQUER 0555 concluída, exclui
+              let temCONC = false;
+              if (statuses0555) {
+                for (const s of statuses0555) {
+                  if (s.startsWith('CONC')) {
+                    temCONC = true;
+                    break;
+                  }
+                }
+              }
+
+              if (temCONC) {
+                totalExcluidasPorCONC++;
+                return;
+              }
+
+              // Aplicar filtros de status 0555
+              let deveIncluir = false;
+              if (!statuses0555) {
+                if (statusSelecionados0555.has('SEM_VINCULO')) {
+                  deveIncluir = true;
+                  totalSemVinculo0555++;
+                }
               } else {
-                totalComVinculoNaoPermitido0555++;
-                return;
+                let algumStatusSelecionado = false;
+                for (const s of statuses0555) {
+                  if (statusSelecionados0555.has(s)) {
+                    algumStatusSelecionado = true;
+                    break;
+                  }
+                }
+
+                if (algumStatusSelecionado) {
+                  deveIncluir = true;
+                  totalComVinculoPermitido0555++;
+                } else {
+                  totalExcluidasPorStatusNaoSelecionado++;
+                }
               }
 
-              totalNotas++;
+              if (deveIncluir) {
+                totalNotas++;
+                notasElegiveis.push(item);
 
-              // Agrupar por mês de fim planejado
-              const fim_planejado = item.fim_planejado;
-              if (fim_planejado && fim_planejado.trim() !== '') {
-                const [dia, mes, ano] = fim_planejado.split('.');
-                if (ano && mes) {
-                  const mesAno = `${ano}-${mes}`;
-                  notasPorMes[mesAno] = (notasPorMes[mesAno] || 0) + 1;
+                // Agrupar por mês de fim planejado
+                const fim_planejado = item.fim_planejado;
+                if (fim_planejado && fim_planejado.trim() !== '') {
+                  const [dia, mes, ano] = fim_planejado.split('.');
+                  if (ano && mes) {
+                    const mesAno = `${ano}-${mes}`;
+                    notasPorMes[mesAno] = (notasPorMes[mesAno] || 0) + 1;
+                  } else {
+                    notasPorMes['Sem data'] = (notasPorMes['Sem data'] || 0) + 1;
+                  }
                 } else {
                   notasPorMes['Sem data'] = (notasPorMes['Sem data'] || 0) + 1;
                 }
-              } else {
-                notasPorMes['Sem data'] = (notasPorMes['Sem data'] || 0) + 1;
               }
             }
           }
         }
       });
 
-      // Armazenar dados para uso no onClick
-      const dadosCompletos = dados.filter(item => {
-        if (item.codigo_medidas !== codigoCarga) return false;
-        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        if (!statusPermitidosCarga.includes(statusRaw)) return false;
-        const numeroNota = item.nota || '';
-        // Excluir notas com 'Descrição Consumidor de BT'
-        if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) return false;
-        if (!numeroNota) return false;
-
-        const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
-        const tem0555Permitido = notasComCodigo0555.has(numeroNota);
-        const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
-        return !temAlgum0555 || (tem0555Permitido && !tem0555Concluido);
-      });
-
-      window.ultimaComparacaoNotasCarga0555Elegiveis = dadosCompletos;
+      window.ultimaComparacaoNotasCarga0555Elegiveis = notasElegiveis;
 
       // Separar "Sem data" das datas válidas
       const semData = notasPorMes['Sem data'] || 0;
@@ -3919,7 +3997,7 @@
       });
 
       // Atualizar info
-      const infoText = `${totalNotas} notas 0040 | sem vínculo 0555: ${totalSemVinculo0555} | com vínculo 0555 permitido: ${totalComVinculoPermitido0555} | excluídas por vínculo 0555 CONC: ${totalComVinculoConcluido0555} | com vínculo 0555 não permitido (excluídas): ${totalComVinculoNaoPermitido0555}`;
+      const infoText = `${totalNotas} notas 0040 | sem vínculo 0555: ${totalSemVinculo0555} | com vínculo 0555 selecionado: ${totalComVinculoPermitido0555} | excluídas por vínculo 0555 CONC: ${totalExcluidasPorCONC} | ocultas por status 0555: ${totalExcluidasPorStatusNaoSelecionado} | ocultas por descrição: ${totalExcluidasPorDescricao}`;
       document.getElementById('totalComparacaoNotasCarga0555').textContent = infoText;
 
       // Destruir gráfico anterior
@@ -3956,15 +4034,14 @@
                 weight: 'bold',
                 size: 12
               },
-              anchor: 'end', // outside, above the bar
-              align: 'end',  // outside, above the bar
+              anchor: 'end',
+              align: 'end',
               offset: 10
             }
           },
           scales: {
             y: {
               beginAtZero: true,
-              // Adiciona gap superior para evitar sobreposição dos números com a legenda
               suggestedMax: Math.max(...dataValues) > 0 ? Math.ceil(Math.max(...dataValues) * 1.25) : undefined,
               ticks: {
                 stepSize: 1
@@ -3986,16 +4063,15 @@
               const elementIndex = activeElements[0].index;
               const mesClicado = mesesOrdenados[elementIndex];
 
-              // Filtrar notas do mês clicado
               let notasFiltradas;
 
               if (mesClicado === 'Sem data') {
-                notasFiltradas = dadosCompletos.filter(item => {
+                notasFiltradas = notasElegiveis.filter(item => {
                   const fim_planejado = item.fim_planejado;
                   return !fim_planejado || fim_planejado.trim() === '';
                 });
               } else {
-                notasFiltradas = dadosCompletos.filter(item => {
+                notasFiltradas = notasElegiveis.filter(item => {
                   const fim_planejado = item.fim_planejado;
                   if (!fim_planejado || fim_planejado.trim() === '') return false;
                   const [dia, mes, ano] = fim_planejado.split('.');
@@ -4010,6 +4086,66 @@
             }
           }
         }
+      });
+    };
+
+    // Função para popular dinamicamente as descrições no filtro do gráfico de comparação 0555
+    window.popularFiltroDescricoesComparacao0555 = function (descricoesUnicas) {
+      const container = document.getElementById('containerCheckboxesDescricoesComparacao0555');
+      if (!container) return;
+
+      // Se já estiver populado e o número de descrições for o mesmo, não faz nada para não resetar a seleção do usuário
+      // a menos que queiramos forçar a atualização quando os dados mudam drasticamente.
+      const checkboxesExistentes = container.querySelectorAll('.filtro-desc-0040');
+      if (checkboxesExistentes.length > 0 && checkboxesExistentes.length === descricoesUnicas.size) {
+        return;
+      }
+
+      container.innerHTML = '';
+
+      // Botões de Selecionar/Desmarcar Todos
+      const botoesDiv = document.createElement('div');
+      botoesDiv.style.cssText = 'display: flex; gap: 10px; margin-bottom: 12px; width: 100%; position: sticky; top: 0; background: #white; z-index: 10;';
+
+      const btnSelTodos = document.createElement('button');
+      btnSelTodos.textContent = 'Marcar Todos';
+      btnSelTodos.style.cssText = 'padding: 5px 10px; font-size: 11px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; flex: 1;';
+      btnSelTodos.onclick = () => {
+        container.querySelectorAll('.filtro-desc-0040').forEach(cb => cb.checked = true);
+        gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais);
+      };
+
+      const btnDesSelTodos = document.createElement('button');
+      btnDesSelTodos.textContent = 'Desmarcar Todos';
+      btnDesSelTodos.style.cssText = 'padding: 5px 10px; font-size: 11px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; flex: 1;';
+      btnDesSelTodos.onclick = () => {
+        container.querySelectorAll('.filtro-desc-0040').forEach(cb => cb.checked = false);
+        gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais);
+      };
+
+      botoesDiv.appendChild(btnSelTodos);
+      botoesDiv.appendChild(btnDesSelTodos);
+      container.appendChild(botoesDiv);
+
+      // Ordenar e criar checkboxes
+      Array.from(descricoesUnicas).sort().forEach((desc, index) => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 13px; color: #444; width: 100%; padding: 4px 0;';
+        
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'filtro-desc-0040';
+        cb.value = desc;
+        cb.checked = true;
+        cb.style.cssText = 'width: 16px; height: 16px; cursor: pointer;';
+        cb.onchange = () => gerarGraficoComparacaoNotasCarga0555(typeof dadosGlobaisCompletos !== 'undefined' ? dadosGlobaisCompletos : dadosGlobais);
+
+        const span = document.createElement('span');
+        span.textContent = desc;
+
+        label.appendChild(cb);
+        label.appendChild(span);
+        container.appendChild(label);
       });
     };
 
@@ -5286,6 +5422,24 @@
       } else {
         container.style.display = 'none';
         botao.style.background = '#2e7d32';
+        botao.querySelector('span:first-child').textContent = '▼';
+      }
+    };
+
+    // Função para toggle dropdown de descrições - Comparação 0555
+    window.toggleDropdownDescricoesComparacao0555 = function () {
+      const container = document.getElementById('containerCheckboxesDescricoesComparacao0555');
+      const botao = document.getElementById('botaoToggleDescricoesComparacao0555');
+
+      if (!container || !botao) return;
+
+      if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        botao.style.background = '#e3f2fd';
+        botao.querySelector('span:first-child').textContent = '▲';
+      } else {
+        container.style.display = 'none';
+        botao.style.background = '#fff';
         botao.querySelector('span:first-child').textContent = '▼';
       }
     };
@@ -8865,46 +9019,73 @@
         return;
       }
 
-      const codigoCarga = '0040';
-      const statusPermitidosCarga = ['ABER', 'ANDM'];
-      const statusPermitidos0555 = ['ANDM', 'ABER', 'ANDM ENVI'];
+      // Obter filtros selecionados nos checkboxes de status 0555
+      const checkboxesStatus = document.querySelectorAll('.filtro-vinculo-0555:checked');
+      const statusSelecionados0555 = new Set(Array.from(checkboxesStatus).map(cb => cb.value));
 
-      const notasComAlgumCodigo0555 = new Set();
-      const notasComCodigo0555Permitido = new Set();
-      const notasComCodigo0555Concluido = new Set();
+      // Obter filtros selecionados nos checkboxes de descrição 0040
+      const checkboxesDesc = document.querySelectorAll('.filtro-desc-0040:checked');
+      const descSelecionadas0040 = new Set(Array.from(checkboxesDesc).map(cb => cb.value));
+      const todasDescMarcadas = document.querySelectorAll('.filtro-desc-0040').length === checkboxesDesc.length;
 
+      // PASSO 1: Identificar números de nota que têm código 0555 e seus status
+      const mapaNotaParaStatus0555 = {};
       dados.forEach(item => {
-        if ((item.codigo_medidas || '').trim() !== '0555') return;
-        const numeroNota = item.nota || '';
-        if (!numeroNota) return;
-
-        notasComAlgumCodigo0555.add(numeroNota);
-
-        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        if (statusPermitidos0555.includes(statusRaw)) {
-          notasComCodigo0555Permitido.add(numeroNota);
-        }
-        if (statusRaw.startsWith('CONC')) {
-          notasComCodigo0555Concluido.add(numeroNota);
+        if (item.codigo_medidas === '0555') {
+          const numeroNota = item.nota || '';
+          if (numeroNota) {
+            if (!mapaNotaParaStatus0555[numeroNota]) {
+              mapaNotaParaStatus0555[numeroNota] = new Set();
+            }
+            const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+            mapaNotaParaStatus0555[numeroNota].add(statusRaw);
+          }
         }
       });
+
+      const codigoCarga = '0040';
+      const statusPermitidosCarga = ['ABER', 'ANDM'];
 
       const dadosFiltrados = dados.filter(item => {
         if ((item.codigo_medidas || '').trim() !== codigoCarga) return false;
 
-        const statusRaw = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
-        if (!statusPermitidosCarga.includes(statusRaw)) return false;
+        const statusRaw0040 = (item.status_usuario || item.status || item.Status || item.status_atual || '').trim().toUpperCase();
+        if (!statusPermitidosCarga.includes(statusRaw0040)) return false;
 
-        if ((item.descricao || '').toUpperCase().includes('CONSUMIDOR DE BT')) return false;
+        const descricao = (item.descricao || '').trim();
+        if (descricao.toUpperCase().includes('CONSUMIDOR DE BT')) return false;
+
+        // Aplicar filtro de descrição
+        if (!todasDescMarcadas && checkboxesDesc.length > 0 && !descSelecionadas0040.has(descricao)) {
+          return false;
+        }
 
         const numeroNota = item.nota || '';
         if (!numeroNota) return false;
 
-        const temAlgum0555 = notasComAlgumCodigo0555.has(numeroNota);
-        const tem0555Permitido = notasComCodigo0555Permitido.has(numeroNota);
-        const tem0555Concluido = notasComCodigo0555Concluido.has(numeroNota);
+        const statuses0555 = mapaNotaParaStatus0555[numeroNota];
 
-        return !temAlgum0555 || (tem0555Permitido && !tem0555Concluido);
+        // Regra de exclusão: se tiver QUALQUER 0555 concluída, exclui
+        let temCONC = false;
+        if (statuses0555) {
+          for (const s of statuses0555) {
+            if (s.startsWith('CONC')) {
+              temCONC = true;
+              break;
+            }
+          }
+        }
+        if (temCONC) return false;
+
+        // Aplicar filtros de status 0555
+        if (!statuses0555) {
+          return statusSelecionados0555.has('SEM_VINCULO');
+        } else {
+          for (const s of statuses0555) {
+            if (statusSelecionados0555.has(s)) return true;
+          }
+          return false;
+        }
       });
 
       if (dadosFiltrados.length === 0) {
@@ -9329,10 +9510,29 @@
           zoomControl: true
         }).setView([-18.5, -44.5], 6);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Camada padrão (OpenStreetMap)
+        const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OpenStreetMap contributors',
           maxZoom: 18
-        }).addTo(mapaNotasCidadeFimPlanejadoInstance);
+        });
+
+        // Camada de Satélite (Esri World Imagery)
+        const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+          maxZoom: 18
+        });
+
+        // Adicionar a camada padrão ao mapa
+        osm.addTo(mapaNotasCidadeFimPlanejadoInstance);
+
+        // Definir as bases para o controle
+        const baseMaps = {
+          "Mapa Padrão": osm,
+          "Satélite": satellite
+        };
+
+        // Adicionar controle de camadas
+        L.control.layers(baseMaps, null, { position: 'topright' }).addTo(mapaNotasCidadeFimPlanejadoInstance);
 
         camadaNotasCidadeFimPlanejado = L.layerGroup().addTo(mapaNotasCidadeFimPlanejadoInstance);
       }
@@ -9455,9 +9655,7 @@
     }
 
     function corCidadeMapaNotas(andm, aber) {
-      if (andm > aber) return '#2e7d32';
-      if (aber > andm) return '#66bb6a';
-      return '#1e88e5';
+      return '#f44336'; // Sempre Vermelho
     }
 
     async function atualizarMapaNotasCidadeFimPlanejado(dadosFiltrados) {
