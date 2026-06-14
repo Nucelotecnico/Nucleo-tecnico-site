@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -1208,6 +1208,9 @@
         approvalSheetToggle.disabled = !approvalToggle.checked;
         if (!approvalToggle.checked) {
           approvalSheetToggle.checked = false;
+        } else if (changedId === "nszip-enableSeal" && approvalToggle.checked) {
+          // Auto-check Gerar Carta de Aprovação when enabling Aplicar selo de aprovação
+          approvalSheetToggle.checked = true;
         }
       }
     }
