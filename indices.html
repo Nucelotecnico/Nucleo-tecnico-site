@@ -3321,6 +3321,8 @@
       });
 
       const anosArray = Array.from(anosSet).sort((a, b) => b - a);
+      const anoAtual = String(new Date().getFullYear());
+      const selecionarSomenteAnoAtual = anosArray.includes(anoAtual);
       const container = document.getElementById('containerCheckboxesAnoNotasSemContrato');
       container.innerHTML = '';
 
@@ -3347,7 +3349,7 @@
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = ano;
-        checkbox.checked = true;
+        checkbox.checked = selecionarSomenteAnoAtual ? ano === anoAtual : true;
         checkbox.onchange = function () {
           popularFiltroMesNotasSemContrato(dados);
           popularFiltroDiasNotasSemContrato(dados);
@@ -15730,6 +15732,8 @@
       });
 
       const anosArray = Array.from(anosSet).sort((a, b) => b - a);
+      const anoAtual = String(new Date().getFullYear());
+      const selecionarSomenteAnoAtual = anosArray.includes(anoAtual);
       const container = document.getElementById('containerCheckboxesAnoNotasSemContrato');
       container.innerHTML = '';
 
@@ -15762,7 +15766,7 @@
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = ano;
-        checkbox.checked = true;
+        checkbox.checked = selecionarSomenteAnoAtual ? ano === anoAtual : true;
         checkbox.onchange = function () {
           popularFiltroDiasNotasSemContrato(dados);
           popularFiltroStatusNotasSemContrato(dados);
